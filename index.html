@@ -42,7 +42,7 @@
         .search-bar { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.9rem; margin-bottom: 16px; outline: none; transition: border-color 0.2s;}
         
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
-        .modal-overlay.active { display: flex; animation: fadeBg 0.25s forwards; }
+        .modal-overlay.active { display: flex; }
         .modal-content { background: white; width: 100%; max-width: 600px; max-height: 88vh; border-radius: 24px 24px 0 0; padding: 24px; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: sticky; top: -24px; background: white; padding: 4px 0 12px 0; z-index: 10; border-bottom: 1px solid var(--border);}
@@ -82,7 +82,7 @@
 <body>
 
     <header>
-        <div class="header-title"><span id="app-rt-name">Sistem RT</span><span class="header-subtitle" id="app-version-head">v2.5.1</span></div>
+        <div class="header-title"><span id="app-rt-name">Sistem RT</span><span class="header-subtitle" id="app-version-head">v2.5.2</span></div>
         <div style="display:flex; gap:10px; align-items:center;">
             <div class="sync-status" id="syncStatus">🟢</div>
             <button onclick="navTo('sec-dashboard')" style="background:var(--primary-light); color:var(--primary); border:none; padding:8px 14px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">🏠 Home</button>
@@ -183,7 +183,7 @@
             <div class="card text-center"><button class="btn btn-outline" onclick="syncDataFromCloud(true)">🔄 Force Sync ke Server</button></div>
         </section>
         
-        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.5.1</span><br><strong>Powered by Ari GPM</strong></div>
+        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.5.2</span><br><strong>Powered by Ari GPM</strong></div>
     </div>
 
     <!-- ============================================== -->
@@ -248,9 +248,11 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const APP_VERSION = "v2.5.1";
+        const APP_VERSION = "v2.5.2";
         const APP_AUTHOR = "Ari GPM";
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec "; 
+        
+        // GAS URL SUDAH TER-KOMBINASI SECARA PERMANEN
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
         
         let APP_DATA = { WARGA: [], NOTULEN: [], KEPUTUSAN: [], KEGIATAN: [], PETUGAS: [], ANGGARAN: [], KEHADIRAN: [], PELAKSANAAN: [], DOKUMENTASI: [], EVALUASI: [], SURAT: [], PENGATURAN: [] };
         let SYNC_QUEUE = JSON.parse(localStorage.getItem('rt_sync_queue')) || [];
@@ -259,8 +261,8 @@
         document.getElementById('app-version-head').innerText = APP_VERSION; document.getElementById('foot-version').innerText = APP_VERSION;
 
         window.onload = () => {
-            loadLocalData(); initDynamicYears(); refreshAllUI(); loadKopSuratConfig();
-            if (GAS_URL !== "") { syncDataFromCloud(); processQueue(); } else { showToast("Mode Demo Aktif"); initDemoData(); }
+            loadLocalData(); initDynamicYears(); refreshAllUI(); loadKopSuratConfig(); loadPengaturanInput();
+            if (GAS_URL !== "") { syncDataFromCloud(); processQueue(); } else { showToast("Mode Lokal / Demo Aktif"); initDemoData(); }
             window.addEventListener('online', () => { document.getElementById('syncStatus').innerHTML = '🟢'; processQueue(); });
             window.addEventListener('offline', () => { document.getElementById('syncStatus').innerHTML = '🔴'; });
         };
@@ -272,15 +274,19 @@
             yearSelect.innerHTML = options;
         }
 
-        function loadLocalData() { let cache = localStorage.getItem('rt_app_data'); if (cache) { APP_DATA = JSON.parse(cache); if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; } }
+        function loadLocalData() { let cache = localStorage.getItem('rt_app_data'); if (cache) { APP_DATA = JSON.parse(cache); if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; if(!APP_DATA.PENGATURAN) APP_DATA.PENGATURAN = []; } }
         function saveLocalData() { localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); }
 
         async function syncDataFromCloud(force = false) {
+            if (GAS_URL === "") {
+                if(force) showToast("URL Google Apps Script belum diisi!");
+                return;
+            }
             if(!navigator.onLine) { if(force) showToast("Anda sedang offline"); return; }
             if(force) showLoader();
             try {
                 let res = await fetch(`${GAS_URL}?action=sync`); let result = await res.json();
-                if (result.status === "success") { APP_DATA = result.data; if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; saveLocalData(); refreshAllUI(); if(force) showToast("Sinkronisasi Berhasil!"); }
+                if (result.status === "success") { APP_DATA = result.data; if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; saveLocalData(); refreshAllUI(); loadPengaturanInput(); if(force) showToast("Sinkronisasi Berhasil!"); }
             } catch (e) { if(force) showToast("Gagal sinkronisasi server."); }
             if(force) hideLoader();
         }
@@ -290,7 +296,7 @@
             if(existingIndex > -1) APP_DATA[tableName][existingIndex] = dataObj; else { if(!dataObj.id || dataObj.id === "") dataObj.id = "temp_" + Date.now(); APP_DATA[tableName].push(dataObj); }
             saveLocalData(); refreshAllUI();
             let payload = { action: 'save', table: tableName, data: dataObj };
-            if (navigator.onLine && GAS_URL !== "") sendToCloud(payload); else { SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE)); showToast("Disimpan offline."); }
+            if (navigator.onLine && GAS_URL !== "") sendToCloud(payload); else { SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE)); showToast("Disimpan lokal."); }
         }
 
         async function sendToCloud(payload) { try { let res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) }); let result = await res.json(); if(result.status === "success") syncDataFromCloud(); } catch (e) { SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE)); } }
@@ -337,6 +343,7 @@
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
             if(sectionId === 'sec-dashboard') { currentKegiatanId = null; currentNotulenId = null; }
+            if(sectionId === 'sec-pengaturan') { loadPengaturanInput(); }
         }
 
         function openModal(id) { 
@@ -365,6 +372,13 @@
             let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt'); if(p_rt) document.getElementById('app-rt-name').innerText = p_rt.nilai;
             updateDashboardUI(); renderWargaUI(); renderNotulenUI(); renderKegiatanUI(); renderSuratUI(); renderLaporanUI();
             if(currentNotulenId) renderDetailNotulenUI(); if(currentKegiatanId) renderDetailKegiatanUI();
+        }
+
+        function loadPengaturanInput() {
+            let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt');
+            if(p_rt && document.getElementById('set_nama_rt')) document.getElementById('set_nama_rt').value = p_rt.nilai;
+            let p_desa = APP_DATA.PENGATURAN.find(x => x.kunci === 'desa');
+            if(p_desa && document.getElementById('set_desa')) document.getElementById('set_desa').value = p_desa.nilai;
         }
 
         function updateDashboardUI() { 
@@ -424,7 +438,7 @@
             if(anggaran.length === 0) aContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada item RAB dimasukkan.</p>`;
             else { 
                 let html = ''; anggaran.forEach(a => { 
-                    let r = parseInt(a.total)||0; let l = parseInt(a.realisasi)||0; totRab+=r; totReal+=l; 
+                    let r = parseInt(a.total||0); let l = parseInt(a.realisasi||0); totRab+=r; totReal+=l; 
                     html += `<div class="list-item flex-between">
                         <div>
                             <div style="font-weight:600; font-size:0.9rem;">${a.nama_kebutuhan}</div>
@@ -532,8 +546,24 @@
             document.getElementById('list-agenda-terdekat').innerHTML = html;
         }
 
-        function savePengaturan(e) { e.preventDefault(); let pr = document.getElementById('set_nama_rt').value; let pd = document.getElementById('set_desa').value; APP_DATA.PENGATURAN = APP_DATA.PENGATURAN.filter(x => x.kunci.startsWith('kop_')); APP_DATA.PENGATURAN.push({id: 'set_1', kunci: 'nama_rt', nilai: pr}, {id: 'set_2', kunci: 'desa', nilai: pd}); saveLocalData(); showToast("Pengaturan disimpan"); refreshAllUI(); }
-        function initDemoData() { if(APP_DATA.PENGATURAN.length === 0) { APP_DATA.PENGATURAN.push({id: 'k1', kunci: 'kop_1', nilai: 'PENGURUS RT 05'}); saveLocalData(); } }
+        function savePengaturan(e) { 
+            e.preventDefault(); 
+            let pr = document.getElementById('set_nama_rt').value; 
+            let pd = document.getElementById('set_desa').value; 
+            APP_DATA.PENGATURAN = APP_DATA.PENGATURAN.filter(x => !['nama_rt', 'desa'].includes(x.kunci)); 
+            APP_DATA.PENGATURAN.push({id: 'set_1', kunci: 'nama_rt', nilai: pr}, {id: 'set_2', kunci: 'desa', nilai: pd}); 
+            saveLocalData(); 
+            showToast("Pengaturan disimpan"); 
+            refreshAllUI(); 
+        }
+
+        function initDemoData() { 
+            if(APP_DATA.PENGATURAN.length === 0) { 
+                APP_DATA.PENGATURAN.push({id: 'k1', kunci: 'kop_1', nilai: 'PENGURUS RT 05'}, {id: 'k2', kunci: 'nama_rt', nilai: 'RT 05 / RW 02'}, {id: 'k3', kunci: 'desa', nilai: 'Sukamaju'}); 
+                saveLocalData(); 
+                loadPengaturanInput();
+            } 
+        }
     </script>
 </body>
 </html>
