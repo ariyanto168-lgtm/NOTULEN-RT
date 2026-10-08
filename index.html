@@ -4,82 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistem RT - Smart Dashboard Full</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #4f46e5; --primary-dark: #4338ca; --primary-light: #e0e7ff; --secondary: #059669; --danger: #dc2626; --warning: #d97706; --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #64748b; --border: #e2e8f0; --radius: 16px; --font: 'Plus Jakarta Sans', sans-serif; }
+        :root { --primary: #4f46e5; --primary-dark: #312e81; --primary-light: #e0e7ff; --secondary: #10b981; --danger: #ef4444; --warning: #f59e0b; --bg-color: #f1f5f9; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #64748b; --border: #e2e8f0; --radius: 20px; --font: 'Plus Jakarta Sans', sans-serif; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); }
-        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 20px; -webkit-tap-highlight-color: transparent; }
-        header { background: var(--card-bg); padding: 14px 20px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
-        .header-title { font-size: 1rem; font-weight: 700; display: flex; flex-direction: column; color: var(--primary);}
-        .header-subtitle { font-size: 0.7rem; font-weight: 500; color: var(--text-muted);}
-        .sync-status { font-size: 0.65rem; color: var(--text-muted); font-weight: 600;}
-        .container { padding: 16px; max-width: 600px; margin: 0 auto; }
-        .section { display: none; animation: fadeIn 0.25s ease-in-out; }
+        body { background-color: var(--bg-color); color: var(--text-main); -webkit-tap-highlight-color: transparent; display: flex; flex-direction: column; min-height: 100vh;}
+        
+        /* HEADER ATAS */
+        header { background: linear-gradient(135deg, var(--primary), #3730a3); padding: 16px 20px; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; margin-bottom: 16px; padding-top: max(16px, env(safe-area-inset-top)); }
+        .header-title { font-size: 1.1rem; font-weight: 800; display: flex; flex-direction: column; color: white; letter-spacing: 0.5px;}
+        .header-subtitle { font-size: 0.75rem; font-weight: 500; color: rgba(255,255,255,0.8);}
+        .sync-status { font-size: 0.65rem; color: rgba(255,255,255,0.9); font-weight: 700; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 12px;}
+        .head-btn { background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 12px; border-radius: 12px; font-weight: 700; cursor: pointer; backdrop-filter: blur(4px); box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; font-size:1rem; transition: transform 0.2s;}
+        .head-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.3); }
+
+        .container { padding: 0 16px; max-width: 600px; margin: 0 auto; flex-grow: 1; position: relative;}
+        .section { display: none; animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; margin-top: 10px;}
-        .menu-card { padding: 20px 10px; border-radius: 20px; text-align: center; color: white; box-shadow: 0 8px 15px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;}
-        .menu-card:active { transform: scale(0.95); }
-        .menu-icon { font-size: 2.2rem; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2)); }
-        .menu-text { font-weight: 700; font-size: 0.95rem; text-shadow: 0px 1px 2px rgba(0,0,0,0.2); line-height: 1.2;}
-        .bg-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } .bg-green { background: linear-gradient(135deg, #10b981, #047857); } .bg-orange { background: linear-gradient(135deg, #f59e0b, #b45309); } .bg-purple { background: linear-gradient(135deg, #8b5cf6, #5b21b6); } .bg-red { background: linear-gradient(135deg, #ef4444, #b91c1c); } .bg-teal { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+        /* MENU GRID MODERN */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;}
+        .menu-card { padding: 22px 10px; border-radius: 24px; text-align: center; color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; position: relative; overflow: hidden;}
+        .menu-card::after { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%); pointer-events: none;}
+        .menu-card:active { transform: scale(0.94); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        .menu-icon { font-size: 2.4rem; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.2)); }
+        .menu-text { font-weight: 800; font-size: 0.95rem; text-shadow: 0px 2px 4px rgba(0,0,0,0.2); letter-spacing: 0.3px;}
         
-        .card { background: var(--card-bg); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.03); border: 1px solid var(--border); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 10px;}
-        .card-title { font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-        .stat-card { background: var(--card-bg); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
-        .stat-card h3 { font-size: 1.4rem; color: var(--primary); margin-bottom: 2px; font-weight: 700; }
-        .stat-card p { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;}
+        .bg-blue { background: linear-gradient(135deg, #3b82f6, #1e3a8a); } .bg-green { background: linear-gradient(135deg, #10b981, #064e3b); } .bg-orange { background: linear-gradient(135deg, #f59e0b, #78350f); } .bg-purple { background: linear-gradient(135deg, #8b5cf6, #4c1d95); } .bg-red { background: linear-gradient(135deg, #ef4444, #7f1d1d); } .bg-teal { background: linear-gradient(135deg, #14b8a6, #134e4a); }
         
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 0.85rem; border: none; cursor: pointer; transition: all 0.2s; width: 100%; gap: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
-        .btn:active { transform: scale(0.98); }
-        .btn-sm { padding: 6px 12px; font-size: 0.75rem; width: auto; border-radius: 8px; }
-        .btn-primary { background: var(--primary); color: white; } .btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); } .btn-success { background: var(--secondary); color: white; } .btn-warning { background: var(--warning); color: white; }
-        .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;}
-        .action-bar { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-        .search-bar { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.9rem; margin-bottom: 16px; outline: none; transition: border-color 0.2s;}
+        .card { background: var(--card-bg); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid rgba(226, 232, 240, 0.6); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1.5px dashed var(--border); padding-bottom: 12px;}
+        .card-title { font-weight: 800; font-size: 1rem; color: var(--text-main); }
         
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
+        /* DASHBOARD KARTU STATISTIK (MODERN) */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+        .stat-card { border-radius: 24px; padding: 20px 16px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.08); transition: transform 0.2s; position: relative; overflow: hidden;}
+        .stat-card:active { transform: scale(0.96); }
+        .stat-icon { font-size: 2.2rem; margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .stat-card h3 { font-size: 1.8rem; color: white; font-weight: 800; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .stat-card p { font-size: 0.75rem; color: rgba(255,255,255,0.9); font-weight: 700; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px;}
+        .stat-rapat { background: linear-gradient(135deg, #6366f1, #4338ca); border: 1px solid #4f46e5; }
+        .stat-kegiatan { background: linear-gradient(135deg, #f59e0b, #d97706); border: 1px solid #d97706; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 18px; border-radius: 14px; font-weight: 700; font-size: 0.9rem; border: none; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; gap: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center;}
+        .btn:active { transform: scale(0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn-sm { padding: 8px 14px; font-size: 0.8rem; width: auto; border-radius: 10px; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 8px 15px rgba(79, 70, 229, 0.3); } 
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); } 
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 8px 15px rgba(16, 185, 129, 0.3);} 
+        .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+        
+        .action-bar { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+        
+        /* SEARCH BAR & SEARCH RESULTS */
+        .search-container { position: relative; margin-bottom: 16px; z-index: 40; }
+        .search-bar { width: 100%; padding: 16px 20px; border: 1.5px solid white; border-radius: 20px; font-size: 0.95rem; font-weight: 500; outline: none; transition: all 0.2s; background: white; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .search-bar:focus { border-color: var(--primary); box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15); }
+        #search-results { display: none; position: absolute; top: calc(100% + 8px); left: 0; width: 100%; background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); border: 1px solid var(--border); max-height: 350px; overflow-y: auto; padding: 10px; z-index: 50; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: flex-end; justify-content: center; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: white; width: 100%; max-width: 600px; max-height: 88vh; border-radius: 24px 24px 0 0; padding: 24px; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s; }
+        .modal-content { background: white; width: 100%; max-width: 600px; max-height: 90vh; border-radius: 30px 30px 0 0; padding: 24px; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); }
         .modal-overlay.active .modal-content { transform: translateY(0); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: sticky; top: -24px; background: white; padding: 4px 0 12px 0; z-index: 10; border-bottom: 1px solid var(--border);}
-        .modal-close { background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; position: sticky; top: -24px; background: white; padding: 10px 0 16px 0; z-index: 10; border-bottom: 1.5px solid var(--border);}
+        .modal-close { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: bold; color: var(--text-muted); cursor: pointer; transition: all 0.2s;}
+        .modal-close:active { transform: scale(0.85); background: #e2e8f0; }
         .modal-fullscreen { max-height: 100vh; height: 100vh; border-radius: 0; top: 0; position: absolute; }
         
-        .form-group { margin-bottom: 16px; } .form-label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
-        .form-control { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; background: #f8fafc; outline: none; transition: all 0.2s;}
-        .form-control:focus { border-color: var(--primary); background: white;} .form-control:read-only { background: #f1f5f9; cursor: not-allowed;}
-        textarea.form-control { min-height: 80px; resize: vertical; }
+        .form-group { margin-bottom: 18px; } .form-label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+        .form-control { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 14px; font-size: 0.95rem; background: #f8fafc; outline: none; transition: all 0.2s; appearance: none;}
+        .form-control:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px var(--primary-light);} .form-control:read-only { background: #e2e8f0; cursor: not-allowed; opacity: 0.8;}
+        textarea.form-control { min-height: 90px; resize: vertical; }
         
-        .editor-toolbar { display: flex; gap: 4px; background: #f1f5f9; padding: 6px; border-radius: 10px 10px 0 0; border: 1.5px solid var(--border); border-bottom: none; overflow-x: auto;}
-        .editor-btn { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 0.85rem; font-weight: bold; cursor: pointer; }
-        .editor-content { min-height: 200px; padding: 12px; border: 1.5px solid var(--border); border-radius: 0 0 10px 10px; background: white; outline: none; font-size: 0.9rem; white-space: pre-wrap; overflow-y: auto;}
-        
-        .badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; }
+        .badge { display: inline-block; padding: 6px 12px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.3px;}
         .badge-info { background: #eff6ff; color: #1d4ed8; } .badge-warning { background: #fef3c7; color: #b45309; } .badge-success { background: #ecfdf5; color: #047857; } .badge-danger { background: #fef2f2; color: #b91c1c; }
-        .list-item { padding: 12px 0; border-bottom: 1px solid var(--border); } .list-item:last-child { border-bottom: none; }
+        .list-item { padding: 14px 0; border-bottom: 1px solid var(--border); } .list-item:last-child { border-bottom: none; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         
-        .toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0f172a; color: white; padding: 12px 20px; border-radius: 30px; font-size: 0.85rem; z-index: 10000; opacity: 0; transition: all 0.25s ease; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); pointer-events: none; font-weight: 500;}
+        /* NOTIFIKASI BROWSER NATIVE-FEEL (Snackbar) */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(50px); background: #1e293b; color: white; padding: 14px 24px; border-radius: 30px; font-size: 0.95rem; font-weight: 600; z-index: 10000; opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 25px rgba(0,0,0,0.3); pointer-events: none; display: flex; align-items: center; gap: 10px;}
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        #loader { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); backdrop-filter: blur(4px); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; }
-        .spinner { width: 38px; height: 38px; border: 3px solid var(--border); border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        
+        #loader { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        .spinner { width: 44px; height: 44px; border: 4px solid var(--border); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* PRINT AREA MODAL STYLING FIX */
-        #print-area { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 99999; overflow-y: auto; padding: 24px; }
-        .kop-surat-print { text-align: center; border-bottom: 3px solid black; margin-bottom: 20px; padding-bottom: 10px; }
-        .kop-title { font-weight: bold; font-size: 16pt; margin: 0; } .kop-subtitle { font-weight: bold; font-size: 14pt; margin: 0; }
-        .kop-address { font-size: 11pt; margin: 0; } .surat-body { font-size: 12pt; line-height: 1.5; font-family: 'Times New Roman', Times, serif; }
-
-        @media print {
-            body * { visibility: hidden; } #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; height: auto; background: white; padding: 10px; margin: 0; z-index: 999999; }
-            #preview-actions { display: none !important; }
-        }
+        /* FOOTER MODERN */
+        .footer-modern { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; text-align: center; padding: 24px 20px 30px 20px; border-radius: 32px 32px 0 0; margin-top: auto; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 600px; margin-inline: auto;}
     </style>
 </head>
 <body>
@@ -91,15 +103,27 @@
         </div>
         <div style="display:flex; gap:8px; align-items:center;">
             <div class="sync-status" id="syncStatus">🟢</div>
-            <button onclick="navTo('sec-pengaturan')" style="background:var(--card-bg); color:var(--text-muted); border:1px solid var(--border); padding:8px 10px; border-radius:12px; font-size:1.1rem; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display:flex; align-items:center; justify-content:center;">⚙️</button>
-            <button onclick="navTo('sec-dashboard')" style="background:var(--primary-light); color:var(--primary); border:none; padding:8px 14px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display:flex; align-items:center; justify-content:center; gap:6px;">🏠 Home</button>
+            <button class="head-btn" onclick="navTo('sec-pengaturan')" title="Pengaturan">⚙️</button>
+            <button class="head-btn" style="background:white; color:var(--primary);" onclick="navTo('sec-dashboard')">🏠</button>
         </div>
     </header>
 
     <div class="container">
         <!-- DASHBOARD -->
         <section id="sec-dashboard" class="section active">
-            <input type="text" class="search-bar" id="searchGlobal" placeholder="🔍 Cari Surat, Notulen, Kegiatan..." oninput="searchApp()">
+            
+            <!-- Area Pencarian & Tombol Info -->
+            <div class="search-container">
+                <input type="text" class="search-bar" id="searchGlobal" placeholder="🔍 Cari Surat, Notulen, Kegiatan..." oninput="searchApp()">
+                <!-- Floating Search Results -->
+                <div id="search-results"></div>
+                
+                <button class="btn" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; border-radius: 16px; margin-top:10px; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);" onclick="openModal('modal-agenda')">
+                    <span style="display:flex; align-items:center; gap:8px;">📅 <span>Info Kegiatan Terdekat</span></span>
+                    <span id="badge-agenda" style="background: white; color: #6366f1; padding: 2px 10px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; margin-left:auto;">0</span>
+                </button>
+            </div>
+
             <div class="menu-grid">
                 <div class="menu-card bg-blue" onclick="navTo('sec-surat')"><div class="menu-icon">📝</div><div class="menu-text">Surat RT</div></div>
                 <div class="menu-card bg-green" onclick="navTo('sec-notulen')"><div class="menu-icon">📁</div><div class="menu-text">Notulen</div></div>
@@ -108,18 +132,30 @@
                 <div class="menu-card bg-red" onclick="navTo('sec-laporan')"><div class="menu-icon">📊</div><div class="menu-text">Laporan</div></div>
                 <div class="menu-card bg-teal" onclick="navTo('sec-perencanaan')"><div class="menu-icon">📅</div><div class="menu-text">Perencanaan</div></div>
             </div>
-            <div class="grid-2"><div class="stat-card"><h3 id="dash-rapat">0</h3><p>Total Rapat</p></div><div class="stat-card"><h3 id="dash-keg-jalan">0</h3><p>Keg. Berjalan</p></div></div>
-            <div class="card"><h3 style="font-size: 0.95rem; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">📅 Kegiatan Terdekat</h3><div id="list-agenda-terdekat"></div></div>
+
+            <!-- KARTU STATISTIK DASHBOARD -->
+            <div class="grid-2">
+                <div class="stat-card stat-rapat">
+                    <div class="stat-icon">🤝</div>
+                    <h3 id="dash-rapat">0</h3>
+                    <p>Total Rapat</p>
+                </div>
+                <div class="stat-card stat-kegiatan">
+                    <div class="stat-icon">🏃‍♂️</div>
+                    <h3 id="dash-keg-jalan">0</h3>
+                    <p>Keg. Berjalan</p>
+                </div>
+            </div>
         </section>
 
         <!-- SURAT -->
         <section id="sec-surat" class="section">
-            <div class="flex-between" style="margin-bottom: 16px;"><h2 style="font-size: 1.15rem; font-weight:700;">Surat Resmi RT</h2><button class="btn btn-outline btn-sm" onclick="openModal('modal-kop-surat')">⚙️ Kop Surat</button></div>
-            <div class="quick-actions"><button class="btn btn-primary" onclick="openModal('modal-pilih-template')">+ Buat Surat</button><button class="btn btn-success" onclick="shareWaGroupRT()">📢 Info ke Grup</button></div>
+            <div class="flex-between" style="margin-bottom: 16px;"><h2 style="font-size: 1.2rem; font-weight:800;">Surat Resmi RT</h2><button class="btn btn-outline btn-sm" onclick="openModal('modal-kop-surat')">⚙️ Kop Surat</button></div>
+            <div class="grid-2" style="margin-bottom: 16px;"><button class="btn btn-primary" onclick="openModal('modal-pilih-template')">+ Buat Surat</button><button class="btn btn-success" onclick="shareWaGroupRT()">📢 Info Grup</button></div>
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">📂 Riwayat Surat</div>
-                    <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('SURAT', 'Riwayat Surat')">🗑️ Reset Riwayat</button>
+                    <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('SURAT', 'Riwayat Surat')">🗑️ Reset</button>
                 </div>
                 <div id="list-surat-container"></div>
             </div>
@@ -128,8 +164,8 @@
         <!-- WARGA -->
         <section id="sec-warga" class="section">
             <div class="flex-between" style="margin-bottom: 16px;">
-                <h2 style="font-size: 1.15rem; font-weight:700;">Daftar Warga</h2>
-                <div style="display:flex; gap:6px;">
+                <h2 style="font-size: 1.2rem; font-weight:800;">Daftar Warga</h2>
+                <div style="display:flex; gap:8px;">
                     <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('WARGA', 'Data Warga')">🗑️ Reset</button>
                     <button class="btn btn-primary btn-sm" onclick="openModal('modal-warga')">+ Warga</button>
                 </div>
@@ -140,8 +176,8 @@
         <!-- NOTULEN -->
         <section id="sec-notulen" class="section">
             <div class="flex-between" style="margin-bottom: 16px;">
-                <h2 style="font-size: 1.15rem; font-weight:700;">Notulen Rapat</h2>
-                <div style="display:flex; gap:6px;">
+                <h2 style="font-size: 1.2rem; font-weight:800;">Notulen Rapat</h2>
+                <div style="display:flex; gap:8px;">
                     <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('NOTULEN', 'Notulen Rapat')">🗑️ Reset</button>
                     <button class="btn btn-primary btn-sm" onclick="openModal('modal-notulen')">+ Notulen</button>
                 </div>
@@ -151,15 +187,15 @@
         
         <section id="sec-detail-notulen" class="section">
             <div class="flex-between" style="margin-bottom: 16px;"><button class="btn btn-outline btn-sm" onclick="navTo('sec-notulen')">← Kembali</button><button class="btn btn-success btn-sm" onclick="shareWhatsAppNotulen()">📤 Share WA</button></div>
-            <h2 id="det-not-agenda" style="color: var(--primary); font-size:1.15rem; font-weight:700;">Agenda</h2><p id="det-not-info" class="text-muted" style="font-size: 0.8rem; margin-bottom: 16px;"></p>
+            <h2 id="det-not-agenda" style="color: var(--primary); font-size:1.2rem; font-weight:800;">Agenda</h2><p id="det-not-info" class="text-muted" style="font-size: 0.85rem; margin-bottom: 16px; font-weight:600;"></p>
             <div class="card"><div class="card-header"><div class="card-title">📝 Daftar Keputusan</div><button class="btn btn-primary btn-sm" onclick="openModalRelNotulen('modal-keputusan')">+ Keputusan</button></div><div id="list-keputusan-container"></div></div>
         </section>
 
         <!-- KEGIATAN & PERENCANAAN -->
         <section id="sec-kegiatan" class="section">
             <div class="flex-between" style="margin-bottom: 16px;">
-                <h2 style="font-size: 1.15rem; font-weight:700;">Kegiatan Berjalan</h2>
-                <div style="display:flex; gap:6px;">
+                <h2 style="font-size: 1.2rem; font-weight:800;">Kegiatan Berjalan</h2>
+                <div style="display:flex; gap:8px;">
                     <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('KEGIATAN', 'Data Kegiatan')">🗑️ Reset</button>
                     <button class="btn btn-primary btn-sm" onclick="openModal('modal-kegiatan')">+ Kegiatan</button>
                 </div>
@@ -167,10 +203,9 @@
             <div id="list-kegiatan-container"></div>
         </section>
 
-        <!-- SECTION BARU: PERENCANAAN -->
         <section id="sec-perencanaan" class="section">
             <div class="flex-between" style="margin-bottom: 16px;">
-                <h2 style="font-size: 1.15rem; font-weight:700;">Perencanaan Kegiatan</h2>
+                <h2 style="font-size: 1.2rem; font-weight:800;">Perencanaan Kegiatan</h2>
                 <button class="btn btn-primary btn-sm" onclick="openModal('modal-kegiatan')">+ Rencana</button>
             </div>
             <div id="list-perencanaan-container"></div>
@@ -179,41 +214,31 @@
         <!-- DETAIL KEGIATAN & KELENGKAPAN -->
         <section id="sec-detail-kegiatan" class="section">
             <div class="flex-between" style="margin-bottom: 16px;"><button class="btn btn-outline btn-sm" onclick="navTo('sec-kegiatan')">← Kembali</button></div>
-            <h2 id="detail-keg-title" style="color: var(--primary); font-size:1.15rem; font-weight:700;">Nama Kegiatan</h2>
-            <p id="detail-keg-info" class="text-muted" style="font-size: 0.8rem; margin-bottom: 6px;"></p>
-            <p id="detail-keg-desc" class="text-main" style="font-size: 0.85rem; margin-bottom: 16px; background:#f1f5f9; padding:8px 12px; border-radius:8px; display:none;"></p>
+            <h2 id="detail-keg-title" style="color: var(--primary); font-size:1.2rem; font-weight:800;">Nama Kegiatan</h2>
+            <p id="detail-keg-info" class="text-muted" style="font-size: 0.85rem; margin-bottom: 6px; font-weight:600;"></p>
+            <p id="detail-keg-desc" class="text-main" style="font-size: 0.9rem; margin-bottom: 16px; background: white; padding:12px 16px; border-radius:14px; box-shadow:0 4px 6px rgba(0,0,0,0.02); display:none; border:1px solid var(--border);"></p>
             
             <div class="card"><div class="card-header"><div class="card-title">👥 Panitia</div><button class="btn btn-primary btn-sm" onclick="openModalRel('modal-petugas')">+ Petugas</button></div><div id="list-petugas-container"></div></div>
             
-            <!-- KALKULATOR RAB -->
-            <div class="card" style="border: 2px solid var(--primary);">
+            <div class="card" style="border: 2px solid var(--primary); background: #f8faff;">
                 <div class="card-header">
                     <div class="card-title">💰 Kalkulator RAB & Realisasi Kas</div>
                     <button class="btn btn-primary btn-sm" onclick="openModalRel('modal-anggaran')">+ Input RAB</button>
                 </div>
                 <div id="list-anggaran-container"></div>
-                <div style="background:#f8fafc; padding:12px; border-radius:12px; font-size:0.85rem; margin-top:12px; border:1px solid var(--border);">
-                    <div class="flex-between" style="margin-bottom:6px;"><span>Total Rencana (RAB):</span><strong id="det-ang-rab" style="color:var(--primary)">Rp 0</strong></div>
-                    <div class="flex-between" style="margin-bottom:6px; color:var(--danger)"><span>Total Realisasi Aktual:</span><strong id="det-ang-real">Rp 0</strong></div>
-                    <div class="flex-between" style="border-top:1px solid var(--border); padding-top:6px;"><span>Selisih (Sisa Kas):</span><strong id="det-ang-sisa">Rp 0</strong></div>
+                <div style="background:white; padding:16px; border-radius:16px; font-size:0.9rem; margin-top:16px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02);">
+                    <div class="flex-between" style="margin-bottom:8px;"><span>Total Rencana (RAB):</span><strong id="det-ang-rab" style="color:var(--primary); font-size:1.05rem;">Rp 0</strong></div>
+                    <div class="flex-between" style="margin-bottom:8px; color:var(--danger)"><span>Total Realisasi Aktual:</span><strong id="det-ang-real" style="font-size:1.05rem;">Rp 0</strong></div>
+                    <div class="flex-between" style="border-top:2px dashed var(--border); padding-top:10px; font-weight:800;"><span>Selisih (Sisa Kas):</span><strong id="det-ang-sisa" style="font-size:1.1rem;">Rp 0</strong></div>
                 </div>
             </div>
 
-            <!-- DOKUMENTASI KEGIATAN -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🖼️ Dokumentasi & Foto</div>
-                    <button class="btn btn-primary btn-sm" onclick="openModalRel('modal-dokumentasi')">+ Dokumentasi</button>
-                </div>
-                <div id="list-dokumentasi-container"></div>
-            </div>
-
-            <div class="card"><div class="card-header"><div class="card-title">📝 Daftar Hadir</div><button class="btn btn-primary btn-sm" onclick="openModalRel('modal-kehadiran')">+ Presensi</button></div><div id="summary-kehadiran" style="display:flex; justify-content:space-around; font-weight:bold; background:#f8fafc; padding:10px; border-radius:10px; font-size:0.85rem; margin-bottom:10px;"></div><div id="list-kehadiran-container"></div></div>
+            <div class="card"><div class="card-header"><div class="card-title">🖼️ Dokumentasi</div><button class="btn btn-primary btn-sm" onclick="openModalRel('modal-dokumentasi')">+ Foto</button></div><div id="list-dokumentasi-container"></div></div>
+            <div class="card"><div class="card-header"><div class="card-title">📝 Daftar Hadir</div><button class="btn btn-primary btn-sm" onclick="openModalRel('modal-kehadiran')">+ Presensi</button></div><div id="summary-kehadiran" style="display:flex; justify-content:space-around; font-weight:800; background:#f1f5f9; padding:12px; border-radius:14px; font-size:0.9rem; margin-bottom:12px; border:1px solid var(--border);"></div><div id="list-kehadiran-container"></div></div>
             <div class="card"><div class="card-header"><div class="card-title">🏃‍♂️ Pelaksanaan</div><button class="btn btn-primary btn-sm" onclick="openModalRel('modal-pelaksanaan')">+ Catat</button></div><div id="list-pelaksanaan-container"></div></div>
             
-            <!-- EVALUASI LENGKAP -->
-            <div class="card" style="background-color: #fafaf9;">
-                <div class="card-header"><div class="card-title">✅ Evaluasi & Kendala</div></div>
+            <div class="card" style="background-color: #fffbeb; border-color: #fde68a;">
+                <div class="card-header"><div class="card-title">✅ Evaluasi Akhir</div></div>
                 <div id="detail-evaluasi-container"></div>
             </div>
         </section>
@@ -221,167 +246,135 @@
         <!-- LAPORAN -->
         <section id="sec-laporan" class="section">
             <div class="flex-between" style="margin-bottom: 16px;">
-                <h2 style="font-size: 1.15rem; font-weight:700;">Laporan & Rekap</h2>
-                <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('EVALUASI', 'Data Laporan / Evaluasi')">🗑️ Reset Laporan</button>
+                <h2 style="font-size: 1.2rem; font-weight:800;">Laporan & Rekap</h2>
+                <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('EVALUASI', 'Data Laporan / Evaluasi')">🗑️ Reset</button>
             </div>
-            <div class="grid-2" style="margin-bottom:14px;">
-                <select id="filter-bulan" class="form-control" onchange="renderLaporanUI()"><option value="all">Semua Bulan</option><option value="01">Jan</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Apr</option><option value="05">Mei</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Agu</option><option value="09">Sep</option><option value="10">Okt</option><option value="11">Nov</option><option value="12">Des</option></select>
-                <select id="filter-tahun" class="form-control" onchange="renderLaporanUI()"><option value="all">Semua Tahun</option></select>
+            <div class="grid-2" style="margin-bottom:16px;">
+                <select id="filter-bulan" class="form-control" onchange="renderLaporanUI()"><option value="all">Bulan</option><option value="01">Jan</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Apr</option><option value="05">Mei</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Agu</option><option value="09">Sep</option><option value="10">Okt</option><option value="11">Nov</option><option value="12">Des</option></select>
+                <select id="filter-tahun" class="form-control" onchange="renderLaporanUI()"><option value="all">Tahun</option></select>
             </div>
-            <div style="background:#f8fafc; padding:12px; border-radius:12px; font-size:0.85rem; margin-bottom:12px; border:1px solid var(--border);">
-                <div class="flex-between"><span>Total RAB:</span><strong id="lap-tot-rab" style="color:var(--primary)">Rp 0</strong></div>
-                <div class="flex-between"><span>Total Realisasi:</span><strong id="lap-tot-real" style="color:var(--danger)">Rp 0</strong></div>
+            <div style="background:white; padding:16px; border-radius:16px; font-size:0.9rem; margin-bottom:16px; border:1px solid var(--border); box-shadow:0 6px 15px rgba(0,0,0,0.04);">
+                <div class="flex-between" style="margin-bottom:8px;"><span>Total RAB:</span><strong id="lap-tot-rab" style="color:var(--primary); font-size:1.1rem;">Rp 0</strong></div>
+                <div class="flex-between"><span>Total Realisasi:</span><strong id="lap-tot-real" style="color:var(--danger); font-size:1.1rem;">Rp 0</strong></div>
             </div>
-            <div class="card"><h3 style="font-size: 0.95rem; margin-bottom: 10px;">Rincian Evaluasi & Kendala</h3><div id="list-laporan-container"></div></div>
+            <div class="card"><h3 style="font-size: 1rem; margin-bottom: 12px; font-weight:800;">Rincian Evaluasi & Kendala</h3><div id="list-laporan-container"></div></div>
         </section>
 
         <!-- PENGATURAN -->
         <section id="sec-pengaturan" class="section">
             <div class="flex-between" style="margin-bottom: 16px;"><button class="btn btn-outline btn-sm" onclick="navTo('sec-dashboard')">← Kembali</button></div>
-            <h2 style="font-size: 1.15rem; font-weight:700; margin-bottom: 16px;">Pengaturan & Database</h2>
+            <h2 style="font-size: 1.2rem; font-weight:800; margin-bottom: 16px;">Pengaturan & Database</h2>
             <div class="card">
                 <form onsubmit="savePengaturan(event)">
                     <div class="form-group"><label class="form-label">Nama Lingkungan (RT/RW)</label><input type="text" id="set_nama_rt" class="form-control" required></div>
                     <div class="form-group"><label class="form-label">Desa / Kelurahan</label><input type="text" id="set_desa" class="form-control" required></div>
                     <div class="form-group">
-                        <label class="form-label">URL Database (Google Apps Script / Web App URL)</label>
+                        <label class="form-label">URL Database Google Apps Script</label>
                         <input type="text" id="set_gas_url" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
                     </div>
-                    <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                    <button type="submit" class="btn btn-primary" onclick="vibrate()">💾 Simpan Pengaturan</button>
                 </form>
             </div>
-            <div class="card text-center"><button class="btn btn-outline" onclick="syncDataFromCloud(true)">🔄 Force Sync ke Server</button></div>
+            <div class="card text-center"><button class="btn btn-outline" onclick="vibrate(); syncDataFromCloud(true)">🔄 Force Sync ke Server</button></div>
         </section>
-        
-        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.6.5</span><br><strong>Powered by Ari GPM</strong></div>
     </div>
+    
+    <!-- HEADER BAWAH (FOOTER MODERN) -->
+    <footer class="footer-modern">
+        <div style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; margin-bottom: 4px;" id="foot-version">v2.6.6</div>
+        <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 500;">Powered by Ari GPM</div>
+    </footer>
 
     <!-- ============================================== -->
     <!-- MODALS -->
     <!-- ============================================== -->
-    <div id="modal-warga" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Data Warga</h3><button class="modal-close" onclick="closeModal('modal-warga')">&times;</button></div><form onsubmit="submitForm(event, 'WARGA', 'modal-warga')"><input type="hidden" name="id"><div class="form-group"><label class="form-label">Nama Lengkap</label><input type="text" name="nama" class="form-control" required></div><div class="grid-2"><div class="form-group"><label class="form-label">No Rumah/Blok</label><input type="text" name="no_rumah" class="form-control" required></div><div class="form-group"><label class="form-label">Nomor WA</label><input type="tel" name="no_wa" class="form-control"></div></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
-
-    <div id="modal-pilih-template" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Pilih Jenis Surat</h3><button class="modal-close" onclick="closeModal('modal-pilih-template')">&times;</button></div><div style="display:flex; flex-direction:column; gap:10px;"><button class="btn btn-outline" style="justify-content:flex-start;" onclick="bukaEditorSurat('Pengantar RT')">📄 Surat Pengantar RT</button><button class="btn btn-outline" style="justify-content:flex-start;" onclick="bukaEditorSurat('Keterangan Domisili')">📄 Surat Keterangan Domisili</button><button class="btn btn-outline" style="justify-content:flex-start;" onclick="bukaEditorSurat('Pemberitahuan Kegiatan')">📢 Surat Pemberitahuan Kegiatan</button><button class="btn btn-primary" style="justify-content:flex-start;" onclick="bukaEditorSurat('Custom')">✨ Surat Custom (Buat Sendiri)</button></div></div></div>
-
-    <div id="modal-form-surat" class="modal-overlay"><div class="modal-content modal-fullscreen"><div class="modal-header"><h3>Editor Surat Resmi</h3><button class="modal-close" onclick="closeModal('modal-form-surat')">&times;</button></div><form onsubmit="simpanSurat(event)" style="display:flex; flex-direction:column; height:100%;"><input type="hidden" name="id" id="surat_id"><input type="hidden" name="jenis_surat" id="surat_jenis"><input type="hidden" name="isi_surat" id="surat_isi_hidden"><div style="flex-grow:1; overflow-y:auto; padding-bottom:20px;"><div class="grid-2"><div class="form-group"><label class="form-label">Nomor Surat</label><div style="display:flex; gap:5px;"><input type="text" name="no_surat" id="surat_no" class="form-control" required><button type="button" class="btn btn-outline btn-sm" onclick="generateNoSurat()">🔄</button></div></div><div class="form-group"><label class="form-label">Tanggal Surat</label><input type="date" name="tgl_surat" id="surat_tgl" class="form-control" required></div></div><div class="form-group"><label class="form-label">Relasi Kegiatan</label><select name="id_kegiatan" id="surat_id_kegiatan" class="form-control" onchange="injectKegiatanKeSurat(this.value)"></select></div><div class="form-group"><label class="form-label">Perihal</label><input type="text" name="perihal" id="surat_perihal" class="form-control" required></div><div class="form-group"><label class="form-label">Tujuan / Penerima</label><textarea name="penerima" id="surat_penerima" class="form-control" style="min-height:60px;"></textarea></div><div class="form-group"><label class="form-label">Isi Surat</label><div class="editor-toolbar"><button type="button" class="editor-btn" onclick="document.execCommand('bold',false,null)"><b>B</b></button><button type="button" class="editor-btn" onclick="document.execCommand('italic',false,null)"><i>I</i></button><button type="button" class="editor-btn" onclick="document.execCommand('underline',false,null)"><u>U</u></button><button type="button" class="editor-btn" onclick="document.execCommand('justifyLeft',false,null)">Kiri</button><button type="button" class="editor-btn" onclick="document.execCommand('justifyCenter',false,null)">Tengah</button></div><div id="surat_isi_editor" class="editor-content" contenteditable="true"></div></div><div class="form-group"><label class="form-label">Penandatangan</label><textarea name="penandatangan" id="surat_ttd" class="form-control" style="min-height:80px;"></textarea></div></div><div style="padding-top:15px; border-top:1px solid var(--border); display:flex; gap:10px;"><button type="button" class="btn btn-outline" onclick="previewSurat()">👁️ Preview A4</button><button type="submit" class="btn btn-primary">💾 Simpan</button></div></form></div></div>
-
-    <div id="modal-kop-surat" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Pengaturan Kop Surat</h3><button class="modal-close" onclick="closeModal('modal-kop-surat')">&times;</button></div><form onsubmit="simpanKopSurat(event)"><div class="form-group"><label class="form-label">Baris 1</label><input type="text" id="kop_1" class="form-control"></div><div class="form-group"><label class="form-label">Baris 2</label><input type="text" id="kop_2" class="form-control"></div><div class="form-group"><label class="form-label">Baris 3</label><input type="text" id="kop_3" class="form-control"></div><div class="form-group"><label class="form-label">Alamat / Kontak</label><input type="text" id="kop_4" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
-
-    <div id="modal-notulen" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Form Notulen</h3><button class="modal-close" onclick="closeModal('modal-notulen')">&times;</button></div><form onsubmit="submitForm(event, 'NOTULEN', 'modal-notulen')"><input type="hidden" name="id"><div class="form-group"><label class="form-label">Nomor</label><input type="text" name="no_notulen" class="form-control" required></div><div class="grid-2"><div class="form-group"><label class="form-label">Tanggal</label><input type="date" name="tgl_rapat" class="form-control" required></div><div class="form-group"><label class="form-label">Waktu</label><input type="time" name="waktu" class="form-control" required></div></div><div class="form-group"><label class="form-label">Tempat</label><select name="tempat" id="sel_tempat_notulen" class="form-control" onchange="document.getElementById('input_tempat_manual').value = this.value"></select><input type="text" name="tempat_manual" id="input_tempat_manual" class="form-control" style="margin-top:8px;"></div><div class="form-group"><label class="form-label">Agenda</label><input type="text" name="agenda" class="form-control" required></div><div class="form-group"><label class="form-label">Pimpinan</label><input type="text" name="pimpinan" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
-    
-    <div id="modal-keputusan" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Item Keputusan</h3><button class="modal-close" onclick="closeModal('modal-keputusan')">&times;</button></div><form onsubmit="submitForm(event, 'KEPUTUSAN', 'modal-keputusan')"><input type="hidden" name="id"><input type="hidden" name="id_notulen" class="rel_id_notulen"><div class="form-group"><label class="form-label">Isi Keputusan</label><textarea name="isi_keputusan" class="form-control" required></textarea></div><div class="form-group"><label class="form-label">Penanggung Jawab</label><input type="text" name="penanggung_jawab" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
-
-    <!-- MODAL UNIVERSAL EDITOR PESAN WA -->
-    <div id="modal-wa-editor" class="modal-overlay">
+    <!-- MODAL INFO KEGIATAN TERDEKAT -->
+    <div id="modal-agenda" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header"><h3 id="wa-editor-title">Editor Pesan WhatsApp</h3><button class="modal-close" onclick="closeModal('modal-wa-editor')">&times;</button></div>
-            <div class="form-group">
-                <label class="form-label">Format Pesan WhatsApp (Dapat Diedit Bebas)</label>
-                <textarea id="wa_editor_text" class="form-control" style="min-height: 240px; font-size: 0.85rem;"></textarea>
+            <div class="modal-header">
+                <h3 style="font-weight: 800; color: var(--primary);">📅 Kegiatan Terdekat</h3>
+                <button class="modal-close" onclick="closeModal('modal-agenda')">&times;</button>
             </div>
-            <button type="button" class="btn btn-success" onclick="kirimWaEditorFinal()">📤 Kirim ke WhatsApp</button>
+            <div id="list-agenda-terdekat-modal"></div>
         </div>
     </div>
 
-    <!-- FORM KEGIATAN LENGKAP -->
+    <!-- Modals lainnya disederhanakan style HTML nya tanpa mengubah ID/Name -->
+    <div id="modal-warga" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Data Warga</h3><button class="modal-close" onclick="closeModal('modal-warga')">&times;</button></div><form onsubmit="submitForm(event, 'WARGA', 'modal-warga')"><input type="hidden" name="id"><div class="form-group"><label class="form-label">Nama Lengkap</label><input type="text" name="nama" class="form-control" required></div><div class="grid-2"><div class="form-group"><label class="form-label">No Rumah/Blok</label><input type="text" name="no_rumah" class="form-control" required></div><div class="form-group"><label class="form-label">Nomor WA</label><input type="tel" name="no_wa" class="form-control"></div></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
+
+    <div id="modal-pilih-template" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Pilih Jenis Surat</h3><button class="modal-close" onclick="closeModal('modal-pilih-template')">&times;</button></div><div style="display:flex; flex-direction:column; gap:10px;"><button class="btn btn-outline" style="justify-content:flex-start;" onclick="vibrate(); bukaEditorSurat('Pengantar RT')">📄 Surat Pengantar RT</button><button class="btn btn-outline" style="justify-content:flex-start;" onclick="vibrate(); bukaEditorSurat('Keterangan Domisili')">📄 Surat Keterangan Domisili</button><button class="btn btn-outline" style="justify-content:flex-start;" onclick="vibrate(); bukaEditorSurat('Pemberitahuan Kegiatan')">📢 Pemberitahuan Kegiatan</button><button class="btn btn-primary" style="justify-content:flex-start;" onclick="vibrate(); bukaEditorSurat('Custom')">✨ Surat Custom Bebas</button></div></div></div>
+
+    <div id="modal-form-surat" class="modal-overlay"><div class="modal-content modal-fullscreen"><div class="modal-header"><h3>Editor Surat Resmi</h3><button class="modal-close" onclick="closeModal('modal-form-surat')">&times;</button></div><form onsubmit="simpanSurat(event)" style="display:flex; flex-direction:column; height:100%;"><input type="hidden" name="id" id="surat_id"><input type="hidden" name="jenis_surat" id="surat_jenis"><input type="hidden" name="isi_surat" id="surat_isi_hidden"><div style="flex-grow:1; overflow-y:auto; padding-bottom:20px;"><div class="grid-2"><div class="form-group"><label class="form-label">Nomor Surat</label><div style="display:flex; gap:8px;"><input type="text" name="no_surat" id="surat_no" class="form-control" required><button type="button" class="btn btn-outline btn-sm" onclick="vibrate(); generateNoSurat()">🔄</button></div></div><div class="form-group"><label class="form-label">Tanggal</label><input type="date" name="tgl_surat" id="surat_tgl" class="form-control" required></div></div><div class="form-group"><label class="form-label">Relasi Kegiatan</label><select name="id_kegiatan" id="surat_id_kegiatan" class="form-control" onchange="injectKegiatanKeSurat(this.value)"></select></div><div class="form-group"><label class="form-label">Perihal</label><input type="text" name="perihal" id="surat_perihal" class="form-control" required></div><div class="form-group"><label class="form-label">Penerima</label><textarea name="penerima" id="surat_penerima" class="form-control" style="min-height:60px;"></textarea></div><div class="form-group"><label class="form-label">Isi Surat</label><div class="editor-toolbar" style="border: 1.5px solid var(--border); border-bottom:none; border-radius: 14px 14px 0 0;"><button type="button" class="editor-btn" onclick="document.execCommand('bold',false,null)"><b>B</b></button><button type="button" class="editor-btn" onclick="document.execCommand('italic',false,null)"><i>I</i></button><button type="button" class="editor-btn" onclick="document.execCommand('underline',false,null)"><u>U</u></button><button type="button" class="editor-btn" onclick="document.execCommand('justifyLeft',false,null)">Kiri</button><button type="button" class="editor-btn" onclick="document.execCommand('justifyCenter',false,null)">Tengah</button></div><div id="surat_isi_editor" style="border: 1.5px solid var(--border); border-top:none; border-radius: 0 0 14px 14px; min-height:200px; padding:14px; outline:none; background:white; white-space:pre-wrap; font-size:0.95rem; overflow-y:auto;" contenteditable="true"></div></div><div class="form-group"><label class="form-label">Penandatangan</label><textarea name="penandatangan" id="surat_ttd" class="form-control"></textarea></div></div><div style="padding-top:16px; border-top:1.5px solid var(--border); display:flex; gap:12px;"><button type="button" class="btn btn-outline" onclick="vibrate(); previewSurat()">👁️ Preview</button><button type="submit" class="btn btn-primary" onclick="vibrate()">💾 Simpan</button></div></form></div></div>
+
+    <div id="modal-kop-surat" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Kop Surat</h3><button class="modal-close" onclick="closeModal('modal-kop-surat')">&times;</button></div><form onsubmit="simpanKopSurat(event)"><div class="form-group"><label class="form-label">Baris 1</label><input type="text" id="kop_1" class="form-control"></div><div class="form-group"><label class="form-label">Baris 2</label><input type="text" id="kop_2" class="form-control"></div><div class="form-group"><label class="form-label">Baris 3</label><input type="text" id="kop_3" class="form-control"></div><div class="form-group"><label class="form-label">Alamat / Kontak</label><input type="text" id="kop_4" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
+
+    <div id="modal-notulen" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Notulen</h3><button class="modal-close" onclick="closeModal('modal-notulen')">&times;</button></div><form onsubmit="submitForm(event, 'NOTULEN', 'modal-notulen')"><input type="hidden" name="id"><div class="form-group"><label class="form-label">Nomor</label><input type="text" name="no_notulen" class="form-control" required></div><div class="grid-2"><div class="form-group"><label class="form-label">Tanggal</label><input type="date" name="tgl_rapat" class="form-control" required></div><div class="form-group"><label class="form-label">Waktu</label><input type="time" name="waktu" class="form-control" required></div></div><div class="form-group"><label class="form-label">Tempat</label><select name="tempat" id="sel_tempat_notulen" class="form-control" onchange="document.getElementById('input_tempat_manual').value = this.value"></select><input type="text" name="tempat_manual" id="input_tempat_manual" class="form-control" style="margin-top:8px;"></div><div class="form-group"><label class="form-label">Agenda</label><input type="text" name="agenda" class="form-control" required></div><div class="form-group"><label class="form-label">Pimpinan</label><input type="text" name="pimpinan" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
+    
+    <div id="modal-keputusan" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Keputusan</h3><button class="modal-close" onclick="closeModal('modal-keputusan')">&times;</button></div><form onsubmit="submitForm(event, 'KEPUTUSAN', 'modal-keputusan')"><input type="hidden" name="id"><input type="hidden" name="id_notulen" class="rel_id_notulen"><div class="form-group"><label class="form-label">Isi Keputusan</label><textarea name="isi_keputusan" class="form-control" required></textarea></div><div class="form-group"><label class="form-label">Penanggung Jawab</label><input type="text" name="penanggung_jawab" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
+
+    <div id="modal-wa-editor" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="wa-editor-title">Editor WA</h3><button class="modal-close" onclick="closeModal('modal-wa-editor')">&times;</button></div>
+            <div class="form-group"><label class="form-label">Format Pesan (Bisa Diedit)</label><textarea id="wa_editor_text" class="form-control" style="min-height: 240px;"></textarea></div>
+            <button type="button" class="btn btn-success" onclick="vibrate(); kirimWaEditorFinal()">📤 Buka WhatsApp</button>
+        </div>
+    </div>
+
     <div id="modal-kegiatan" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header"><h3>Form Kegiatan</h3><button class="modal-close" onclick="closeModal('modal-kegiatan')">&times;</button></div>
+            <div class="modal-header"><h3>Data Kegiatan</h3><button class="modal-close" onclick="closeModal('modal-kegiatan')">&times;</button></div>
             <form onsubmit="submitForm(event, 'KEGIATAN', 'modal-kegiatan')">
                 <input type="hidden" name="id">
                 <div class="form-group"><label class="form-label">Nama Kegiatan</label><input type="text" name="nama_kegiatan" id="keg_nama" class="form-control" required></div>
                 <div class="form-group"><label class="form-label">Dasar Keputusan</label><input type="text" name="dasar_keputusan" id="keg_dasar" class="form-control" readonly></div>
-                <div class="grid-2">
-                    <div class="form-group"><label class="form-label">Jenis</label><select name="jenis_kegiatan" class="form-control"><option value="Kerja Bakti">Kerja Bakti</option><option value="Rapat RT">Rapat RT</option><option value="Lainnya">Lainnya</option></select></div>
-                    <div class="form-group"><label class="form-label">Status</label><select name="status" class="form-control"><option value="Rencana">Rencana</option><option value="Berjalan">Berjalan</option></select></div>
-                </div>
-                <div class="grid-2">
-                    <div class="form-group"><label class="form-label">Tanggal</label><input type="date" name="tgl" id="keg_tgl" class="form-control" required></div>
-                    <div class="form-group"><label class="form-label">Waktu</label><input type="time" name="waktu" class="form-control"></div>
-                </div>
+                <div class="grid-2"><div class="form-group"><label class="form-label">Jenis</label><select name="jenis_kegiatan" class="form-control"><option value="Kerja Bakti">Kerja Bakti</option><option value="Rapat RT">Rapat RT</option><option value="Lainnya">Lainnya</option></select></div><div class="form-group"><label class="form-label">Status</label><select name="status" class="form-control"><option value="Rencana">Rencana</option><option value="Berjalan">Berjalan</option></select></div></div>
+                <div class="grid-2"><div class="form-group"><label class="form-label">Tanggal</label><input type="date" name="tgl" id="keg_tgl" class="form-control" required></div><div class="form-group"><label class="form-label">Waktu</label><input type="time" name="waktu" class="form-control"></div></div>
                 <div class="form-group"><label class="form-label">Lokasi</label><input type="text" name="lokasi" class="form-control" required></div>
-                <div class="form-group"><label class="form-label">Keterangan / Deskripsi</label><textarea name="keterangan" class="form-control" placeholder="Keterangan lengkap kegiatan..."></textarea></div>
+                <div class="form-group"><label class="form-label">Deskripsi</label><textarea name="keterangan" class="form-control"></textarea></div>
                 <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>
     
-    <div id="modal-petugas" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Tambah Panitia</h3><button class="modal-close" onclick="closeModal('modal-petugas')">&times;</button></div><form onsubmit="submitForm(event, 'PETUGAS', 'modal-petugas')"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Pilih Warga</label><select name="nama" id="sel_petugas_warga" class="form-control" onchange="autoFillWarga(this, 'petugas_rumah', 'petugas_wa')" required></select></div><div class="grid-2"><div class="form-group"><label class="form-label">No Rumah</label><input type="text" name="no_rumah" id="petugas_rumah" class="form-control" readonly></div><div class="form-group"><label class="form-label">No WA</label><input type="text" name="no_wa" id="petugas_wa" class="form-control" readonly></div></div><div class="form-group"><label class="form-label">Tugas</label><input type="text" name="jabatan" class="form-control" required></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
+    <div id="modal-petugas" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Panitia</h3><button class="modal-close" onclick="closeModal('modal-petugas')">&times;</button></div><form onsubmit="submitForm(event, 'PETUGAS', 'modal-petugas')"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Pilih Warga</label><select name="nama" id="sel_petugas_warga" class="form-control" onchange="autoFillWarga(this, 'petugas_rumah', 'petugas_wa')" required></select></div><div class="grid-2"><div class="form-group"><label class="form-label">No Rumah</label><input type="text" name="no_rumah" id="petugas_rumah" class="form-control" readonly></div><div class="form-group"><label class="form-label">No WA</label><input type="text" name="no_wa" id="petugas_wa" class="form-control" readonly></div></div><div class="form-group"><label class="form-label">Tugas</label><input type="text" name="jabatan" class="form-control" required></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
 
-    <!-- MODAL INPUT KALKULATOR RAB -->
     <div id="modal-anggaran" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header"><h3>Input Kalkulator RAB</h3><button class="modal-close" onclick="closeModal('modal-anggaran')">&times;</button></div>
+            <div class="modal-header"><h3>Input RAB / Nota</h3><button class="modal-close" onclick="closeModal('modal-anggaran')">&times;</button></div>
             <form onsubmit="submitForm(event, 'ANGGARAN', 'modal-anggaran')">
-                <input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan">
-                <input type="hidden" name="satuan" value="Pcs">
-                <div class="form-group"><label class="form-label">Nama Kebutuhan / Keperluan</label><input type="text" name="nama_kebutuhan" class="form-control" placeholder="Cth: Konsumsi / Tenda" required></div>
-                <div class="grid-2">
-                    <div class="form-group"><label class="form-label">Qty (Jumlah)</label><input type="number" name="jumlah" id="ang_qty" class="form-control" oninput="calcAnggaran()" required></div>
-                    <div class="form-group"><label class="form-label">Harga Satuan (Rp)</label><input type="number" name="harga_satuan" id="ang_harga" class="form-control" oninput="calcAnggaran()" required></div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" style="color:var(--primary)">Total RAB (Otomatis Qty x Harga)</label>
-                    <input type="number" name="total" id="ang_total" class="form-control" readonly required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" style="color:var(--danger)">Realisasi Pengeluaran Aktual (Rp)</label>
-                    <input type="number" name="realisasi" class="form-control" placeholder="Kosongkan jika belum terealisasi">
-                </div>
+                <input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><input type="hidden" name="satuan" value="Pcs">
+                <div class="form-group"><label class="form-label">Kebutuhan / Keperluan</label><input type="text" name="nama_kebutuhan" class="form-control" required></div>
+                <div class="grid-2"><div class="form-group"><label class="form-label">Qty (Jumlah)</label><input type="number" name="jumlah" id="ang_qty" class="form-control" oninput="calcAnggaran()" required></div><div class="form-group"><label class="form-label">Harga (Rp)</label><input type="number" name="harga_satuan" id="ang_harga" class="form-control" oninput="calcAnggaran()" required></div></div>
+                <div class="form-group"><label class="form-label" style="color:var(--primary)">Total RAB</label><input type="number" name="total" id="ang_total" class="form-control" readonly required></div>
+                <div class="form-group"><label class="form-label" style="color:var(--danger)">Realisasi Pengeluaran (Rp)</label><input type="number" name="realisasi" class="form-control"></div>
                 <button type="submit" class="btn btn-success">Simpan RAB</button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL DOKUMENTASI -->
-    <div id="modal-dokumentasi" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header"><h3>Tambah Dokumentasi Foto</h3><button class="modal-close" onclick="closeModal('modal-dokumentasi')">&times;</button></div>
-            <form onsubmit="submitForm(event, 'DOKUMENTASI', 'modal-dokumentasi')">
-                <input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan">
-                <div class="form-group"><label class="form-label">Keterangan / Judul Foto</label><input type="text" name="keterangan" class="form-control" placeholder="Cth: Suasana kerja bakti" required></div>
-                <div class="form-group"><label class="form-label">Link / URL Foto (Google Drive/Imgur/dll)</label><input type="url" name="url_foto" class="form-control" placeholder="https://..." required></div>
-                <button type="submit" class="btn btn-primary">Simpan Dokumentasi</button>
-            </form>
-        </div>
-    </div>
+    <div id="modal-dokumentasi" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Dokumentasi</h3><button class="modal-close" onclick="closeModal('modal-dokumentasi')">&times;</button></div><form onsubmit="submitForm(event, 'DOKUMENTASI', 'modal-dokumentasi')"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Keterangan Foto</label><input type="text" name="keterangan" class="form-control" required></div><div class="form-group"><label class="form-label">Link Foto (G-Drive dll)</label><input type="url" name="url_foto" class="form-control" required></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
+    <div id="modal-kehadiran" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Presensi</h3><button class="modal-close" onclick="closeModal('modal-kehadiran')">&times;</button></div><form onsubmit="submitForm(event, 'KEHADIRAN', 'modal-kehadiran')"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Pilih Warga</label><select name="nama" id="sel_hadir_warga" class="form-control" onchange="autoFillWarga(this, 'hadir_rumah', null)" required></select></div><div class="grid-2"><div class="form-group"><label class="form-label">No Rumah</label><input type="text" name="no_rumah" id="hadir_rumah" class="form-control" readonly></div><div class="form-group"><label class="form-label">Status</label><select name="status_hadir" class="form-control" required><option value="Hadir">Hadir</option><option value="Izin">Izin</option><option value="Tidak Hadir">Alpa</option></select></div></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
+    <div id="modal-pelaksanaan" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Catatan Hari-H</h3><button class="modal-close" onclick="closeModal('modal-pelaksanaan')">&times;</button></div><form onsubmit="submitForm(event, 'PELAKSANAAN', 'modal-pelaksanaan')"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Tanggal Pelaksanaan</label><input type="date" name="tgl_pelaksanaan" class="form-control" required></div><div class="form-group"><label class="form-label">Kegiatan Terlaksana</label><textarea name="keg_dilaksanakan" class="form-control" required></textarea></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
 
-    <div id="modal-kehadiran" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Form Presensi</h3><button class="modal-close" onclick="closeModal('modal-kehadiran')">&times;</button></div><form onsubmit="submitForm(event, 'KEHADIRAN', 'modal-kehadiran')"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Pilih Warga</label><select name="nama" id="sel_hadir_warga" class="form-control" onchange="autoFillWarga(this, 'hadir_rumah', null)" required></select></div><div class="grid-2"><div class="form-group"><label class="form-label">No Rumah</label><input type="text" name="no_rumah" id="hadir_rumah" class="form-control" readonly></div><div class="form-group"><label class="form-label">Status</label><select name="status_hadir" class="form-control" required><option value="Hadir">Hadir</option><option value="Izin">Izin</option><option value="Tidak Hadir">Alpa</option></select></div></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
-
-    <div id="modal-pelaksanaan" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Catatan Hari-H</h3><button class="modal-close" onclick="closeModal('modal-pelaksanaan')">&times;</button></div><form onsubmit="submitForm(event, 'PELAKSANAAN', 'modal-pelaksanaan')"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Tanggal Pelaksanaan</label><input type="date" name="tgl_pelaksanaan" class="form-control" required></div><div class="form-group"><label class="form-label">Kegiatan yang Terlaksana</label><textarea name="keg_dilaksanakan" class="form-control" required></textarea></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
-
-    <!-- MODAL EVALUASI LENGKAP -->
-    <div id="modal-evaluasi" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header"><h3>Tutup & Evaluasi Kegiatan</h3><button class="modal-close" onclick="closeModal('modal-evaluasi')">&times;</button></div>
-            <form onsubmit="submitEvaluasi(event)">
-                <input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan">
-                <div class="form-group"><label class="form-label">Kendala di Lapangan</label><textarea name="kendala" class="form-control" placeholder="Tuliskan kendala atau hambatan..."></textarea></div>
-                <div class="form-group"><label class="form-label">Solusi / Tindak Lanjut</label><textarea name="solusi" class="form-control" placeholder="Tuliskan solusi yang diambil..."></textarea></div>
-                <div class="form-group"><label class="form-label">Hasil Akhir / Kesimpulan</label><textarea name="hasil" class="form-control" placeholder="Kesimpulan akhir kegiatan..." required></textarea></div>
-                <button type="submit" class="btn btn-warning" style="width:100%;">Selesaikan & Tutup Kegiatan</button>
-            </form>
-        </div>
-    </div>
+    <div id="modal-evaluasi" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Evaluasi Kegiatan</h3><button class="modal-close" onclick="closeModal('modal-evaluasi')">&times;</button></div><form onsubmit="submitEvaluasi(event)"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Kendala</label><textarea name="kendala" class="form-control"></textarea></div><div class="form-group"><label class="form-label">Solusi</label><textarea name="solusi" class="form-control"></textarea></div><div class="form-group"><label class="form-label">Kesimpulan</label><textarea name="hasil" class="form-control" required></textarea></div><button type="submit" class="btn btn-warning">Tutup Kegiatan</button></form></div></div>
 
     <!-- Print / Preview Area Modal -->
-    <div id="print-area">
-        <div class="kop-surat-print"><h1 class="kop-title" id="p_kop1"></h1><h2 class="kop-subtitle" id="p_kop2"></h2><h2 class="kop-subtitle" id="p_kop3" style="font-size:12pt; font-weight:normal;"></h2><p class="kop-address" id="p_kop4"></p></div>
-        <div class="surat-body"><div style="display:flex; justify-content:space-between; margin-bottom:20px;"><div><div>Nomor : <span id="p_no"></span></div><div>Perihal : <span id="p_perihal"></span></div></div><div><span id="p_tgl"></span></div></div><div style="margin-bottom:20px;">Kepada Yth.<br><div id="p_penerima" style="white-space:pre-wrap;"></div></div><div id="p_isi" style="text-align:justify; margin-bottom:30px; min-height:200px;"></div><div style="display:flex; justify-content:flex-end;"><div style="text-align:center; white-space:pre-wrap; min-width:200px;" id="p_ttd"></div></div></div>
-        <div id="preview-actions" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); padding:10px 20px; border-radius:30px; display:flex; gap:15px; box-shadow:0 10px 25px rgba(0,0,0,0.3); z-index:999999;"><button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Cetak / PDF</button><button class="btn btn-outline btn-sm" style="color:white; border-color:white;" onclick="tutupPreview()">❌ Tutup</button></div>
+    <div id="print-area" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:99999; overflow-y:auto; padding:24px;">
+        <div style="text-align:center; border-bottom:3px solid black; margin-bottom:20px; padding-bottom:10px;"><h1 id="p_kop1" style="font-size:16pt; margin:0;"></h1><h2 id="p_kop2" style="font-size:14pt; margin:0;"></h2><h2 id="p_kop3" style="font-size:12pt; font-weight:normal; margin:0;"></h2><p id="p_kop4" style="font-size:11pt; margin:0;"></p></div>
+        <div style="font-size:12pt; line-height:1.5; font-family:'Times New Roman', serif;"><div style="display:flex; justify-content:space-between; margin-bottom:20px;"><div><div>Nomor : <span id="p_no"></span></div><div>Perihal : <span id="p_perihal"></span></div></div><div><span id="p_tgl"></span></div></div><div style="margin-bottom:20px;">Kepada Yth.<br><div id="p_penerima" style="white-space:pre-wrap;"></div></div><div id="p_isi" style="text-align:justify; margin-bottom:30px; min-height:200px;"></div><div style="display:flex; justify-content:flex-end;"><div style="text-align:center; white-space:pre-wrap; min-width:200px;" id="p_ttd"></div></div></div>
+        <div id="preview-actions" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); padding:10px 20px; border-radius:30px; display:flex; gap:15px; box-shadow:0 10px 25px rgba(0,0,0,0.3); z-index:999999;"><button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Cetak PDF</button><button class="btn btn-outline btn-sm" style="color:white; border-color:white;" onclick="document.getElementById('print-area').style.display='none'">❌ Tutup</button></div>
     </div>
 
-    <!-- Loader & Toast -->
-    <div id="loader"><div class="spinner"></div><p style="margin-top:12px; font-weight:600; font-size:0.85rem;">Memproses...</p></div>
-    <div id="toast" class="toast">Notifikasi</div>
+    <!-- Loader & Toast Native Feel -->
+    <div id="loader"><div class="spinner"></div><p style="margin-top:16px; font-weight:800; font-size:0.95rem; color:var(--text-main);">Memproses...</p></div>
+    <div id="toast" class="toast"><span>🔔</span> <span id="toast-msg">Notifikasi</span></div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const APP_VERSION = "v2.6.5";
+        const APP_VERSION = "v2.6.6";
         const APP_AUTHOR = "Ari GPM";
         
         let GAS_URL = localStorage.getItem('rt_gas_url') || "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
-        
         let APP_DATA = { WARGA: [], NOTULEN: [], KEPUTUSAN: [], KEGIATAN: [], PETUGAS: [], ANGGARAN: [], KEHADIRAN: [], PELAKSANAAN: [], DOKUMENTASI: [], EVALUASI: [], SURAT: [], PENGATURAN: [] };
         let SYNC_QUEUE = JSON.parse(localStorage.getItem('rt_sync_queue')) || [];
         let currentKegiatanId = localStorage.getItem('rt_current_kegiatan') || null; 
@@ -389,17 +382,25 @@
 
         document.getElementById('foot-version').innerText = APP_VERSION;
 
+        // Native feel vibrate
+        function vibrate(duration = 50) {
+            if (navigator.vibrate) navigator.vibrate(duration);
+        }
+
         window.onload = () => {
             loadLocalData(); initDynamicYears(); 
-            
             let savedSec = localStorage.getItem('rt_active_section');
-            if(savedSec && document.getElementById(savedSec)) {
-                navTo(savedSec, false);
-            } else {
-                navTo('sec-dashboard', false);
-            }
-
+            if(savedSec && document.getElementById(savedSec)) { navTo(savedSec, false); } else { navTo('sec-dashboard', false); }
             refreshAllUI(); loadKopSuratConfig(); loadPengaturanInput();
+            
+            // Close search results if clicked outside
+            document.addEventListener('click', (e) => {
+                let sRes = document.getElementById('search-results');
+                if(sRes && sRes.style.display === 'block' && !e.target.closest('.search-container')) {
+                    sRes.style.display = 'none';
+                }
+            });
+
             if (GAS_URL !== "") { syncDataFromCloud(); processQueue(); } else { showToast("Mode Lokal / Demo Aktif"); initDemoData(); }
             window.addEventListener('online', () => { document.getElementById('syncStatus').innerHTML = '🟢'; processQueue(); });
             window.addEventListener('offline', () => { document.getElementById('syncStatus').innerHTML = '🔴'; });
@@ -407,7 +408,7 @@
 
         function initDynamicYears() {
             let yearSelect = document.getElementById('filter-tahun'); if(!yearSelect) return;
-            let currentYear = new Date().getFullYear(); let options = '<option value="all">Semua Tahun</option>';
+            let currentYear = new Date().getFullYear(); let options = '<option value="all">Tahun</option>';
             for(let y = currentYear - 2; y <= currentYear + 5; y++) options += `<option value="${y}">${y}</option>`;
             yearSelect.innerHTML = options;
         }
@@ -420,23 +421,16 @@
             try {
                 let d = new Date(dateStr);
                 if(!isNaN(d.getTime())) {
-                    let day = String(d.getDate()).padStart(2, '0');
-                    let month = String(d.getMonth() + 1).padStart(2, '0');
-                    let year = d.getFullYear();
+                    let day = String(d.getDate()).padStart(2, '0'); let month = String(d.getMonth() + 1).padStart(2, '0'); let year = d.getFullYear();
                     return `${day}-${month}-${year}`;
                 }
             } catch(e) {}
-            if(dateStr.includes('T')) {
-                return dateStr.split('T')[0].split('-').reverse().join('-');
-            }
+            if(dateStr.includes('T')) return dateStr.split('T')[0].split('-').reverse().join('-');
             return dateStr;
         }
 
         async function syncDataFromCloud(force = false) {
-            if (GAS_URL === "") {
-                if(force) showToast("URL Google Apps Script belum diisi!");
-                return;
-            }
+            if (GAS_URL === "") { if(force) showToast("URL Database belum diisi!"); return; }
             if(!navigator.onLine) { if(force) showToast("Anda sedang offline"); return; }
             if(force) showLoader();
             try {
@@ -447,122 +441,42 @@
         }
 
         function saveRecord(tableName, dataObj) {
+            vibrate(30);
             let existingIndex = APP_DATA[tableName].findIndex(x => x.id === dataObj.id);
             if(existingIndex > -1) APP_DATA[tableName][existingIndex] = dataObj; else { if(!dataObj.id || dataObj.id === "") dataObj.id = "temp_" + Date.now(); APP_DATA[tableName].push(dataObj); }
             saveLocalData(); refreshAllUI();
             let payload = { action: 'save', table: tableName, data: dataObj };
-            if (navigator.onLine && GAS_URL !== "") sendToCloud(payload); else { SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE)); showToast("Disimpan lokal."); }
+            if (navigator.onLine && GAS_URL !== "") sendToCloud(payload); else { SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE)); showToast("Disimpan (Lokal)"); }
         }
 
         function deleteRecord(tableName, id) {
-            if(!confirm("Yakin ingin menghapus data ini?")) return;
+            vibrate([50, 50]); // Warning vibe
+            if(!window.confirm("Yakin ingin menghapus data ini?")) return;
             APP_DATA[tableName] = APP_DATA[tableName].filter(x => x.id !== id);
-            saveLocalData(); refreshAllUI(); showToast("Data berhasil dihapus");
+            saveLocalData(); refreshAllUI(); showToast("Data dihapus");
             let payload = { action: 'delete', table: tableName, id: id };
             if(navigator.onLine && GAS_URL !== "") sendToCloud(payload);
         }
 
         function resetTableData(tableName, titleName) {
-            if(!confirm(`⚠️ Apakah Anda yakin ingin mereset/menghapus seluruh data ${titleName}? Tindakan ini tidak dapat dibatalkan.`)) return;
-            APP_DATA[tableName] = [];
-            saveLocalData();
-            refreshAllUI();
-            showToast(`Data ${titleName} berhasil direset.`);
+            vibrate([100, 100]);
+            if(!window.confirm(`⚠️ PERINGATAN BROWSER: Apakah Anda yakin mereset seluruh data ${titleName}? Tindakan ini permanen.`)) return;
+            APP_DATA[tableName] = []; saveLocalData(); refreshAllUI(); showToast(`${titleName} direset`);
         }
 
         function editRecord(tableName, id) {
-            let item = APP_DATA[tableName].find(x => x.id === id);
-            if(!item) return;
-            if(tableName === 'WARGA') {
-                let m = document.getElementById('modal-warga');
-                m.querySelector('[name="id"]').value = item.id;
-                m.querySelector('[name="nama"]').value = item.nama || '';
-                m.querySelector('[name="no_rumah"]').value = item.no_rumah || '';
-                m.querySelector('[name="no_wa"]').value = item.no_wa || '';
-                m.classList.add('active');
-            } else if(tableName === 'KEGIATAN') {
-                let m = document.getElementById('modal-kegiatan');
-                m.querySelector('[name="id"]').value = item.id;
-                m.querySelector('[name="nama_kegiatan"]').value = item.nama_kegiatan || '';
-                m.querySelector('[name="dasar_keputusan"]').value = item.dasar_keputusan || '';
-                m.querySelector('[name="jenis_kegiatan"]').value = item.jenis_kegiatan || 'Kerja Bakti';
-                m.querySelector('[name="status"]').value = item.status || 'Rencana';
-                m.querySelector('[name="tgl"]').value = item.tgl || '';
-                m.querySelector('[name="waktu"]').value = item.waktu || '';
-                m.querySelector('[name="lokasi"]').value = item.lokasi || '';
-                m.querySelector('[name="keterangan"]').value = item.keterangan || '';
-                m.classList.add('active');
-            } else if(tableName === 'NOTULEN') {
-                let m = document.getElementById('modal-notulen');
-                populateWargaDropdown('sel_tempat_notulen');
-                m.querySelector('[name="id"]').value = item.id;
-                m.querySelector('[name="no_notulen"]').value = item.no_notulen || '';
-                m.querySelector('[name="tgl_rapat"]').value = item.tgl_rapat || '';
-                m.querySelector('[name="waktu"]').value = item.waktu || '';
-                m.querySelector('[name="tempat"]').value = item.tempat || '';
-                m.querySelector('[name="tempat_manual"]').value = item.tempat || '';
-                m.querySelector('[name="agenda"]').value = item.agenda || '';
-                m.querySelector('[name="pimpinan"]').value = item.pimpinan || '';
-                m.classList.add('active');
-            } else if(tableName === 'KEPUTUSAN') {
-                let m = document.getElementById('modal-keputusan');
-                m.querySelector('[name="id"]').value = item.id;
-                m.querySelector('[name="id_notulen"]').value = item.id_notulen || currentNotulenId;
-                m.querySelector('[name="isi_keputusan"]').value = item.isi_keputusan || '';
-                m.querySelector('[name="penanggung_jawab"]').value = item.penanggung_jawab || '';
-                m.classList.add('active');
-            } else if(tableName === 'PETUGAS') {
-                let m = document.getElementById('modal-petugas');
-                populateWargaDropdown('sel_petugas_warga');
-                m.querySelector('[name="id"]').value = item.id;
-                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
-                m.querySelector('[name="nama"]').value = item.nama || '';
-                m.querySelector('[name="no_rumah"]').value = item.no_rumah || '';
-                m.querySelector('[name="no_wa"]').value = item.no_wa || '';
-                m.querySelector('[name="jabatan"]').value = item.jabatan || '';
-                m.classList.add('active');
-            } else if(tableName === 'ANGGARAN') {
-                let m = document.getElementById('modal-anggaran');
-                m.querySelector('[name="id"]').value = item.id;
-                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
-                m.querySelector('[name="nama_kebutuhan"]').value = item.nama_kebutuhan || '';
-                m.querySelector('[name="jumlah"]').value = item.jumlah || '';
-                m.querySelector('[name="harga_satuan"]').value = item.harga_satuan || '';
-                m.querySelector('[name="total"]').value = item.total || '';
-                m.querySelector('[name="realisasi"]').value = item.realisasi || '';
-                m.classList.add('active');
-            } else if(tableName === 'KEHADIRAN') {
-                let m = document.getElementById('modal-kehadiran');
-                populateWargaDropdown('sel_hadir_warga');
-                m.querySelector('[name="id"]').value = item.id;
-                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
-                m.querySelector('[name="nama"]').value = item.nama || '';
-                m.querySelector('[name="no_rumah"]').value = item.no_rumah || '';
-                m.querySelector('[name="status_hadir"]').value = item.status_hadir || 'Hadir';
-                m.classList.add('active');
-            } else if(tableName === 'PELAKSANAAN') {
-                let m = document.getElementById('modal-pelaksanaan');
-                m.querySelector('[name="id"]').value = item.id;
-                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
-                m.querySelector('[name="tgl_pelaksanaan"]').value = item.tgl_pelaksanaan || '';
-                m.querySelector('[name="keg_dilaksanakan"]').value = item.keg_dilaksanakan || '';
-                m.classList.add('active');
-            } else if(tableName === 'DOKUMENTASI') {
-                let m = document.getElementById('modal-dokumentasi');
-                m.querySelector('[name="id"]').value = item.id;
-                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
-                m.querySelector('[name="keterangan"]').value = item.keterangan || '';
-                m.querySelector('[name="url_foto"]').value = item.url_foto || '';
-                m.classList.add('active');
-            } else if(tableName === 'EVALUASI') {
-                let m = document.getElementById('modal-evaluasi');
-                m.querySelector('[name="id"]').value = item.id;
-                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
-                m.querySelector('[name="kendala"]').value = item.kendala || '';
-                m.querySelector('[name="solusi"]').value = item.solusi || '';
-                m.querySelector('[name="hasil"]').value = item.hasil || '';
-                m.classList.add('active');
-            }
+            vibrate(20);
+            let item = APP_DATA[tableName].find(x => x.id === id); if(!item) return;
+            if(tableName === 'WARGA') { let m = document.getElementById('modal-warga'); m.querySelector('[name="id"]').value = item.id; m.querySelector('[name="nama"]').value = item.nama||''; m.querySelector('[name="no_rumah"]').value = item.no_rumah||''; m.querySelector('[name="no_wa"]').value = item.no_wa||''; openModal('modal-warga'); } 
+            else if(tableName === 'KEGIATAN') { let m = document.getElementById('modal-kegiatan'); m.querySelector('[name="id"]').value = item.id; m.querySelector('[name="nama_kegiatan"]').value = item.nama_kegiatan||''; m.querySelector('[name="dasar_keputusan"]').value = item.dasar_keputusan||''; m.querySelector('[name="jenis_kegiatan"]').value = item.jenis_kegiatan||'Kerja Bakti'; m.querySelector('[name="status"]').value = item.status||'Rencana'; m.querySelector('[name="tgl"]').value = item.tgl||''; m.querySelector('[name="waktu"]').value = item.waktu||''; m.querySelector('[name="lokasi"]').value = item.lokasi||''; m.querySelector('[name="keterangan"]').value = item.keterangan||''; openModal('modal-kegiatan'); } 
+            else if(tableName === 'NOTULEN') { populateWargaDropdown('sel_tempat_notulen'); let m = document.getElementById('modal-notulen'); m.querySelector('[name="id"]').value = item.id; m.querySelector('[name="no_notulen"]').value = item.no_notulen||''; m.querySelector('[name="tgl_rapat"]').value = item.tgl_rapat||''; m.querySelector('[name="waktu"]').value = item.waktu||''; m.querySelector('[name="tempat"]').value = item.tempat||''; m.querySelector('[name="tempat_manual"]').value = item.tempat||''; m.querySelector('[name="agenda"]').value = item.agenda||''; m.querySelector('[name="pimpinan"]').value = item.pimpinan||''; openModal('modal-notulen'); } 
+            else if(tableName === 'KEPUTUSAN') { let m = document.getElementById('modal-keputusan'); m.querySelector('[name="id"]').value = item.id; m.querySelector('[name="id_notulen"]').value = item.id_notulen||currentNotulenId; m.querySelector('[name="isi_keputusan"]').value = item.isi_keputusan||''; m.querySelector('[name="penanggung_jawab"]').value = item.penanggung_jawab||''; openModal('modal-keputusan'); } 
+            else if(tableName === 'PETUGAS') { populateWargaDropdown('sel_petugas_warga'); let m = document.getElementById('modal-petugas'); m.querySelector('[name="id"]').value = item.id; m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan||currentKegiatanId; m.querySelector('[name="nama"]').value = item.nama||''; m.querySelector('[name="no_rumah"]').value = item.no_rumah||''; m.querySelector('[name="no_wa"]').value = item.no_wa||''; m.querySelector('[name="jabatan"]').value = item.jabatan||''; openModal('modal-petugas'); } 
+            else if(tableName === 'ANGGARAN') { let m = document.getElementById('modal-anggaran'); m.querySelector('[name="id"]').value = item.id; m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan||currentKegiatanId; m.querySelector('[name="nama_kebutuhan"]').value = item.nama_kebutuhan||''; m.querySelector('[name="jumlah"]').value = item.jumlah||''; m.querySelector('[name="harga_satuan"]').value = item.harga_satuan||''; m.querySelector('[name="total"]').value = item.total||''; m.querySelector('[name="realisasi"]').value = item.realisasi||''; openModal('modal-anggaran'); } 
+            else if(tableName === 'KEHADIRAN') { populateWargaDropdown('sel_hadir_warga'); let m = document.getElementById('modal-kehadiran'); m.querySelector('[name="id"]').value = item.id; m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan||currentKegiatanId; m.querySelector('[name="nama"]').value = item.nama||''; m.querySelector('[name="no_rumah"]').value = item.no_rumah||''; m.querySelector('[name="status_hadir"]').value = item.status_hadir||'Hadir'; openModal('modal-kehadiran'); } 
+            else if(tableName === 'PELAKSANAAN') { let m = document.getElementById('modal-pelaksanaan'); m.querySelector('[name="id"]').value = item.id; m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan||currentKegiatanId; m.querySelector('[name="tgl_pelaksanaan"]').value = item.tgl_pelaksanaan||''; m.querySelector('[name="keg_dilaksanakan"]').value = item.keg_dilaksanakan||''; openModal('modal-pelaksanaan'); } 
+            else if(tableName === 'DOKUMENTASI') { let m = document.getElementById('modal-dokumentasi'); m.querySelector('[name="id"]').value = item.id; m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan||currentKegiatanId; m.querySelector('[name="keterangan"]').value = item.keterangan||''; m.querySelector('[name="url_foto"]').value = item.url_foto||''; openModal('modal-dokumentasi'); } 
+            else if(tableName === 'EVALUASI') { let m = document.getElementById('modal-evaluasi'); m.querySelector('[name="id"]').value = item.id; m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan||currentKegiatanId; m.querySelector('[name="kendala"]').value = item.kendala||''; m.querySelector('[name="solusi"]').value = item.solusi||''; m.querySelector('[name="hasil"]').value = item.hasil||''; openModal('modal-evaluasi'); }
         }
 
         async function sendToCloud(payload) { try { let res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) }); let result = await res.json(); if(result.status === "success") syncDataFromCloud(); } catch (e) { SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE)); } }
@@ -571,7 +485,7 @@
         function submitForm(e, tableName, modalId) { 
             e.preventDefault(); let formData = new FormData(e.target); let data = Object.fromEntries(formData.entries()); 
             if(tableName === 'NOTULEN' && data.tempat_manual && data.tempat_manual.trim() !== "") { data.tempat = data.tempat_manual; delete data.tempat_manual; }
-            saveRecord(tableName, data); closeModal(modalId); showToast("Data disimpan"); e.target.reset(); 
+            saveRecord(tableName, data); closeModal(modalId); showToast("Berhasil disimpan!"); e.target.reset(); 
         }
 
         function submitEvaluasi(e) { 
@@ -579,7 +493,7 @@
             saveRecord('EVALUASI', data); 
             let kegIndex = APP_DATA.KEGIATAN.findIndex(x => x.id === currentKegiatanId); 
             if(kegIndex > -1) { APP_DATA.KEGIATAN[kegIndex].status = "Selesai"; saveRecord('KEGIATAN', APP_DATA.KEGIATAN[kegIndex]); } 
-            closeModal('modal-evaluasi'); showToast("Kegiatan selesai ditutup"); 
+            closeModal('modal-evaluasi'); showToast("Kegiatan ditutup!"); 
         }
 
         // ==========================================
@@ -587,16 +501,12 @@
         // ==========================================
         const formatRp = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
         
-        function calcAnggaran() { 
-            let q = document.getElementById('ang_qty').value; 
-            let h = document.getElementById('ang_harga').value; 
-            document.getElementById('ang_total').value = (q && h) ? parseInt(q)*parseInt(h) : ""; 
-        }
+        function calcAnggaran() { let q = document.getElementById('ang_qty').value; let h = document.getElementById('ang_harga').value; document.getElementById('ang_total').value = (q && h) ? parseInt(q)*parseInt(h) : ""; }
         
         function populateWargaDropdown(selectId) {
             let sel = document.getElementById(selectId); if(!sel) return;
             sel.innerHTML = '<option value="">-- Pilih Warga / Rumah --</option>';
-            if(APP_DATA.WARGA) { [...APP_DATA.WARGA].sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(w => { sel.innerHTML += `<option value="${w.nama} (${w.no_rumah||'-'})" data-rumah="${w.no_rumah||''}" data-wa="${w.no_wa||''}">${w.nama} - Blok/No: ${w.no_rumah||'-'}</option>`; }); }
+            if(APP_DATA.WARGA) { [...APP_DATA.WARGA].sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(w => { sel.innerHTML += `<option value="${w.nama} (${w.no_rumah||'-'})" data-rumah="${w.no_rumah||''}" data-wa="${w.no_wa||''}">${w.nama} - Blok: ${w.no_rumah||'-'}</option>`; }); }
         }
 
         function autoFillWarga(selectElement, rumahId, waId) {
@@ -606,32 +516,31 @@
         }
 
         function navTo(sectionId, resetIds = true) {
+            vibrate(30);
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             let target = document.getElementById(sectionId);
             if(target) target.classList.add('active');
             localStorage.setItem('rt_active_section', sectionId);
+            window.scrollTo(0,0);
             
-            if(resetIds) {
-                if(sectionId === 'sec-dashboard') { currentKegiatanId = null; currentNotulenId = null; localStorage.removeItem('rt_current_kegiatan'); localStorage.removeItem('rt_current_notulen'); }
-            }
+            if(resetIds) { if(sectionId === 'sec-dashboard') { currentKegiatanId = null; currentNotulenId = null; localStorage.removeItem('rt_current_kegiatan'); localStorage.removeItem('rt_current_notulen'); document.getElementById('search-results').style.display='none'; document.getElementById('searchGlobal').value='';} }
             if(sectionId === 'sec-pengaturan') { loadPengaturanInput(); }
         }
 
-        function openModal(id) { 
-            if(id === 'modal-notulen') populateWargaDropdown('sel_tempat_notulen');
-            document.getElementById(id).classList.add('active'); 
-        }
-        function openModalRel(id) { 
-            document.querySelectorAll(`#${id} .rel_id_kegiatan`).forEach(el => el.value = currentKegiatanId); 
-            if(id === 'modal-kehadiran') populateWargaDropdown('sel_hadir_warga');
-            if(id === 'modal-petugas') populateWargaDropdown('sel_petugas_warga');
-            document.getElementById(id).classList.add('active'); 
-        }
-        function openModalRelNotulen(id) { document.querySelectorAll(`#${id} .rel_id_notulen`).forEach(el => el.value = currentNotulenId); document.getElementById(id).classList.add('active'); }
+        function openModal(id) { vibrate(20); document.getElementById(id).classList.add('active'); }
+        function openModalRel(id) { vibrate(20); document.querySelectorAll(`#${id} .rel_id_kegiatan`).forEach(el => el.value = currentKegiatanId); if(id === 'modal-kehadiran') populateWargaDropdown('sel_hadir_warga'); if(id === 'modal-petugas') populateWargaDropdown('sel_petugas_warga'); document.getElementById(id).classList.add('active'); }
+        function openModalRelNotulen(id) { vibrate(20); document.querySelectorAll(`#${id} .rel_id_notulen`).forEach(el => el.value = currentNotulenId); document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); let form = document.querySelector(`#${id} form`); if(form) form.reset(); }
         function showLoader() { document.getElementById('loader').style.display = 'flex'; }
         function hideLoader() { document.getElementById('loader').style.display = 'none'; }
-        function showToast(msg) { let el = document.getElementById('toast'); el.innerText = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2800); }
+        
+        // NATIVE FEEL TOAST / NOTIFICATION
+        function showToast(msg) { 
+            let el = document.getElementById('toast'); 
+            document.getElementById('toast-msg').innerText = msg; 
+            el.classList.add('show'); 
+            setTimeout(() => el.classList.remove('show'), 3000); 
+        }
 
         function getBadgeClass(s) { let stat = s ? s.toLowerCase() : ''; if(stat === 'berjalan') return 'badge-warning'; if(stat === 'selesai') return 'badge-success'; return 'badge-info'; }
         function getBadgeHadir(s) { let stat = s ? s.toLowerCase() : ''; if(stat === 'izin') return 'badge-warning'; if(stat.includes('tidak')||stat==='alpa') return 'badge-danger'; return 'badge-success'; }
@@ -642,7 +551,6 @@
         function refreshAllUI() { 
             let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt'); 
             if(p_rt) document.getElementById('app-rt-name').innerText = p_rt.nilai;
-            
             let p_desa = APP_DATA.PENGATURAN.find(x => x.kunci === 'desa'); 
             if(p_desa) document.getElementById('app-desa-head').innerText = p_desa.nilai;
 
@@ -651,35 +559,73 @@
         }
 
         function loadPengaturanInput() {
-            let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt');
-            if(p_rt && document.getElementById('set_nama_rt')) document.getElementById('set_nama_rt').value = p_rt.nilai;
-            let p_desa = APP_DATA.PENGATURAN.find(x => x.kunci === 'desa');
-            if(p_desa && document.getElementById('set_desa')) document.getElementById('set_desa').value = p_desa.nilai;
-            let p_gas = APP_DATA.PENGATURAN.find(x => x.kunci === 'gas_url');
-            let storedGas = p_gas ? p_gas.nilai : localStorage.getItem('rt_gas_url') || GAS_URL;
-            if(document.getElementById('set_gas_url')) document.getElementById('set_gas_url').value = storedGas;
+            let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt'); if(p_rt && document.getElementById('set_nama_rt')) document.getElementById('set_nama_rt').value = p_rt.nilai;
+            let p_desa = APP_DATA.PENGATURAN.find(x => x.kunci === 'desa'); if(p_desa && document.getElementById('set_desa')) document.getElementById('set_desa').value = p_desa.nilai;
+            let p_gas = APP_DATA.PENGATURAN.find(x => x.kunci === 'gas_url'); let storedGas = p_gas ? p_gas.nilai : localStorage.getItem('rt_gas_url') || GAS_URL; if(document.getElementById('set_gas_url')) document.getElementById('set_gas_url').value = storedGas;
         }
 
         function updateDashboardUI() { 
+            // Update Dashboard Stat Cards
             document.getElementById('dash-rapat').innerText = APP_DATA.NOTULEN ? APP_DATA.NOTULEN.length : 0; 
             let kegJalan = 0; if(APP_DATA.KEGIATAN) APP_DATA.KEGIATAN.forEach(k => { if(k.status === 'Berjalan') kegJalan++; });
             document.getElementById('dash-keg-jalan').innerText = kegJalan;
             
+            // Populating Modal Agenda Terdekat
+            let kTerdekat = APP_DATA.KEGIATAN ? APP_DATA.KEGIATAN.filter(k=>k.status!=='Selesai').slice(-4).reverse() : [];
+            document.getElementById('badge-agenda').innerText = kTerdekat.length;
+
             let agendaHtml = '';
-            if(APP_DATA.KEGIATAN && APP_DATA.KEGIATAN.length > 0) {
-                APP_DATA.KEGIATAN.filter(k=>k.status!=='Selesai').slice(-3).reverse().forEach(k => { agendaHtml += `<div style="padding: 10px 0; border-bottom: 1px solid var(--border);"><strong style="color: var(--text-main); font-size:0.9rem;">${k.nama_kegiatan}</strong><span class="badge ${getBadgeClass(k.status)}" style="float:right;">${k.status || 'Rencana'}</span><br><small style="color: var(--text-muted);">📅 ${formatDate(k.tgl)} ${k.waktu ? ' | ⏰ '+k.waktu : ''} | 📍 ${k.lokasi || '-'}</small></div>`; });
-            } else { agendaHtml = `<p class="text-muted" style="font-size:0.85rem;">Tidak ada agenda terdekat.</p>`; }
-            document.getElementById('list-agenda-terdekat').innerHTML = agendaHtml;
+            if(kTerdekat.length > 0) {
+                kTerdekat.forEach(k => { 
+                    agendaHtml += `<div style="padding: 16px; border: 1.5px solid var(--border); border-radius: 16px; margin-bottom: 12px; background: #f8fafc; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                        <strong style="color: var(--primary); font-size:1rem; font-weight:800;">${k.nama_kegiatan}</strong>
+                        <span class="badge ${getBadgeClass(k.status)}" style="float:right;">${k.status || 'Rencana'}</span><br>
+                        <small style="color: var(--text-muted); margin-top:8px; display:block; font-size:0.8rem;">
+                            📅 ${formatDate(k.tgl)} ${k.waktu ? ' | ⏰ '+k.waktu : ''}<br>📍 ${k.lokasi || '-'}
+                        </small>
+                    </div>`; 
+                });
+            } else { 
+                agendaHtml = `<div style="text-align:center; padding:30px 10px; color:var(--text-muted);">
+                    <div style="font-size:3rem; margin-bottom:10px; opacity:0.5;">📭</div>
+                    <p style="font-weight:600;">Tidak ada agenda terdekat.</p>
+                </div>`; 
+            }
+            document.getElementById('list-agenda-terdekat-modal').innerHTML = agendaHtml;
+        }
+
+        function searchApp() {
+            let q = document.getElementById('searchGlobal').value.toLowerCase();
+            let resDiv = document.getElementById('search-results');
+            
+            if(q.length === 0) { resDiv.style.display = 'none'; return; }
+            
+            let fKeg = APP_DATA.KEGIATAN.filter(k => k.nama_kegiatan.toLowerCase().includes(q) || (k.keterangan && k.keterangan.toLowerCase().includes(q))); 
+            let fNot = APP_DATA.NOTULEN.filter(n => n.agenda.toLowerCase().includes(q) || n.pimpinan.toLowerCase().includes(q));
+            let fSur = APP_DATA.SURAT.filter(s => s.perihal.toLowerCase().includes(q) || s.penerima.toLowerCase().includes(q));
+            
+            let html = '<p class="text-muted" style="font-size:0.75rem; margin-bottom:8px; font-weight:700; padding:0 6px;">HASIL PENCARIAN:</p>';
+            
+            if(fKeg.length === 0 && fNot.length === 0 && fSur.length === 0) {
+                html += '<p style="padding:10px; font-size:0.9rem; text-align:center; color:var(--text-muted);">Tidak ditemukan.</p>';
+            } else {
+                fKeg.forEach(k => { html += `<div style="padding: 10px; border-bottom: 1px solid var(--border); cursor:pointer; border-radius:8px;" onclick="openDetailKegiatan('${k.id}'); document.getElementById('search-results').style.display='none';"><strong style="color:var(--primary); font-size:0.95rem;">📋 ${k.nama_kegiatan}</strong><br><small style="color:var(--text-muted);">📅 ${formatDate(k.tgl)}</small></div>`; });
+                fNot.forEach(n => { html += `<div style="padding: 10px; border-bottom: 1px solid var(--border); cursor:pointer; border-radius:8px;" onclick="openDetailNotulen('${n.id}'); document.getElementById('search-results').style.display='none';"><strong style="color:var(--secondary); font-size:0.95rem;">📁 ${n.agenda}</strong><br><small style="color:var(--text-muted);">📅 ${formatDate(n.tgl_rapat)}</small></div>`; });
+                fSur.forEach(s => { html += `<div style="padding: 10px; border-bottom: 1px solid var(--border); cursor:pointer; border-radius:8px;" onclick="navTo('sec-surat'); document.getElementById('search-results').style.display='none';"><strong style="color:var(--warning); font-size:0.95rem;">📝 Surat: ${s.perihal}</strong><br><small style="color:var(--text-muted);">No: ${s.no_surat}</small></div>`; });
+            }
+            
+            resDiv.innerHTML = html;
+            resDiv.style.display = 'block';
         }
 
         function renderWargaUI() {
             let container = document.getElementById('list-warga-container');
-            if(!APP_DATA.WARGA || APP_DATA.WARGA.length === 0) { container.innerHTML = `<p class="text-muted text-center" style="padding:20px; font-size:0.85rem;">Database warga kosong.</p>`; return; }
+            if(!APP_DATA.WARGA || APP_DATA.WARGA.length === 0) { container.innerHTML = `<div class="text-center" style="padding:20px; color:var(--text-muted);"><div style="font-size:2rem; margin-bottom:10px;">👥</div><p>Database warga kosong.</p></div>`; return; }
             let html = ''; [...APP_DATA.WARGA].sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(w => { 
                 html += `<div class="list-item flex-between">
                     <div>
-                        <div style="font-weight:600; font-size:0.9rem;">${w.nama}</div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Blok/No: ${w.no_rumah||'-'} ${w.no_wa ? ' | WA: '+w.no_wa : ''}</div>
+                        <div style="font-weight:800; font-size:0.95rem;">${w.nama}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; margin-top:4px;">Blok/No: ${w.no_rumah||'-'} ${w.no_wa ? ' | 📱 '+w.no_wa : ''}</div>
                     </div>
                     <div style="display:flex; gap:6px;">
                         <button class="btn btn-outline btn-sm" onclick="editRecord('WARGA', '${w.id}')">✏️</button>
@@ -692,45 +638,40 @@
 
         function renderNotulenUI() {
             let container = document.getElementById('list-notulen-container');
-            if(!APP_DATA.NOTULEN || APP_DATA.NOTULEN.length === 0) { container.innerHTML = `<div class="card text-muted" style="font-size:0.85rem;">Belum ada notulen rapat.</div>`; return; }
+            if(!APP_DATA.NOTULEN || APP_DATA.NOTULEN.length === 0) { container.innerHTML = `<div class="card text-center text-muted"><div style="font-size:2rem; margin-bottom:10px;">📁</div><p>Belum ada notulen rapat.</p></div>`; return; }
             let html = ''; [...APP_DATA.NOTULEN].reverse().forEach(n => { 
                 html += `<div class="card">
                     <div class="card-header">
                         <div class="card-title">${n.agenda}</div>
-                        <span style="font-size:0.75rem; color:var(--text-muted);">${formatDate(n.tgl_rapat)}</span>
+                        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">${formatDate(n.tgl_rapat)}</span>
                     </div>
-                    <p style="font-size:0.85rem; margin-bottom:10px;"><strong>Tempat:</strong> ${n.tempat}</p>
+                    <p style="font-size:0.85rem; margin-bottom:14px; font-weight:600; color:var(--text-muted);">📍 ${n.tempat}</p>
                     <div class="action-bar">
                         <button class="btn btn-primary btn-sm" onclick="openDetailNotulen('${n.id}')">Buka Keputusan</button>
                         <button class="btn btn-outline btn-sm" onclick="editRecord('NOTULEN', '${n.id}')">✏️ Edit</button>
-                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('NOTULEN', '${n.id}')">🗑️ Hapus</button>
+                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('NOTULEN', '${n.id}')">🗑️</button>
                     </div>
                 </div>`; 
             }); 
             container.innerHTML = html;
         }
 
-        function openDetailNotulen(id) { 
-            currentNotulenId = id; 
-            localStorage.setItem('rt_current_notulen', id);
-            navTo('sec-detail-notulen', false); 
-            renderDetailNotulenUI(); 
-        }
+        function openDetailNotulen(id) { currentNotulenId = id; localStorage.setItem('rt_current_notulen', id); navTo('sec-detail-notulen', false); renderDetailNotulenUI(); }
 
         function renderDetailNotulenUI() {
             let n = APP_DATA.NOTULEN.find(x => x.id === currentNotulenId); if(!n) return;
             document.getElementById('det-not-agenda').innerText = n.agenda; document.getElementById('det-not-info').innerText = `📅 ${formatDate(n.tgl_rapat)} | 📍 ${n.tempat}`;
             let kContainer = document.getElementById('list-keputusan-container'); let kep = APP_DATA.KEPUTUSAN.filter(x => x.id_notulen === currentNotulenId);
-            if(kep.length === 0) kContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada keputusan.</p>`;
+            if(kep.length === 0) kContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem; padding:10px 0;">Belum ada keputusan.</p>`;
             else { 
                 let html = ''; kep.forEach(k => { 
                     html += `<div class="list-item">
-                        <div style="font-weight:600; font-size:0.9rem; margin-bottom:4px;">${k.isi_keputusan}</div>
-                        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">PJ: ${k.penanggung_jawab||'-'}</div>
+                        <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px; color:var(--primary);">${k.isi_keputusan}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; margin-bottom:10px;">PJ: ${k.penanggung_jawab||'-'}</div>
                         <div class="action-bar">
                             <button class="btn btn-outline btn-sm" onclick="jadikanKegiatan('${k.id}')">Jadikan Rencana</button>
-                            <button class="btn btn-outline btn-sm" onclick="editRecord('KEPUTUSAN', '${k.id}')">✏️ Edit</button>
-                            <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('KEPUTUSAN', '${k.id}')">🗑️ Hapus</button>
+                            <button class="btn btn-outline btn-sm" onclick="editRecord('KEPUTUSAN', '${k.id}')">✏️</button>
+                            <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('KEPUTUSAN', '${k.id}')">🗑️</button>
                         </div>
                     </div>`; 
                 }); 
@@ -738,20 +679,19 @@
             }
         }
 
-        function jadikanKegiatan(idKep) { let kep = APP_DATA.KEPUTUSAN.find(x => x.id === idKep); if(!kep) return; openModal('modal-kegiatan'); document.getElementById('keg_dasar').value = kep.id; document.getElementById('keg_nama').value = kep.isi_keputusan.substring(0, 50); showToast("Draft Kegiatan Dibuat"); }
+        function jadikanKegiatan(idKep) { vibrate(); let kep = APP_DATA.KEPUTUSAN.find(x => x.id === idKep); if(!kep) return; openModal('modal-kegiatan'); document.getElementById('keg_dasar').value = kep.id; document.getElementById('keg_nama').value = kep.isi_keputusan.substring(0, 50); showToast("Draft Kegiatan Dibuat"); }
 
         function renderKegiatanUI() {
             let container = document.getElementById('list-kegiatan-container');
             let pContainer = document.getElementById('list-perencanaan-container');
 
             if(!APP_DATA.KEGIATAN || APP_DATA.KEGIATAN.length === 0) { 
-                if(container) container.innerHTML = `<div class="card text-muted" style="font-size:0.85rem;">Belum ada kegiatan.</div>`;
-                if(pContainer) pContainer.innerHTML = `<div class="card text-muted" style="font-size:0.85rem;">Belum ada rencana kegiatan.</div>`;
+                if(container) container.innerHTML = `<div class="card text-center text-muted"><div style="font-size:2rem; margin-bottom:10px;">📋</div><p>Belum ada kegiatan.</p></div>`;
+                if(pContainer) pContainer.innerHTML = `<div class="card text-center text-muted"><div style="font-size:2rem; margin-bottom:10px;">📅</div><p>Belum ada rencana.</p></div>`;
                 return; 
             }
 
-            let htmlKeg = '';
-            let htmlPer = '';
+            let htmlKeg = ''; let htmlPer = '';
 
             [...APP_DATA.KEGIATAN].reverse().forEach(k => { 
                 let cardHtml = `<div class="card">
@@ -759,39 +699,30 @@
                         <div class="card-title">${k.nama_kegiatan}</div>
                         <span class="badge ${getBadgeClass(k.status)}">${k.status || 'Rencana'}</span>
                     </div>
-                    <p style="font-size:0.85rem; margin-bottom:4px;">📅 ${formatDate(k.tgl)} ${k.waktu ? ' | ⏰ '+k.waktu : ''}</p>
-                    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">📍 ${k.lokasi || '-'}</p>
+                    <p style="font-size:0.85rem; margin-bottom:4px; font-weight:600; color:var(--text-main);">📅 ${formatDate(k.tgl)} ${k.waktu ? ' | ⏰ '+k.waktu : ''}</p>
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:14px; font-weight:600;">📍 ${k.lokasi || '-'}</p>
                     <div class="action-bar">
                         <button class="btn btn-primary btn-sm" onclick="openDetailKegiatan('${k.id}')">Detail & RAB</button>
                         <button class="btn btn-outline btn-sm" onclick="editRecord('KEGIATAN', '${k.id}')">✏️ Edit</button>
-                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('KEGIATAN', '${k.id}')">🗑️ Hapus</button>
+                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('KEGIATAN', '${k.id}')">🗑️</button>
                     </div>
                 </div>`; 
 
-                if (k.status === 'Rencana') {
-                    htmlPer += cardHtml;
-                } else {
-                    htmlKeg += cardHtml;
-                }
+                if (k.status === 'Rencana') htmlPer += cardHtml; else htmlKeg += cardHtml;
             }); 
             
-            if(container) container.innerHTML = htmlKeg || `<div class="card text-muted" style="font-size:0.85rem;">Belum ada kegiatan yang berjalan atau selesai.</div>`;
-            if(pContainer) pContainer.innerHTML = htmlPer || `<div class="card text-muted" style="font-size:0.85rem;">Belum ada rencana kegiatan.</div>`;
+            if(container) container.innerHTML = htmlKeg || `<div class="card text-center text-muted"><p>Tidak ada kegiatan berjalan.</p></div>`;
+            if(pContainer) pContainer.innerHTML = htmlPer || `<div class="card text-center text-muted"><p>Tidak ada rencana.</p></div>`;
         }
 
-        function openDetailKegiatan(id) { 
-            currentKegiatanId = id; 
-            localStorage.setItem('rt_current_kegiatan', id);
-            navTo('sec-detail-kegiatan', false); 
-            renderDetailKegiatanUI(); 
-        }
+        function openDetailKegiatan(id) { currentKegiatanId = id; localStorage.setItem('rt_current_kegiatan', id); navTo('sec-detail-kegiatan', false); renderDetailKegiatanUI(); }
 
         function renderDetailKegiatanUI() {
             if(!currentKegiatanId) return; let kegiatan = APP_DATA.KEGIATAN.find(x => x.id === currentKegiatanId); if(!kegiatan) return;
             document.getElementById('detail-keg-title').innerText = kegiatan.nama_kegiatan; 
             document.getElementById('detail-keg-info').innerText = `📅 ${formatDate(kegiatan.tgl)} ${kegiatan.waktu ? ' | ⏰ '+kegiatan.waktu : ''} | 📍 ${kegiatan.lokasi}`;
             let descEl = document.getElementById('detail-keg-desc');
-            if(kegiatan.keterangan) { descEl.style.display = 'block'; descEl.innerText = `📝 ${kegiatan.keterangan}`; } else { descEl.style.display = 'none'; }
+            if(kegiatan.keterangan) { descEl.style.display = 'block'; descEl.innerText = `${kegiatan.keterangan}`; } else { descEl.style.display = 'none'; }
 
             // Petugas
             let pContainer = document.getElementById('list-petugas-container'); let petugas = APP_DATA.PETUGAS.filter(x => x.id_kegiatan === currentKegiatanId);
@@ -800,8 +731,8 @@
                 let html = ''; petugas.forEach(p => { 
                     html += `<div class="list-item flex-between">
                         <div>
-                            <div style="font-weight:600; font-size:0.9rem;">${p.nama}</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted);">${p.jabatan}</div>
+                            <div style="font-weight:800; font-size:0.95rem;">${p.nama}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; margin-top:2px;">${p.jabatan}</div>
                         </div>
                         <div style="display:flex; gap:6px;">
                             <button class="btn btn-outline btn-sm" onclick="editRecord('PETUGAS', '${p.id}')">✏️</button>
@@ -815,21 +746,21 @@
             // Kalkulator RAB
             let aContainer = document.getElementById('list-anggaran-container'); let anggaran = APP_DATA.ANGGARAN.filter(x => x.id_kegiatan === currentKegiatanId); 
             let totRab = 0; let totReal = 0;
-            if(anggaran.length === 0) aContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada item RAB dimasukkan.</p>`;
+            if(anggaran.length === 0) aContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada item RAB.</p>`;
             else { 
                 let html = ''; anggaran.forEach(a => { 
                     let r = parseInt(a.total||0); let l = parseInt(a.realisasi||0); totRab+=r; totReal+=l; 
                     html += `<div class="list-item flex-between">
                         <div>
-                            <div style="font-weight:600; font-size:0.9rem;">${a.nama_kebutuhan}</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted);">${a.jumlah} unit x ${formatRp(a.harga_satuan)}</div>
+                            <div style="font-weight:800; font-size:0.95rem;">${a.nama_kebutuhan}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; margin-top:2px;">${a.jumlah} unit x ${formatRp(a.harga_satuan)}</div>
                         </div>
                         <div style="text-align:right; display:flex; align-items:center; gap:10px;">
                             <div>
-                                <div style="font-weight:700; font-size:0.9rem;">${formatRp(r)}</div>
-                                <div style="font-size:0.7rem; color:var(--danger)">Real: ${formatRp(l)}</div>
+                                <div style="font-weight:800; font-size:0.95rem;">${formatRp(r)}</div>
+                                <div style="font-size:0.75rem; color:var(--danger); font-weight:700;">Real: ${formatRp(l)}</div>
                             </div>
-                            <div style="display:flex; gap:4px;">
+                            <div style="display:flex; flex-direction:column; gap:4px;">
                                 <button class="btn btn-outline btn-sm" onclick="editRecord('ANGGARAN', '${a.id}')">✏️</button>
                                 <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('ANGGARAN', '${a.id}')">🗑️</button>
                             </div>
@@ -844,13 +775,13 @@
 
             // Dokumentasi
             let dContainer = document.getElementById('list-dokumentasi-container'); let dok = APP_DATA.DOKUMENTASI.filter(x => x.id_kegiatan === currentKegiatanId);
-            if(dok.length === 0) dContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada dokumentasi foto.</p>`;
+            if(dok.length === 0) dContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada foto.</p>`;
             else { 
                 let html = ''; dok.forEach(d => { 
                     html += `<div class="list-item flex-between">
                         <div>
-                            <div style="font-weight:600; font-size:0.9rem;">🖼️ ${d.keterangan}</div>
-                            <a href="${d.url_foto}" target="_blank" style="font-size:0.75rem; color:var(--primary); text-decoration:underline;">🔗 Buka Link Foto / Berkas</a>
+                            <div style="font-weight:800; font-size:0.95rem;">🖼️ ${d.keterangan}</div>
+                            <a href="${d.url_foto}" target="_blank" style="font-size:0.75rem; color:var(--primary); font-weight:700; text-decoration:none;">🔗 Buka Link</a>
                         </div>
                         <div style="display:flex; gap:6px;">
                             <button class="btn btn-outline btn-sm" onclick="editRecord('DOKUMENTASI', '${d.id}')">✏️</button>
@@ -870,8 +801,8 @@
                 let html = ''; kehadiran.forEach(h => { 
                     html += `<div class="list-item flex-between">
                         <div>
-                            <div style="font-weight:600; font-size:0.9rem;">${h.nama}</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted);">${h.no_rumah||''}</div>
+                            <div style="font-weight:800; font-size:0.95rem;">${h.nama}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Blok: ${h.no_rumah||''}</div>
                         </div>
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span class="badge ${getBadgeHadir(h.status_hadir)}">${h.status_hadir}</span>
@@ -890,8 +821,8 @@
                 let html = ''; pelaksanaan.forEach(p => { 
                     html += `<div class="list-item flex-between">
                         <div>
-                            <div style="font-weight:600; color:var(--primary); font-size:0.85rem;">${formatDate(p.tgl_pelaksanaan)}</div>
-                            <div style="font-size:0.85rem; margin-top:2px;">${p.keg_dilaksanakan}</div>
+                            <div style="font-weight:800; color:var(--primary); font-size:0.85rem;">${formatDate(p.tgl_pelaksanaan)}</div>
+                            <div style="font-size:0.9rem; margin-top:4px; font-weight:500;">${p.keg_dilaksanakan}</div>
                         </div>
                         <div style="display:flex; gap:6px;">
                             <button class="btn btn-outline btn-sm" onclick="editRecord('PELAKSANAAN', '${p.id}')">✏️</button>
@@ -906,12 +837,12 @@
             let evContainer = document.getElementById('detail-evaluasi-container');
             let ev = APP_DATA.EVALUASI.find(e => e.id_kegiatan === currentKegiatanId);
             if(!ev) {
-                evContainer.innerHTML = `<button class="btn btn-warning" onclick="openModalRel('modal-evaluasi')">Buat Laporan Evaluasi & Kendala</button>`;
+                evContainer.innerHTML = `<button class="btn btn-warning" onclick="openModalRel('modal-evaluasi')">Buat Evaluasi & Tutup Kegiatan</button>`;
             } else {
                 evContainer.innerHTML = `
-                    <div style="font-size:0.85rem; margin-bottom:8px;"><strong>⚠️ Kendala:</strong><br>${ev.kendala || '-'}</div>
-                    <div style="font-size:0.85rem; margin-bottom:8px;"><strong>💡 Solusi:</strong><br>${ev.solusi || '-'}</div>
-                    <div style="font-size:0.85rem; margin-bottom:12px;"><strong>✅ Kesimpulan:</strong><br>${ev.hasil || '-'}</div>
+                    <div style="font-size:0.9rem; margin-bottom:10px;"><strong>⚠️ Kendala:</strong><br><span style="color:var(--text-muted);">${ev.kendala || '-'}</span></div>
+                    <div style="font-size:0.9rem; margin-bottom:10px;"><strong>💡 Solusi:</strong><br><span style="color:var(--text-muted);">${ev.solusi || '-'}</span></div>
+                    <div style="font-size:0.9rem; margin-bottom:16px;"><strong>✅ Kesimpulan Akhir:</strong><br><span style="color:var(--text-main); font-weight:600;">${ev.hasil || '-'}</span></div>
                     <div style="display:flex; gap:8px;">
                         <button class="btn btn-outline btn-sm" onclick="editRecord('EVALUASI', '${ev.id}')">✏️ Edit Evaluasi</button>
                         <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('EVALUASI', '${ev.id}')">🗑️ Hapus Evaluasi</button>
@@ -922,16 +853,16 @@
 
         function renderSuratUI() {
             let container = document.getElementById('list-surat-container');
-            if(!APP_DATA.SURAT || APP_DATA.SURAT.length === 0) { container.innerHTML = `<p class="text-muted text-center" style="padding:15px; font-size:0.85rem;">Belum ada surat yang dibuat.</p>`; return; }
+            if(!APP_DATA.SURAT || APP_DATA.SURAT.length === 0) { container.innerHTML = `<div class="card text-center text-muted"><div style="font-size:2rem; margin-bottom:10px;">📝</div><p>Belum ada surat yang dibuat.</p></div>`; return; }
             let html = ''; [...APP_DATA.SURAT].reverse().forEach(s => { 
                 html += `<div class="list-item">
-                    <div style="font-weight:700; color:var(--primary); font-size:0.95rem;">${s.perihal}</div>
-                    <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">No: ${s.no_surat} | ${formatDate(s.tgl_surat)}</div>
+                    <div style="font-weight:800; color:var(--primary); font-size:1rem;">${s.perihal}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px; font-weight:600; margin-top:4px;">No: ${s.no_surat} | ${formatDate(s.tgl_surat)}</div>
                     <div class="action-bar">
                         <button class="btn btn-outline btn-sm" onclick="bukaEditorSurat('${s.jenis_surat}', '${s.id}')">✏️ Edit</button>
                         <button class="btn btn-outline btn-sm" onclick="cetakSuratId('${s.id}')">🖨️ Cetak</button>
                         <button class="btn btn-success btn-sm" onclick="shareWhatsAppSurat('${s.id}')">📤 WA</button>
-                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('SURAT', '${s.id}')">🗑️ Hapus</button>
+                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('SURAT', '${s.id}')">🗑️</button>
                     </div>
                 </div>`; 
             }); 
@@ -941,34 +872,11 @@
         // ==========================================
         // SURAT LOGIC
         // ==========================================
-        const TEMPLATE_SURAT = {
-            "Pengantar RT": { perihal: "Surat Pengantar RT", isi: "Yang bertanda tangan di bawah ini Ketua RT, menerangkan bahwa:\n\nNama:\nNIK:\nAlamat:\n\nAdalah benar warga kami. Surat ini dibuat untuk keperluan:\n\nDemikian surat ini dibuat agar dapat dipergunakan semestinya." },
-            "Keterangan Domisili": { perihal: "Keterangan Domisili", isi: "Yang bertanda tangan di bawah ini menerangkan bahwa:\n\nNama:\nTempat, Tgl Lahir:\nAgama:\nPekerjaan:\n\nBenar berdomisili di wilayah RT kami.\nDemikian surat keterangan ini dibuat." },
-            "Pemberitahuan Kegiatan": { perihal: "Pemberitahuan Kegiatan Lingkungan", isi: "Dengan hormat,\n\nKami beritahukan kepada seluruh warga bahwa akan diadakan kegiatan lingkungan pada:\n\nHari/Tgl:\nWaktu:\nTempat:\n\nMohon kehadiran dan partisipasinya. Terima kasih." }
-        };
+        const TEMPLATE_SURAT = { "Pengantar RT": { perihal: "Surat Pengantar RT", isi: "Yang bertanda tangan di bawah ini Ketua RT, menerangkan bahwa:\n\nNama:\nNIK:\nAlamat:\n\nAdalah benar warga kami. Surat ini dibuat untuk keperluan:\n\nDemikian surat ini dibuat agar dapat dipergunakan semestinya." }, "Keterangan Domisili": { perihal: "Keterangan Domisili", isi: "Yang bertanda tangan di bawah ini menerangkan bahwa:\n\nNama:\nTempat, Tgl Lahir:\nAgama:\nPekerjaan:\n\nBenar berdomisili di wilayah RT kami.\nDemikian surat keterangan ini dibuat." }, "Pemberitahuan Kegiatan": { perihal: "Pemberitahuan Kegiatan Lingkungan", isi: "Dengan hormat,\n\nKami beritahukan kepada seluruh warga bahwa akan diadakan kegiatan lingkungan pada:\n\nHari/Tgl:\nWaktu:\nTempat:\n\nMohon kehadiran dan partisipasinya. Terima kasih." } };
 
-        function bukaEditorSurat(jenis, id = null) {
-            closeModal('modal-pilih-template'); openModal('modal-form-surat');
-            document.getElementById('surat_id').value = id || "";
-            let optKeg = '<option value="">-- Tidak ada relasi --</option>'; APP_DATA.KEGIATAN.forEach(k => { optKeg += `<option value="${k.id}">${k.nama_kegiatan}</option>`; }); document.getElementById('surat_id_kegiatan').innerHTML = optKeg;
+        function bukaEditorSurat(jenis, id = null) { closeModal('modal-pilih-template'); openModal('modal-form-surat'); document.getElementById('surat_id').value = id || ""; let optKeg = '<option value="">-- Tidak ada relasi --</option>'; APP_DATA.KEGIATAN.forEach(k => { optKeg += `<option value="${k.id}">${k.nama_kegiatan}</option>`; }); document.getElementById('surat_id_kegiatan').innerHTML = optKeg; if (id) { let s = APP_DATA.SURAT.find(x => x.id === id); if(s) { document.getElementById('surat_jenis').value = s.jenis_surat; document.getElementById('surat_no').value = s.no_surat; document.getElementById('surat_tgl').value = s.tgl_surat; document.getElementById('surat_id_kegiatan').value = s.id_kegiatan || ""; document.getElementById('surat_perihal').value = s.perihal; document.getElementById('surat_penerima').value = s.penerima; document.getElementById('surat_isi_editor').innerHTML = s.isi_surat; document.getElementById('surat_ttd').value = s.penandatangan; } } else { document.getElementById('surat_jenis').value = jenis; document.getElementById('surat_no').value = ""; document.getElementById('surat_tgl').value = new Date().toISOString().split('T')[0]; document.getElementById('surat_penerima').value = "Bapak/Ibu ....\nDi Tempat"; let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt'); document.getElementById('surat_ttd').value = `Ketua ${p_rt ? p_rt.nilai : 'RT'}\n\n\n\n( ........................... )`; if (TEMPLATE_SURAT[jenis]) { document.getElementById('surat_perihal').value = TEMPLATE_SURAT[jenis].perihal; document.getElementById('surat_isi_editor').innerText = TEMPLATE_SURAT[jenis].isi; } else { document.getElementById('surat_perihal').value = "Perihal Surat"; document.getElementById('surat_isi_editor').innerText = "Ketik isi surat di sini..."; } } }
 
-            if (id) {
-                let s = APP_DATA.SURAT.find(x => x.id === id);
-                if(s) { document.getElementById('surat_jenis').value = s.jenis_surat; document.getElementById('surat_no').value = s.no_surat; document.getElementById('surat_tgl').value = s.tgl_surat; document.getElementById('surat_id_kegiatan').value = s.id_kegiatan || ""; document.getElementById('surat_perihal').value = s.perihal; document.getElementById('surat_penerima').value = s.penerima; document.getElementById('surat_isi_editor').innerHTML = s.isi_surat; document.getElementById('surat_ttd').value = s.penandatangan; }
-            } else {
-                document.getElementById('surat_jenis').value = jenis; document.getElementById('surat_no').value = ""; document.getElementById('surat_tgl').value = new Date().toISOString().split('T')[0]; document.getElementById('surat_penerima').value = "Bapak/Ibu ....\nDi Tempat";
-                let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt'); document.getElementById('surat_ttd').value = `Ketua ${p_rt ? p_rt.nilai : 'RT'}\n\n\n\n( ........................... )`;
-                if (TEMPLATE_SURAT[jenis]) { document.getElementById('surat_perihal').value = TEMPLATE_SURAT[jenis].perihal; document.getElementById('surat_isi_editor').innerText = TEMPLATE_SURAT[jenis].isi; } 
-                else { document.getElementById('surat_perihal').value = "Perihal Surat"; document.getElementById('surat_isi_editor').innerText = "Ketik isi surat di sini..."; }
-            }
-        }
-
-        function generateNoSurat() {
-            let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt'); let rtName = p_rt ? p_rt.nilai.replace(/\s/g, '').toUpperCase() : "RT";
-            let d = new Date(); let yr = d.getFullYear(); let mo = (d.getMonth()+1).toString().padStart(2,'0'); let autoNum = `001/${rtName}/${mo}/${yr}`;
-            if(APP_DATA.SURAT && APP_DATA.SURAT.length > 0) { let suratTahunIni = APP_DATA.SURAT.filter(s => s.no_surat.includes(`/${yr}`)); if(suratTahunIni.length > 0) { let lastNo = suratTahunIni[suratTahunIni.length-1].no_surat.split('/')[0]; if(!isNaN(lastNo)) { autoNum = `${(parseInt(lastNo)+1).toString().padStart(3,'0')}/${rtName}/${mo}/${yr}`; } } }
-            document.getElementById('surat_no').value = autoNum;
-        }
+        function generateNoSurat() { let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt'); let rtName = p_rt ? p_rt.nilai.replace(/\s/g, '').toUpperCase() : "RT"; let d = new Date(); let yr = d.getFullYear(); let mo = (d.getMonth()+1).toString().padStart(2,'0'); let autoNum = `001/${rtName}/${mo}/${yr}`; if(APP_DATA.SURAT && APP_DATA.SURAT.length > 0) { let suratTahunIni = APP_DATA.SURAT.filter(s => s.no_surat.includes(`/${yr}`)); if(suratTahunIni.length > 0) { let lastNo = suratTahunIni[suratTahunIni.length-1].no_surat.split('/')[0]; if(!isNaN(lastNo)) { autoNum = `${(parseInt(lastNo)+1).toString().padStart(3,'0')}/${rtName}/${mo}/${yr}`; } } } document.getElementById('surat_no').value = autoNum; }
 
         function injectKegiatanKeSurat(idKeg) { if(!idKeg) return; let k = APP_DATA.KEGIATAN.find(x => x.id === idKeg); if(k) { let cText = document.getElementById('surat_isi_editor').innerText; document.getElementById('surat_isi_editor').innerText = cText + `\n\nKegiatan: ${k.nama_kegiatan}\nTanggal: ${formatDate(k.tgl)}\nTempat: ${k.lokasi}\n`; } }
 
@@ -979,7 +887,6 @@
         function setKopToPrint() { document.getElementById('p_kop1').innerText = document.getElementById('kop_1').value || "PENGURUS RUKUN TETANGGA"; document.getElementById('p_kop2').innerText = document.getElementById('kop_2').value || "DESA / KELURAHAN"; document.getElementById('p_kop3').innerText = document.getElementById('kop_3').value || "KECAMATAN / KABUPATEN"; document.getElementById('p_kop4').innerText = document.getElementById('kop_4').value || "Alamat lengkap"; }
         function previewSurat() { setKopToPrint(); document.getElementById('p_no').innerText = document.getElementById('surat_no').value; document.getElementById('p_perihal').innerText = document.getElementById('surat_perihal').value; let tgl = document.getElementById('surat_tgl').value; document.getElementById('p_tgl').innerText = tgl ? formatDate(tgl) : ""; document.getElementById('p_penerima').innerText = document.getElementById('surat_penerima').value; document.getElementById('p_isi').innerHTML = document.getElementById('surat_isi_editor').innerHTML; document.getElementById('p_ttd').innerText = document.getElementById('surat_ttd').value; document.getElementById('print-area').style.display = 'block'; }
         function cetakSuratId(id) { let s = APP_DATA.SURAT.find(x => x.id === id); if(!s) return; setKopToPrint(); document.getElementById('p_no').innerText = s.no_surat; document.getElementById('p_perihal').innerText = s.perihal; document.getElementById('p_tgl').innerText = formatDate(s.tgl_surat); document.getElementById('p_penerima').innerText = s.penerima; document.getElementById('p_isi').innerHTML = s.isi_surat; document.getElementById('p_ttd').innerText = s.penandatangan; document.getElementById('print-area').style.display = 'block'; }
-        function tutupPreview() { document.getElementById('print-area').style.display = 'none'; }
 
         // ==========================================
         // LAPORAN & SHARE LOGIC
@@ -990,17 +897,17 @@
             let totRab = 0; let totReal = 0; dataLaporan.forEach(k => { let ang = APP_DATA.ANGGARAN.filter(a => a.id_kegiatan === k.id); ang.forEach(a => { totRab += parseInt(a.total||0); totReal += parseInt(a.realisasi||0); }); });
             document.getElementById('lap-tot-rab').innerText = formatRp(totRab); document.getElementById('lap-tot-real').innerText = formatRp(totReal);
             let lapContainer = document.getElementById('list-laporan-container'); 
-            if(dataLaporan.length === 0) lapContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Tidak ada laporan selesai pada periode ini.</p>`;
+            if(dataLaporan.length === 0) lapContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem; padding:10px 0;">Tidak ada laporan di periode ini.</p>`;
             else { 
                 let html = ''; [...dataLaporan].reverse().forEach(k => { 
                     let ev = APP_DATA.EVALUASI.find(e => e.id_kegiatan === k.id); 
-                    html += `<div class="list-item" style="padding-bottom:12px;">
-                        <div class="flex-between" style="margin-bottom:4px;"><div style="font-weight:700; color:var(--primary); font-size:0.95rem;">${k.nama_kegiatan}</div><button class="btn btn-success btn-sm" onclick="shareWaLaporan('${k.id}')">📤 WA</button></div>
-                        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:6px;">📅 ${formatDate(k.tgl)}</div>
-                        <div style="font-size:0.85rem; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid var(--border);">
-                            <div><strong>⚠️ Kendala:</strong> ${ev ? ev.kendala || '-' : '-'}</div>
-                            <div style="margin-top:4px;"><strong>💡 Solusi:</strong> ${ev ? ev.solusi || '-' : '-'}</div>
-                            <div style="margin-top:4px;"><strong>✅ Kesimpulan:</strong> ${ev ? ev.hasil || '-' : '-'}</div>
+                    html += `<div class="list-item" style="padding-bottom:16px;">
+                        <div class="flex-between" style="margin-bottom:6px;"><div style="font-weight:800; color:var(--primary); font-size:1rem;">${k.nama_kegiatan}</div><button class="btn btn-success btn-sm" onclick="shareWaLaporan('${k.id}')">📤 WA</button></div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px; font-weight:700;">📅 ${formatDate(k.tgl)}</div>
+                        <div style="font-size:0.85rem; background:#f8fafc; padding:14px; border-radius:14px; border:1px solid var(--border);">
+                            <div><strong>⚠️ Kendala:</strong><br><span style="color:var(--text-muted)">${ev ? ev.kendala || '-' : '-'}</span></div>
+                            <div style="margin-top:8px;"><strong>💡 Solusi:</strong><br><span style="color:var(--text-muted)">${ev ? ev.solusi || '-' : '-'}</span></div>
+                            <div style="margin-top:8px;"><strong>✅ Kesimpulan:</strong><br><span style="color:var(--text-main); font-weight:600;">${ev ? ev.hasil || '-' : '-'}</span></div>
                         </div>
                     </div>`; 
                 }); 
@@ -1008,102 +915,22 @@
             }
         }
 
-        function shareWaLaporan(id) { 
-            let k = APP_DATA.KEGIATAN.find(x => x.id === id); if(!k) return; 
-            let ev = APP_DATA.EVALUASI.find(x => x.id_kegiatan === id); 
-            let ang = APP_DATA.ANGGARAN.filter(a => a.id_kegiatan === id); 
-            let totRab = 0; let totReal = 0; 
-            
-            let rincianList = ang.map((a, i) => {
-                let r = parseInt(a.total||0);
-                let l = parseInt(a.realisasi||0);
-                totRab += r; totReal += l;
-                return `• ${a.nama_kebutuhan} (${a.jumlah} unit)\n  - RAB: ${formatRp(r)}\n  - Real: ${formatRp(l)}`;
-            }).join('\n\n');
-
-            let text = `*📊 LAPORAN & NOTA RINCIAN KEGIATAN*\n\n*Kegiatan:* ${k.nama_kegiatan}\n*Tanggal:* ${formatDate(k.tgl)}\n\n*🧾 Rincian Nota / Kebutuhan:*\n${rincianList || 'Belum ada rincian nota'}\n\n*💰 Rekap Keuangan:*\n- Total RAB: ${formatRp(totRab)}\n- Total Realisasi: ${formatRp(totReal)}\n- Sisa Kas: ${formatRp(totRab - totReal)}\n\n*⚠️ Kendala:*\n${ev ? ev.kendala || '-' : '-'}\n\n*💡 Solusi:*\n${ev ? ev.solusi || '-' : '-'}\n\n*✅ Hasil Evaluasi:*\n${ev ? ev.hasil || '-' : '-'}\n\n_Powered by ${APP_AUTHOR}_`; 
-            
-            document.getElementById('wa-editor-title').innerText = 'Editor Laporan & Nota WA';
-            document.getElementById('wa_editor_text').value = text;
-            openModal('modal-wa-editor');
-        }
-
-        function shareWhatsAppSurat(id) { 
-            let s = APP_DATA.SURAT.find(x => x.id === id); if(!s) return; 
-            let text = `*📄 SURAT RT*\n\n*Nomor:* ${s.no_surat}\n*Perihal:* ${s.perihal}\n\n*Kepada:*\n${s.penerima}\n\nSilakan cek dokumen terlampir.\n\n_Powered by ${APP_AUTHOR}_`; 
-            
-            document.getElementById('wa-editor-title').innerText = 'Editor Pesan Surat WA';
-            document.getElementById('wa_editor_text').value = text;
-            openModal('modal-wa-editor');
-        }
-
-        function shareWaGroupRT() { 
-            let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt');
-            let rtName = p_rt ? p_rt.nilai : 'RT';
-            let text = `*📢 PEMBERITAHUAN ${rtName.toUpperCase()}*\n\nAssalamu'alaikum Wr. Wb.\nDiberitahukan kepada seluruh warga bahwa...\n\nTerima kasih.\n\n_Powered by ${APP_AUTHOR}_`; 
-            
-            document.getElementById('wa-editor-title').innerText = 'Editor Info Grup RT';
-            document.getElementById('wa_editor_text').value = text;
-            openModal('modal-wa-editor');
-        }
-        
-        function shareWhatsAppNotulen() { 
-            if(!currentNotulenId) return; 
-            let n = APP_DATA.NOTULEN.find(x => x.id === currentNotulenId); if(!n) return; 
-            let kep = APP_DATA.KEPUTUSAN.filter(x => x.id_notulen === currentNotulenId); 
-            let kepTxt = kep.map((k, i) => `${i+1}. ${k.isi_keputusan}${k.penanggung_jawab ? ' (PJ: '+k.penanggung_jawab+')' : ''}`).join('\n'); 
-            let text = `*📋 NOTULEN RAPAT RT*\n\n*Nomor:* ${n.no_notulen || '-'}\n*Tanggal:* ${formatDate(n.tgl_rapat)}\n*Waktu:* ${n.waktu || '-'}\n*Tempat:* ${n.tempat}\n*Agenda:* ${n.agenda}\n*Pimpinan:* ${n.pimpinan || '-'}\n\n*Daftar Keputusan:*\n${kepTxt || '-'}\n\n_Powered by ${APP_AUTHOR}_`; 
-            
-            document.getElementById('wa-editor-title').innerText = 'Editor Pesan Notulen WA';
-            document.getElementById('wa_editor_text').value = text;
-            openModal('modal-wa-editor');
-        }
-
-        function kirimWaEditorFinal() {
-            let text = document.getElementById('wa_editor_text').value;
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-            closeModal('modal-wa-editor');
-        }
-
-        function searchApp() {
-            let q = document.getElementById('searchGlobal').value.toLowerCase(); if(q.length === 0) { updateDashboardUI(); return; }
-            let fKeg = APP_DATA.KEGIATAN.filter(k => k.nama_kegiatan.toLowerCase().includes(q)); let fNot = APP_DATA.NOTULEN.filter(n => n.agenda.toLowerCase().includes(q));
-            let html = '<p class="text-muted" style="font-size:0.75rem; margin-bottom:6px;">Hasil Pencarian:</p>';
-            fKeg.forEach(k => { html += `<div style="padding: 8px 0; border-bottom: 1px solid var(--border);"><strong style="color:var(--primary); cursor:pointer;" onclick="openDetailKegiatan('${k.id}')">📋 ${k.nama_kegiatan}</strong><br><small>📅 ${formatDate(k.tgl)}</small></div>`; });
-            fNot.forEach(n => { html += `<div style="padding: 8px 0; border-bottom: 1px solid var(--border);"><strong style="color:var(--secondary); cursor:pointer;" onclick="openDetailNotulen('${n.id}')">📁 ${n.agenda}</strong><br><small>📅 ${formatDate(n.tgl_rapat)}</small></div>`; });
-            if(fKeg.length === 0 && fNot.length === 0) html += '<p class="text-muted" style="font-size:0.85rem;">Tidak ditemukan.</p>';
-            document.getElementById('list-agenda-terdekat').innerHTML = html;
-        }
+        function shareWaLaporan(id) { vibrate(); let k = APP_DATA.KEGIATAN.find(x => x.id === id); if(!k) return; let ev = APP_DATA.EVALUASI.find(x => x.id_kegiatan === id); let ang = APP_DATA.ANGGARAN.filter(a => a.id_kegiatan === id); let totRab = 0; let totReal = 0; let rincianList = ang.map((a, i) => { let r = parseInt(a.total||0); let l = parseInt(a.realisasi||0); totRab += r; totReal += l; return `• ${a.nama_kebutuhan} (${a.jumlah} unit)\n  - RAB: ${formatRp(r)}\n  - Real: ${formatRp(l)}`; }).join('\n\n'); let text = `*📊 LAPORAN & NOTA KEGIATAN*\n\n*Kegiatan:* ${k.nama_kegiatan}\n*Tanggal:* ${formatDate(k.tgl)}\n\n*🧾 Rincian Nota / Kebutuhan:*\n${rincianList || 'Belum ada rincian nota'}\n\n*💰 Rekap Keuangan:*\n- Total RAB: ${formatRp(totRab)}\n- Total Real: ${formatRp(totReal)}\n- Sisa Kas: ${formatRp(totRab - totReal)}\n\n*⚠️ Kendala:*\n${ev ? ev.kendala || '-' : '-'}\n\n*💡 Solusi:*\n${ev ? ev.solusi || '-' : '-'}\n\n*✅ Hasil Evaluasi:*\n${ev ? ev.hasil || '-' : '-'}\n\n_Powered by ${APP_AUTHOR}_`; document.getElementById('wa-editor-title').innerText = 'Editor Laporan WA'; document.getElementById('wa_editor_text').value = text; openModal('modal-wa-editor'); }
+        function shareWhatsAppSurat(id) { vibrate(); let s = APP_DATA.SURAT.find(x => x.id === id); if(!s) return; let text = `*📄 SURAT RT*\n\n*Nomor:* ${s.no_surat}\n*Perihal:* ${s.perihal}\n\n*Kepada:*\n${s.penerima}\n\nSilakan cek dokumen terlampir.\n\n_Powered by ${APP_AUTHOR}_`; document.getElementById('wa-editor-title').innerText = 'Editor Surat WA'; document.getElementById('wa_editor_text').value = text; openModal('modal-wa-editor'); }
+        function shareWaGroupRT() { vibrate(); let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt'); let rtName = p_rt ? p_rt.nilai : 'RT'; let text = `*📢 INFO ${rtName.toUpperCase()}*\n\nAssalamu'alaikum Wr. Wb.\nDiberitahukan kepada seluruh warga bahwa...\n\nTerima kasih.\n\n_Powered by ${APP_AUTHOR}_`; document.getElementById('wa-editor-title').innerText = 'Editor Info Grup RT'; document.getElementById('wa_editor_text').value = text; openModal('modal-wa-editor'); }
+        function shareWhatsAppNotulen() { vibrate(); if(!currentNotulenId) return; let n = APP_DATA.NOTULEN.find(x => x.id === currentNotulenId); if(!n) return; let kep = APP_DATA.KEPUTUSAN.filter(x => x.id_notulen === currentNotulenId); let kepTxt = kep.map((k, i) => `${i+1}. ${k.isi_keputusan}${k.penanggung_jawab ? ' (PJ: '+k.penanggung_jawab+')' : ''}`).join('\n'); let text = `*📋 NOTULEN RAPAT RT*\n\n*Agenda:* ${n.agenda}\n*Nomor:* ${n.no_notulen || '-'}\n*Tanggal:* ${formatDate(n.tgl_rapat)}\n*Waktu:* ${n.waktu || '-'}\n*Tempat:* ${n.tempat}\n*Pimpinan:* ${n.pimpinan || '-'}\n\n*Daftar Keputusan:*\n${kepTxt || '-'}\n\n_Powered by ${APP_AUTHOR}_`; document.getElementById('wa-editor-title').innerText = 'Editor Notulen WA'; document.getElementById('wa_editor_text').value = text; openModal('modal-wa-editor'); }
+        function kirimWaEditorFinal() { vibrate(30); let text = document.getElementById('wa_editor_text').value; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); closeModal('modal-wa-editor'); }
 
         function savePengaturan(e) { 
             e.preventDefault(); 
-            let pr = document.getElementById('set_nama_rt').value; 
-            let pd = document.getElementById('set_desa').value; 
-            let pgs = document.getElementById('set_gas_url').value.trim();
-            
-            if(pgs !== "") {
-                GAS_URL = pgs;
-                localStorage.setItem('rt_gas_url', pgs);
-            }
-
+            let pr = document.getElementById('set_nama_rt').value; let pd = document.getElementById('set_desa').value; let pgs = document.getElementById('set_gas_url').value.trim();
+            if(pgs !== "") { GAS_URL = pgs; localStorage.setItem('rt_gas_url', pgs); }
             APP_DATA.PENGATURAN = APP_DATA.PENGATURAN.filter(x => !['nama_rt', 'desa', 'gas_url'].includes(x.kunci)); 
-            APP_DATA.PENGATURAN.push(
-                {id: 'set_1', kunci: 'nama_rt', nilai: pr}, 
-                {id: 'set_2', kunci: 'desa', nilai: pd},
-                {id: 'set_3', kunci: 'gas_url', nilai: pgs}
-            ); 
-            saveLocalData(); 
-            showToast("Pengaturan & Database disimpan"); 
-            refreshAllUI(); 
+            APP_DATA.PENGATURAN.push({id: 'set_1', kunci: 'nama_rt', nilai: pr}, {id: 'set_2', kunci: 'desa', nilai: pd}, {id: 'set_3', kunci: 'gas_url', nilai: pgs}); 
+            saveLocalData(); showToast("Pengaturan disimpan"); refreshAllUI(); 
         }
 
-        function initDemoData() { 
-            if(APP_DATA.PENGATURAN.length === 0) { 
-                APP_DATA.PENGATURAN.push({id: 'k1', kunci: 'kop_1', nilai: 'PENGURUS RT 05'}, {id: 'k2', kunci: 'nama_rt', nilai: 'RT 05 / RW 02'}, {id: 'k3', kunci: 'desa', nilai: 'Sukamaju'}, {id: 'k4', kunci: 'gas_url', nilai: GAS_URL}); 
-                saveLocalData(); 
-                loadPengaturanInput();
-            } 
-        }
+        function initDemoData() { if(APP_DATA.PENGATURAN.length === 0) { APP_DATA.PENGATURAN.push({id: 'k1', kunci: 'kop_1', nilai: 'PENGURUS RT 05'}, {id: 'k2', kunci: 'nama_rt', nilai: 'RT 05 / RW 02'}, {id: 'k3', kunci: 'desa', nilai: 'Sukamaju'}, {id: 'k4', kunci: 'gas_url', nilai: GAS_URL}); saveLocalData(); loadPengaturanInput(); } }
     </script>
 </body>
 </html>
