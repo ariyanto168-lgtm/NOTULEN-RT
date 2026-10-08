@@ -205,7 +205,7 @@
             <div class="card text-center"><button class="btn btn-outline" onclick="syncDataFromCloud(true)">🔄 Force Sync ke Server</button></div>
         </section>
         
-        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.5.8</span><br><strong>Powered by Ari GPM</strong></div>
+        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.5.9</span><br><strong>Powered by Ari GPM</strong></div>
     </div>
 
     <!-- ============================================== -->
@@ -317,18 +317,29 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const APP_VERSION = "v2.5.8";
+        const APP_VERSION = "v2.5.9";
         const APP_AUTHOR = "Ari GPM";
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
         
         let APP_DATA = { WARGA: [], NOTULEN: [], KEPUTUSAN: [], KEGIATAN: [], PETUGAS: [], ANGGARAN: [], KEHADIRAN: [], PELAKSANAAN: [], DOKUMENTASI: [], EVALUASI: [], SURAT: [], PENGATURAN: [] };
         let SYNC_QUEUE = JSON.parse(localStorage.getItem('rt_sync_queue')) || [];
-        let currentKegiatanId = null; let currentNotulenId = null;
+        let currentKegiatanId = localStorage.getItem('rt_current_kegiatan') || null; 
+        let currentNotulenId = localStorage.getItem('rt_current_notulen') || null;
 
-        document.getElementById('app-version-head').innerText = APP_VERSION; document.getElementById('foot-version').innerText = APP_VERSION;
+        document.getElementById('foot-version').innerText = APP_VERSION;
 
         window.onload = () => {
-            loadLocalData(); initDynamicYears(); refreshAllUI(); loadKopSuratConfig(); loadPengaturanInput();
+            loadLocalData(); initDynamicYears(); 
+            
+            // Restore active section on refresh
+            let savedSec = localStorage.getItem('rt_active_section');
+            if(savedSec && document.getElementById(savedSec)) {
+                navTo(savedSec, false);
+            } else {
+                navTo('sec-dashboard', false);
+            }
+
+            refreshAllUI(); loadKopSuratConfig(); loadPengaturanInput();
             if (GAS_URL !== "") { syncDataFromCloud(); processQueue(); } else { showToast("Mode Lokal / Demo Aktif"); initDemoData(); }
             window.addEventListener('online', () => { document.getElementById('syncStatus').innerHTML = '🟢'; processQueue(); });
             window.addEventListener('offline', () => { document.getElementById('syncStatus').innerHTML = '🔴'; });
@@ -526,10 +537,15 @@
             if(waId && document.getElementById(waId)) document.getElementById(waId).value = opt.getAttribute('data-wa') || '';
         }
 
-        function navTo(sectionId) {
+        function navTo(sectionId, resetIds = true) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            if(sectionId === 'sec-dashboard') { currentKegiatanId = null; currentNotulenId = null; }
+            let target = document.getElementById(sectionId);
+            if(target) target.classList.add('active');
+            localStorage.setItem('rt_active_section', sectionId);
+            
+            if(resetIds) {
+                if(sectionId === 'sec-dashboard') { currentKegiatanId = null; currentNotulenId = null; localStorage.removeItem('rt_current_kegiatan'); localStorage.removeItem('rt_current_notulen'); }
+            }
             if(sectionId === 'sec-pengaturan') { loadPengaturanInput(); }
         }
 
@@ -623,7 +639,13 @@
             container.innerHTML = html;
         }
 
-        function openDetailNotulen(id) { currentNotulenId = id; navTo('sec-detail-notulen'); renderDetailNotulenUI(); }
+        function openDetailNotulen(id) { 
+            currentNotulenId = id; 
+            localStorage.setItem('rt_current_notulen', id);
+            navTo('sec-detail-notulen', false); 
+            renderDetailNotulenUI(); 
+        }
+
         function renderDetailNotulenUI() {
             let n = APP_DATA.NOTULEN.find(x => x.id === currentNotulenId); if(!n) return;
             document.getElementById('det-not-agenda').innerText = n.agenda; document.getElementById('det-not-info').innerText = `📅 ${formatDate(n.tgl_rapat)} | 📍 ${n.tempat}`;
@@ -668,7 +690,13 @@
             container.innerHTML = html;
         }
 
-        function openDetailKegiatan(id) { currentKegiatanId = id; navTo('sec-detail-kegiatan'); renderDetailKegiatanUI(); }
+        function openDetailKegiatan(id) { 
+            currentKegiatanId = id; 
+            localStorage.setItem('rt_current_kegiatan', id);
+            navTo('sec-detail-kegiatan', false); 
+            renderDetailKegiatanUI(); 
+        }
+
         function renderDetailKegiatanUI() {
             if(!currentKegiatanId) return; let kegiatan = APP_DATA.KEGIATAN.find(x => x.id === currentKegiatanId); if(!kegiatan) return;
             document.getElementById('detail-keg-title').innerText = kegiatan.nama_kegiatan; 
