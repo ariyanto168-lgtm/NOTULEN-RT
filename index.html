@@ -22,7 +22,7 @@
         .menu-card { padding: 20px 10px; border-radius: 20px; text-align: center; color: white; box-shadow: 0 8px 15px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;}
         .menu-card:active { transform: scale(0.95); }
         .menu-icon { font-size: 2.2rem; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2)); }
-        .menu-text { font-weight: 700; font-size: 0.95rem; text-shadow: 0px 1px 2px rgba(0,0,0,0.2); }
+        .menu-text { font-weight: 700; font-size: 0.95rem; text-shadow: 0px 1px 2px rgba(0,0,0,0.2); line-height: 1.2;}
         .bg-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } .bg-green { background: linear-gradient(135deg, #10b981, #047857); } .bg-orange { background: linear-gradient(135deg, #f59e0b, #b45309); } .bg-purple { background: linear-gradient(135deg, #8b5cf6, #5b21b6); } .bg-red { background: linear-gradient(135deg, #ef4444, #b91c1c); } .bg-teal { background: linear-gradient(135deg, #14b8a6, #0f766e); }
         
         .card { background: var(--card-bg); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.03); border: 1px solid var(--border); }
@@ -89,9 +89,10 @@
             <span id="app-rt-name">Sistem RT</span>
             <span class="header-subtitle" id="app-desa-head">Desa / Kelurahan</span>
         </div>
-        <div style="display:flex; gap:10px; align-items:center;">
+        <div style="display:flex; gap:8px; align-items:center;">
             <div class="sync-status" id="syncStatus">🟢</div>
-            <button onclick="navTo('sec-dashboard')" style="background:var(--primary-light); color:var(--primary); border:none; padding:8px 14px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">🏠 Home</button>
+            <button onclick="navTo('sec-pengaturan')" style="background:var(--card-bg); color:var(--text-muted); border:1px solid var(--border); padding:8px 10px; border-radius:12px; font-size:1.1rem; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display:flex; align-items:center; justify-content:center;">⚙️</button>
+            <button onclick="navTo('sec-dashboard')" style="background:var(--primary-light); color:var(--primary); border:none; padding:8px 14px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display:flex; align-items:center; justify-content:center; gap:6px;">🏠 Home</button>
         </div>
     </header>
 
@@ -105,7 +106,7 @@
                 <div class="menu-card bg-orange" onclick="navTo('sec-kegiatan')"><div class="menu-icon">📋</div><div class="menu-text">Kegiatan</div></div>
                 <div class="menu-card bg-purple" onclick="navTo('sec-warga')"><div class="menu-icon">👥</div><div class="menu-text">Warga</div></div>
                 <div class="menu-card bg-red" onclick="navTo('sec-laporan')"><div class="menu-icon">📊</div><div class="menu-text">Laporan</div></div>
-                <div class="menu-card bg-teal" onclick="navTo('sec-pengaturan')"><div class="menu-icon">⚙️</div><div class="menu-text">Pengaturan</div></div>
+                <div class="menu-card bg-teal" onclick="navTo('sec-perencanaan')"><div class="menu-icon">📅</div><div class="menu-text">Perencanaan</div></div>
             </div>
             <div class="grid-2"><div class="stat-card"><h3 id="dash-rapat">0</h3><p>Total Rapat</p></div><div class="stat-card"><h3 id="dash-keg-jalan">0</h3><p>Keg. Berjalan</p></div></div>
             <div class="card"><h3 style="font-size: 0.95rem; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">📅 Kegiatan Terdekat</h3><div id="list-agenda-terdekat"></div></div>
@@ -154,16 +155,25 @@
             <div class="card"><div class="card-header"><div class="card-title">📝 Daftar Keputusan</div><button class="btn btn-primary btn-sm" onclick="openModalRelNotulen('modal-keputusan')">+ Keputusan</button></div><div id="list-keputusan-container"></div></div>
         </section>
 
-        <!-- KEGIATAN -->
+        <!-- KEGIATAN & PERENCANAAN -->
         <section id="sec-kegiatan" class="section">
             <div class="flex-between" style="margin-bottom: 16px;">
-                <h2 style="font-size: 1.15rem; font-weight:700;">Kegiatan</h2>
+                <h2 style="font-size: 1.15rem; font-weight:700;">Kegiatan Berjalan</h2>
                 <div style="display:flex; gap:6px;">
                     <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('KEGIATAN', 'Data Kegiatan')">🗑️ Reset</button>
                     <button class="btn btn-primary btn-sm" onclick="openModal('modal-kegiatan')">+ Kegiatan</button>
                 </div>
             </div>
             <div id="list-kegiatan-container"></div>
+        </section>
+
+        <!-- SECTION BARU: PERENCANAAN -->
+        <section id="sec-perencanaan" class="section">
+            <div class="flex-between" style="margin-bottom: 16px;">
+                <h2 style="font-size: 1.15rem; font-weight:700;">Perencanaan Kegiatan</h2>
+                <button class="btn btn-primary btn-sm" onclick="openModal('modal-kegiatan')">+ Rencana</button>
+            </div>
+            <div id="list-perencanaan-container"></div>
         </section>
 
         <!-- DETAIL KEGIATAN & KELENGKAPAN -->
@@ -227,6 +237,7 @@
 
         <!-- PENGATURAN -->
         <section id="sec-pengaturan" class="section">
+            <div class="flex-between" style="margin-bottom: 16px;"><button class="btn btn-outline btn-sm" onclick="navTo('sec-dashboard')">← Kembali</button></div>
             <h2 style="font-size: 1.15rem; font-weight:700; margin-bottom: 16px;">Pengaturan & Database</h2>
             <div class="card">
                 <form onsubmit="savePengaturan(event)">
@@ -242,7 +253,7 @@
             <div class="card text-center"><button class="btn btn-outline" onclick="syncDataFromCloud(true)">🔄 Force Sync ke Server</button></div>
         </section>
         
-        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.6.4</span><br><strong>Powered by Ari GPM</strong></div>
+        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.6.5</span><br><strong>Powered by Ari GPM</strong></div>
     </div>
 
     <!-- ============================================== -->
@@ -366,7 +377,7 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const APP_VERSION = "v2.6.4";
+        const APP_VERSION = "v2.6.5";
         const APP_AUTHOR = "Ari GPM";
         
         let GAS_URL = localStorage.getItem('rt_gas_url') || "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
@@ -731,9 +742,19 @@
 
         function renderKegiatanUI() {
             let container = document.getElementById('list-kegiatan-container');
-            if(!APP_DATA.KEGIATAN || APP_DATA.KEGIATAN.length === 0) { container.innerHTML = `<div class="card text-muted" style="font-size:0.85rem;">Belum ada kegiatan.</div>`; return; }
-            let html = ''; [...APP_DATA.KEGIATAN].reverse().forEach(k => { 
-                html += `<div class="card">
+            let pContainer = document.getElementById('list-perencanaan-container');
+
+            if(!APP_DATA.KEGIATAN || APP_DATA.KEGIATAN.length === 0) { 
+                if(container) container.innerHTML = `<div class="card text-muted" style="font-size:0.85rem;">Belum ada kegiatan.</div>`;
+                if(pContainer) pContainer.innerHTML = `<div class="card text-muted" style="font-size:0.85rem;">Belum ada rencana kegiatan.</div>`;
+                return; 
+            }
+
+            let htmlKeg = '';
+            let htmlPer = '';
+
+            [...APP_DATA.KEGIATAN].reverse().forEach(k => { 
+                let cardHtml = `<div class="card">
                     <div class="card-header">
                         <div class="card-title">${k.nama_kegiatan}</div>
                         <span class="badge ${getBadgeClass(k.status)}">${k.status || 'Rencana'}</span>
@@ -746,8 +767,16 @@
                         <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('KEGIATAN', '${k.id}')">🗑️ Hapus</button>
                     </div>
                 </div>`; 
+
+                if (k.status === 'Rencana') {
+                    htmlPer += cardHtml;
+                } else {
+                    htmlKeg += cardHtml;
+                }
             }); 
-            container.innerHTML = html;
+            
+            if(container) container.innerHTML = htmlKeg || `<div class="card text-muted" style="font-size:0.85rem;">Belum ada kegiatan yang berjalan atau selesai.</div>`;
+            if(pContainer) pContainer.innerHTML = htmlPer || `<div class="card text-muted" style="font-size:0.85rem;">Belum ada rencana kegiatan.</div>`;
         }
 
         function openDetailKegiatan(id) { 
