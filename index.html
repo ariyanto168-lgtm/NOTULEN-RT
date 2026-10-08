@@ -205,7 +205,7 @@
             <div class="card text-center"><button class="btn btn-outline" onclick="syncDataFromCloud(true)">🔄 Force Sync ke Server</button></div>
         </section>
         
-        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.5.9</span><br><strong>Powered by Ari GPM</strong></div>
+        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.6.2</span><br><strong>Powered by Ari GPM</strong></div>
     </div>
 
     <!-- ============================================== -->
@@ -222,6 +222,18 @@
     <div id="modal-notulen" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Form Notulen</h3><button class="modal-close" onclick="closeModal('modal-notulen')">&times;</button></div><form onsubmit="submitForm(event, 'NOTULEN', 'modal-notulen')"><input type="hidden" name="id"><div class="form-group"><label class="form-label">Nomor</label><input type="text" name="no_notulen" class="form-control" required></div><div class="grid-2"><div class="form-group"><label class="form-label">Tanggal</label><input type="date" name="tgl_rapat" class="form-control" required></div><div class="form-group"><label class="form-label">Waktu</label><input type="time" name="waktu" class="form-control" required></div></div><div class="form-group"><label class="form-label">Tempat</label><select name="tempat" id="sel_tempat_notulen" class="form-control" onchange="document.getElementById('input_tempat_manual').value = this.value"></select><input type="text" name="tempat_manual" id="input_tempat_manual" class="form-control" style="margin-top:8px;"></div><div class="form-group"><label class="form-label">Agenda</label><input type="text" name="agenda" class="form-control" required></div><div class="form-group"><label class="form-label">Pimpinan</label><input type="text" name="pimpinan" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
     
     <div id="modal-keputusan" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Item Keputusan</h3><button class="modal-close" onclick="closeModal('modal-keputusan')">&times;</button></div><form onsubmit="submitForm(event, 'KEPUTUSAN', 'modal-keputusan')"><input type="hidden" name="id"><input type="hidden" name="id_notulen" class="rel_id_notulen"><div class="form-group"><label class="form-label">Isi Keputusan</label><textarea name="isi_keputusan" class="form-control" required></textarea></div><div class="form-group"><label class="form-label">Penanggung Jawab</label><input type="text" name="penanggung_jawab" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
+
+    <!-- MODAL UNIVERSAL EDITOR PESAN WA -->
+    <div id="modal-wa-editor" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="wa-editor-title">Editor Pesan WhatsApp</h3><button class="modal-close" onclick="closeModal('modal-wa-editor')">&times;</button></div>
+            <div class="form-group">
+                <label class="form-label">Format Pesan WhatsApp (Dapat Diedit Bebas)</label>
+                <textarea id="wa_editor_text" class="form-control" style="min-height: 240px; font-size: 0.85rem;"></textarea>
+            </div>
+            <button type="button" class="btn btn-success" onclick="kirimWaEditorFinal()">📤 Kirim ke WhatsApp</button>
+        </div>
+    </div>
 
     <!-- FORM KEGIATAN LENGKAP -->
     <div id="modal-kegiatan" class="modal-overlay">
@@ -317,7 +329,7 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const APP_VERSION = "v2.5.9";
+        const APP_VERSION = "v2.6.2";
         const APP_AUTHOR = "Ari GPM";
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
         
@@ -331,7 +343,6 @@
         window.onload = () => {
             loadLocalData(); initDynamicYears(); 
             
-            // Restore active section on refresh
             let savedSec = localStorage.getItem('rt_active_section');
             if(savedSec && document.getElementById(savedSec)) {
                 navTo(savedSec, false);
@@ -933,12 +944,48 @@
             }).join('\n\n');
 
             let text = `*📊 LAPORAN & NOTA RINCIAN KEGIATAN*\n\n*Kegiatan:* ${k.nama_kegiatan}\n*Tanggal:* ${formatDate(k.tgl)}\n\n*🧾 Rincian Nota / Kebutuhan:*\n${rincianList || 'Belum ada rincian nota'}\n\n*💰 Rekap Keuangan:*\n- Total RAB: ${formatRp(totRab)}\n- Total Realisasi: ${formatRp(totReal)}\n- Sisa Kas: ${formatRp(totRab - totReal)}\n\n*⚠️ Kendala:*\n${ev ? ev.kendala || '-' : '-'}\n\n*💡 Solusi:*\n${ev ? ev.solusi || '-' : '-'}\n\n*✅ Hasil Evaluasi:*\n${ev ? ev.hasil || '-' : '-'}\n\n_Powered by ${APP_AUTHOR}_`; 
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); 
+            
+            document.getElementById('wa-editor-title').innerText = 'Editor Laporan & Nota WA';
+            document.getElementById('wa_editor_text').value = text;
+            openModal('modal-wa-editor');
         }
 
-        function shareWhatsAppSurat(id) { let s = APP_DATA.SURAT.find(x => x.id === id); if(!s) return; let text = `*📄 SURAT RT*\n\n*Nomor:* ${s.no_surat}\n*Perihal:* ${s.perihal}\n\n*Kepada:*\n${s.penerima}\n\nSilakan cek dokumen terlampir.\n\n_Powered by ${APP_AUTHOR}_`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); }
-        function shareWaGroupRT() { let text = `*📢 PEMBERITAHUAN RT*\n\nAssalamu'alaikum.\nDiberitahukan kepada seluruh warga RT bahwa...\n\nTerima kasih.\n\n_Powered by ${APP_AUTHOR}_`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); }
-        function shareWhatsAppNotulen() { if(!currentNotulenId) return; let n = APP_DATA.NOTULEN.find(x => x.id === currentNotulenId); if(!n) return; let kep = APP_DATA.KEPUTUSAN.filter(x => x.id_notulen === currentNotulenId); let kepTxt = kep.map((k, i) => `${i+1}. ${k.isi_keputusan}`).join('%0A'); let text = `*📋 NOTULEN RAPAT RT*\n\n*Tanggal:* ${formatDate(n.tgl_rapat)}\n*Tempat:* ${n.tempat}\n*Agenda:* ${n.agenda}\n\n*Keputusan:*\n${kepTxt || '-'}\n\n_Powered by ${APP_AUTHOR}_`; window.open(`https://wa.me/?text=${text}`, '_blank'); }
+        function shareWhatsAppSurat(id) { 
+            let s = APP_DATA.SURAT.find(x => x.id === id); if(!s) return; 
+            let text = `*📄 SURAT RT*\n\n*Nomor:* ${s.no_surat}\n*Perihal:* ${s.perihal}\n\n*Kepada:*\n${s.penerima}\n\nSilakan cek dokumen terlampir.\n\n_Powered by ${APP_AUTHOR}_`; 
+            
+            document.getElementById('wa-editor-title').innerText = 'Editor Pesan Surat WA';
+            document.getElementById('wa_editor_text').value = text;
+            openModal('modal-wa-editor');
+        }
+
+        function shareWaGroupRT() { 
+            let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt');
+            let rtName = p_rt ? p_rt.nilai : 'RT';
+            let text = `*📢 PEMBERITAHUAN ${rtName.toUpperCase()}*\n\nAssalamu'alaikum Wr. Wb.\nDiberitahukan kepada seluruh warga bahwa...\n\nTerima kasih.\n\n_Powered by ${APP_AUTHOR}_`; 
+            
+            document.getElementById('wa-editor-title').innerText = 'Editor Info Grup RT';
+            document.getElementById('wa_editor_text').value = text;
+            openModal('modal-wa-editor');
+        }
+        
+        function shareWhatsAppNotulen() { 
+            if(!currentNotulenId) return; 
+            let n = APP_DATA.NOTULEN.find(x => x.id === currentNotulenId); if(!n) return; 
+            let kep = APP_DATA.KEPUTUSAN.filter(x => x.id_notulen === currentNotulenId); 
+            let kepTxt = kep.map((k, i) => `${i+1}. ${k.isi_keputusan}${k.penanggung_jawab ? ' (PJ: '+k.penanggung_jawab+')' : ''}`).join('\n'); 
+            let text = `*📋 NOTULEN RAPAT RT*\n\n*Nomor:* ${n.no_notulen || '-'}\n*Tanggal:* ${formatDate(n.tgl_rapat)}\n*Waktu:* ${n.waktu || '-'}\n*Tempat:* ${n.tempat}\n*Agenda:* ${n.agenda}\n*Pimpinan:* ${n.pimpinan || '-'}\n\n*Daftar Keputusan:*\n${kepTxt || '-'}\n\n_Powered by ${APP_AUTHOR}_`; 
+            
+            document.getElementById('wa-editor-title').innerText = 'Editor Pesan Notulen WA';
+            document.getElementById('wa_editor_text').value = text;
+            openModal('modal-wa-editor');
+        }
+
+        function kirimWaEditorFinal() {
+            let text = document.getElementById('wa_editor_text').value;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+            closeModal('modal-wa-editor');
+        }
 
         function searchApp() {
             let q = document.getElementById('searchGlobal').value.toLowerCase(); if(q.length === 0) { updateDashboardUI(); return; }
