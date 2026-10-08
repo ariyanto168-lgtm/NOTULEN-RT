@@ -85,7 +85,10 @@
 <body>
 
     <header>
-        <div class="header-title"><span id="app-rt-name">Sistem RT</span><span class="header-subtitle" id="app-version-head">v2.5.6</span></div>
+        <div class="header-title">
+            <span id="app-rt-name">Sistem RT</span>
+            <span class="header-subtitle" id="app-desa-head">Desa / Kelurahan</span>
+        </div>
         <div style="display:flex; gap:10px; align-items:center;">
             <div class="sync-status" id="syncStatus">🟢</div>
             <button onclick="navTo('sec-dashboard')" style="background:var(--primary-light); color:var(--primary); border:none; padding:8px 14px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">🏠 Home</button>
@@ -139,12 +142,12 @@
             <div id="list-kegiatan-container"></div>
         </section>
 
-        <!-- DETAIL KEGIATAN & KELENGKAPAN (RAB, DOKUMENTASI, EVALUASI) -->
+        <!-- DETAIL KEGIATAN & KELENGKAPAN -->
         <section id="sec-detail-kegiatan" class="section">
             <div class="flex-between" style="margin-bottom: 16px;"><button class="btn btn-outline btn-sm" onclick="navTo('sec-kegiatan')">← Kembali</button></div>
             <h2 id="detail-keg-title" style="color: var(--primary); font-size:1.15rem; font-weight:700;">Nama Kegiatan</h2>
             <p id="detail-keg-info" class="text-muted" style="font-size: 0.8rem; margin-bottom: 6px;"></p>
-            <p id="detail-keg-desc" class="text-main" style="font-size: 0.85rem; margin-bottom: 16px; background:#f1f5f9; padding:8px 12px; border-radius:8px;"></p>
+            <p id="detail-keg-desc" class="text-main" style="font-size: 0.85rem; margin-bottom: 16px; background:#f1f5f9; padding:8px 12px; border-radius:8px; display:none;"></p>
             
             <div class="card"><div class="card-header"><div class="card-title">👥 Panitia</div><button class="btn btn-primary btn-sm" onclick="openModalRel('modal-petugas')">+ Petugas</button></div><div id="list-petugas-container"></div></div>
             
@@ -162,7 +165,7 @@
                 </div>
             </div>
 
-            <!-- DOKUMENTASI KEGIATAN (LENGKAP) -->
+            <!-- DOKUMENTASI KEGIATAN -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">🖼️ Dokumentasi & Foto</div>
@@ -202,7 +205,7 @@
             <div class="card text-center"><button class="btn btn-outline" onclick="syncDataFromCloud(true)">🔄 Force Sync ke Server</button></div>
         </section>
         
-        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.5.6</span><br><strong>Powered by Ari GPM</strong></div>
+        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.5.8</span><br><strong>Powered by Ari GPM</strong></div>
     </div>
 
     <!-- ============================================== -->
@@ -217,6 +220,7 @@
     <div id="modal-kop-surat" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Pengaturan Kop Surat</h3><button class="modal-close" onclick="closeModal('modal-kop-surat')">&times;</button></div><form onsubmit="simpanKopSurat(event)"><div class="form-group"><label class="form-label">Baris 1</label><input type="text" id="kop_1" class="form-control"></div><div class="form-group"><label class="form-label">Baris 2</label><input type="text" id="kop_2" class="form-control"></div><div class="form-group"><label class="form-label">Baris 3</label><input type="text" id="kop_3" class="form-control"></div><div class="form-group"><label class="form-label">Alamat / Kontak</label><input type="text" id="kop_4" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
 
     <div id="modal-notulen" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Form Notulen</h3><button class="modal-close" onclick="closeModal('modal-notulen')">&times;</button></div><form onsubmit="submitForm(event, 'NOTULEN', 'modal-notulen')"><input type="hidden" name="id"><div class="form-group"><label class="form-label">Nomor</label><input type="text" name="no_notulen" class="form-control" required></div><div class="grid-2"><div class="form-group"><label class="form-label">Tanggal</label><input type="date" name="tgl_rapat" class="form-control" required></div><div class="form-group"><label class="form-label">Waktu</label><input type="time" name="waktu" class="form-control" required></div></div><div class="form-group"><label class="form-label">Tempat</label><select name="tempat" id="sel_tempat_notulen" class="form-control" onchange="document.getElementById('input_tempat_manual').value = this.value"></select><input type="text" name="tempat_manual" id="input_tempat_manual" class="form-control" style="margin-top:8px;"></div><div class="form-group"><label class="form-label">Agenda</label><input type="text" name="agenda" class="form-control" required></div><div class="form-group"><label class="form-label">Pimpinan</label><input type="text" name="pimpinan" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
+    
     <div id="modal-keputusan" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Item Keputusan</h3><button class="modal-close" onclick="closeModal('modal-keputusan')">&times;</button></div><form onsubmit="submitForm(event, 'KEPUTUSAN', 'modal-keputusan')"><input type="hidden" name="id"><input type="hidden" name="id_notulen" class="rel_id_notulen"><div class="form-group"><label class="form-label">Isi Keputusan</label><textarea name="isi_keputusan" class="form-control" required></textarea></div><div class="form-group"><label class="form-label">Penanggung Jawab</label><input type="text" name="penanggung_jawab" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
 
     <!-- FORM KEGIATAN LENGKAP -->
@@ -313,7 +317,7 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const APP_VERSION = "v2.5.6";
+        const APP_VERSION = "v2.5.8";
         const APP_AUTHOR = "Ari GPM";
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
         
@@ -377,6 +381,109 @@
             saveLocalData(); refreshAllUI();
             let payload = { action: 'save', table: tableName, data: dataObj };
             if (navigator.onLine && GAS_URL !== "") sendToCloud(payload); else { SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE)); showToast("Disimpan lokal."); }
+        }
+
+        function deleteRecord(tableName, id) {
+            if(!confirm("Yakin ingin menghapus data ini?")) return;
+            APP_DATA[tableName] = APP_DATA[tableName].filter(x => x.id !== id);
+            saveLocalData(); refreshAllUI(); showToast("Data berhasil dihapus");
+            let payload = { action: 'delete', table: tableName, id: id };
+            if(navigator.onLine && GAS_URL !== "") sendToCloud(payload);
+        }
+
+        function editRecord(tableName, id) {
+            let item = APP_DATA[tableName].find(x => x.id === id);
+            if(!item) return;
+            if(tableName === 'WARGA') {
+                let m = document.getElementById('modal-warga');
+                m.querySelector('[name="id"]').value = item.id;
+                m.querySelector('[name="nama"]').value = item.nama || '';
+                m.querySelector('[name="no_rumah"]').value = item.no_rumah || '';
+                m.querySelector('[name="no_wa"]').value = item.no_wa || '';
+                m.classList.add('active');
+            } else if(tableName === 'KEGIATAN') {
+                let m = document.getElementById('modal-kegiatan');
+                m.querySelector('[name="id"]').value = item.id;
+                m.querySelector('[name="nama_kegiatan"]').value = item.nama_kegiatan || '';
+                m.querySelector('[name="dasar_keputusan"]').value = item.dasar_keputusan || '';
+                m.querySelector('[name="jenis_kegiatan"]').value = item.jenis_kegiatan || 'Kerja Bakti';
+                m.querySelector('[name="status"]').value = item.status || 'Rencana';
+                m.querySelector('[name="tgl"]').value = item.tgl || '';
+                m.querySelector('[name="waktu"]').value = item.waktu || '';
+                m.querySelector('[name="lokasi"]').value = item.lokasi || '';
+                m.querySelector('[name="keterangan"]').value = item.keterangan || '';
+                m.classList.add('active');
+            } else if(tableName === 'NOTULEN') {
+                let m = document.getElementById('modal-notulen');
+                populateWargaDropdown('sel_tempat_notulen');
+                m.querySelector('[name="id"]').value = item.id;
+                m.querySelector('[name="no_notulen"]').value = item.no_notulen || '';
+                m.querySelector('[name="tgl_rapat"]').value = item.tgl_rapat || '';
+                m.querySelector('[name="waktu"]').value = item.waktu || '';
+                m.querySelector('[name="tempat"]').value = item.tempat || '';
+                m.querySelector('[name="tempat_manual"]').value = item.tempat || '';
+                m.querySelector('[name="agenda"]').value = item.agenda || '';
+                m.querySelector('[name="pimpinan"]').value = item.pimpinan || '';
+                m.classList.add('active');
+            } else if(tableName === 'KEPUTUSAN') {
+                let m = document.getElementById('modal-keputusan');
+                m.querySelector('[name="id"]').value = item.id;
+                m.querySelector('[name="id_notulen"]').value = item.id_notulen || currentNotulenId;
+                m.querySelector('[name="isi_keputusan"]').value = item.isi_keputusan || '';
+                m.querySelector('[name="penanggung_jawab"]').value = item.penanggung_jawab || '';
+                m.classList.add('active');
+            } else if(tableName === 'PETUGAS') {
+                let m = document.getElementById('modal-petugas');
+                populateWargaDropdown('sel_petugas_warga');
+                m.querySelector('[name="id"]').value = item.id;
+                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
+                m.querySelector('[name="nama"]').value = item.nama || '';
+                m.querySelector('[name="no_rumah"]').value = item.no_rumah || '';
+                m.querySelector('[name="no_wa"]').value = item.no_wa || '';
+                m.querySelector('[name="jabatan"]').value = item.jabatan || '';
+                m.classList.add('active');
+            } else if(tableName === 'ANGGARAN') {
+                let m = document.getElementById('modal-anggaran');
+                m.querySelector('[name="id"]').value = item.id;
+                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
+                m.querySelector('[name="nama_kebutuhan"]').value = item.nama_kebutuhan || '';
+                m.querySelector('[name="jumlah"]').value = item.jumlah || '';
+                m.querySelector('[name="harga_satuan"]').value = item.harga_satuan || '';
+                m.querySelector('[name="total"]').value = item.total || '';
+                m.querySelector('[name="realisasi"]').value = item.realisasi || '';
+                m.classList.add('active');
+            } else if(tableName === 'KEHADIRAN') {
+                let m = document.getElementById('modal-kehadiran');
+                populateWargaDropdown('sel_hadir_warga');
+                m.querySelector('[name="id"]').value = item.id;
+                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
+                m.querySelector('[name="nama"]').value = item.nama || '';
+                m.querySelector('[name="no_rumah"]').value = item.no_rumah || '';
+                m.querySelector('[name="status_hadir"]').value = item.status_hadir || 'Hadir';
+                m.classList.add('active');
+            } else if(tableName === 'PELAKSANAAN') {
+                let m = document.getElementById('modal-pelaksanaan');
+                m.querySelector('[name="id"]').value = item.id;
+                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
+                m.querySelector('[name="tgl_pelaksanaan"]').value = item.tgl_pelaksanaan || '';
+                m.querySelector('[name="keg_dilaksanakan"]').value = item.keg_dilaksanakan || '';
+                m.classList.add('active');
+            } else if(tableName === 'DOKUMENTASI') {
+                let m = document.getElementById('modal-dokumentasi');
+                m.querySelector('[name="id"]').value = item.id;
+                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
+                m.querySelector('[name="keterangan"]').value = item.keterangan || '';
+                m.querySelector('[name="url_foto"]').value = item.url_foto || '';
+                m.classList.add('active');
+            } else if(tableName === 'EVALUASI') {
+                let m = document.getElementById('modal-evaluasi');
+                m.querySelector('[name="id"]').value = item.id;
+                m.querySelector('[name="id_kegiatan"]').value = item.id_kegiatan || currentKegiatanId;
+                m.querySelector('[name="kendala"]').value = item.kendala || '';
+                m.querySelector('[name="solusi"]').value = item.solusi || '';
+                m.querySelector('[name="hasil"]').value = item.hasil || '';
+                m.classList.add('active');
+            }
         }
 
         async function sendToCloud(payload) { try { let res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) }); let result = await res.json(); if(result.status === "success") syncDataFromCloud(); } catch (e) { SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE)); } }
@@ -449,7 +556,12 @@
         // RENDER UI FUNCTIONS
         // ==========================================
         function refreshAllUI() { 
-            let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt'); if(p_rt) document.getElementById('app-rt-name').innerText = p_rt.nilai;
+            let p_rt = APP_DATA.PENGATURAN.find(x => x.kunci === 'nama_rt'); 
+            if(p_rt) document.getElementById('app-rt-name').innerText = p_rt.nilai;
+            
+            let p_desa = APP_DATA.PENGATURAN.find(x => x.kunci === 'desa'); 
+            if(p_desa) document.getElementById('app-desa-head').innerText = p_desa.nilai;
+
             updateDashboardUI(); renderWargaUI(); renderNotulenUI(); renderKegiatanUI(); renderSuratUI(); renderLaporanUI();
             if(currentNotulenId) renderDetailNotulenUI(); if(currentKegiatanId) renderDetailKegiatanUI();
         }
@@ -476,13 +588,39 @@
         function renderWargaUI() {
             let container = document.getElementById('list-warga-container');
             if(!APP_DATA.WARGA || APP_DATA.WARGA.length === 0) { container.innerHTML = `<p class="text-muted text-center" style="padding:20px; font-size:0.85rem;">Database warga kosong.</p>`; return; }
-            let html = ''; [...APP_DATA.WARGA].sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(w => { html += `<div class="list-item flex-between"><div><div style="font-weight:600; font-size:0.9rem;">${w.nama}</div><div style="font-size:0.75rem; color:var(--text-muted);">Blok/No: ${w.no_rumah||'-'} ${w.no_wa ? ' | WA: '+w.no_wa : ''}</div></div></div>`; }); container.innerHTML = html;
+            let html = ''; [...APP_DATA.WARGA].sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(w => { 
+                html += `<div class="list-item flex-between">
+                    <div>
+                        <div style="font-weight:600; font-size:0.9rem;">${w.nama}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">Blok/No: ${w.no_rumah||'-'} ${w.no_wa ? ' | WA: '+w.no_wa : ''}</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn btn-outline btn-sm" onclick="editRecord('WARGA', '${w.id}')">✏️</button>
+                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('WARGA', '${w.id}')">🗑️</button>
+                    </div>
+                </div>`; 
+            }); 
+            container.innerHTML = html;
         }
 
         function renderNotulenUI() {
             let container = document.getElementById('list-notulen-container');
             if(!APP_DATA.NOTULEN || APP_DATA.NOTULEN.length === 0) { container.innerHTML = `<div class="card text-muted" style="font-size:0.85rem;">Belum ada notulen rapat.</div>`; return; }
-            let html = ''; [...APP_DATA.NOTULEN].reverse().forEach(n => { html += `<div class="card"><div class="card-header"><div class="card-title">${n.agenda}</div><span style="font-size:0.75rem; color:var(--text-muted);">${formatDate(n.tgl_rapat)}</span></div><p style="font-size:0.85rem; margin-bottom:10px;"><strong>Tempat:</strong> ${n.tempat}</p><button class="btn btn-primary btn-sm" onclick="openDetailNotulen('${n.id}')">Buka Keputusan Rapat</button></div>`; }); container.innerHTML = html;
+            let html = ''; [...APP_DATA.NOTULEN].reverse().forEach(n => { 
+                html += `<div class="card">
+                    <div class="card-header">
+                        <div class="card-title">${n.agenda}</div>
+                        <span style="font-size:0.75rem; color:var(--text-muted);">${formatDate(n.tgl_rapat)}</span>
+                    </div>
+                    <p style="font-size:0.85rem; margin-bottom:10px;"><strong>Tempat:</strong> ${n.tempat}</p>
+                    <div class="action-bar">
+                        <button class="btn btn-primary btn-sm" onclick="openDetailNotulen('${n.id}')">Buka Keputusan</button>
+                        <button class="btn btn-outline btn-sm" onclick="editRecord('NOTULEN', '${n.id}')">✏️ Edit</button>
+                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('NOTULEN', '${n.id}')">🗑️ Hapus</button>
+                    </div>
+                </div>`; 
+            }); 
+            container.innerHTML = html;
         }
 
         function openDetailNotulen(id) { currentNotulenId = id; navTo('sec-detail-notulen'); renderDetailNotulenUI(); }
@@ -491,7 +629,20 @@
             document.getElementById('det-not-agenda').innerText = n.agenda; document.getElementById('det-not-info').innerText = `📅 ${formatDate(n.tgl_rapat)} | 📍 ${n.tempat}`;
             let kContainer = document.getElementById('list-keputusan-container'); let kep = APP_DATA.KEPUTUSAN.filter(x => x.id_notulen === currentNotulenId);
             if(kep.length === 0) kContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada keputusan.</p>`;
-            else { let html = ''; kep.forEach(k => { html += `<div class="list-item"><div style="font-weight:600; font-size:0.9rem; margin-bottom:4px;">${k.isi_keputusan}</div><div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">PJ: ${k.penanggung_jawab||'-'}</div><button class="btn btn-outline btn-sm" onclick="jadikanKegiatan('${k.id}')">Jadikan Rencana Kegiatan</button></div>`; }); kContainer.innerHTML = html; }
+            else { 
+                let html = ''; kep.forEach(k => { 
+                    html += `<div class="list-item">
+                        <div style="font-weight:600; font-size:0.9rem; margin-bottom:4px;">${k.isi_keputusan}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">PJ: ${k.penanggung_jawab||'-'}</div>
+                        <div class="action-bar">
+                            <button class="btn btn-outline btn-sm" onclick="jadikanKegiatan('${k.id}')">Jadikan Rencana</button>
+                            <button class="btn btn-outline btn-sm" onclick="editRecord('KEPUTUSAN', '${k.id}')">✏️ Edit</button>
+                            <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('KEPUTUSAN', '${k.id}')">🗑️ Hapus</button>
+                        </div>
+                    </div>`; 
+                }); 
+                kContainer.innerHTML = html; 
+            }
         }
 
         function jadikanKegiatan(idKep) { let kep = APP_DATA.KEPUTUSAN.find(x => x.id === idKep); if(!kep) return; openModal('modal-kegiatan'); document.getElementById('keg_dasar').value = kep.id; document.getElementById('keg_nama').value = kep.isi_keputusan.substring(0, 50); showToast("Draft Kegiatan Dibuat"); }
@@ -499,7 +650,22 @@
         function renderKegiatanUI() {
             let container = document.getElementById('list-kegiatan-container');
             if(!APP_DATA.KEGIATAN || APP_DATA.KEGIATAN.length === 0) { container.innerHTML = `<div class="card text-muted" style="font-size:0.85rem;">Belum ada kegiatan.</div>`; return; }
-            let html = ''; [...APP_DATA.KEGIATAN].reverse().forEach(k => { html += `<div class="card"><div class="card-header"><div class="card-title">${k.nama_kegiatan}</div><span class="badge ${getBadgeClass(k.status)}">${k.status || 'Rencana'}</span></div><p style="font-size:0.85rem; margin-bottom:4px;">📅 ${formatDate(k.tgl)} ${k.waktu ? ' | ⏰ '+k.waktu : ''}</p><p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">📍 ${k.lokasi || '-'}</p><button class="btn btn-primary btn-sm" onclick="openDetailKegiatan('${k.id}')">Buka Detail & RAB</button></div>`; }); container.innerHTML = html;
+            let html = ''; [...APP_DATA.KEGIATAN].reverse().forEach(k => { 
+                html += `<div class="card">
+                    <div class="card-header">
+                        <div class="card-title">${k.nama_kegiatan}</div>
+                        <span class="badge ${getBadgeClass(k.status)}">${k.status || 'Rencana'}</span>
+                    </div>
+                    <p style="font-size:0.85rem; margin-bottom:4px;">📅 ${formatDate(k.tgl)} ${k.waktu ? ' | ⏰ '+k.waktu : ''}</p>
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">📍 ${k.lokasi || '-'}</p>
+                    <div class="action-bar">
+                        <button class="btn btn-primary btn-sm" onclick="openDetailKegiatan('${k.id}')">Detail & RAB</button>
+                        <button class="btn btn-outline btn-sm" onclick="editRecord('KEGIATAN', '${k.id}')">✏️ Edit</button>
+                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('KEGIATAN', '${k.id}')">🗑️ Hapus</button>
+                    </div>
+                </div>`; 
+            }); 
+            container.innerHTML = html;
         }
 
         function openDetailKegiatan(id) { currentKegiatanId = id; navTo('sec-detail-kegiatan'); renderDetailKegiatanUI(); }
@@ -507,13 +673,27 @@
             if(!currentKegiatanId) return; let kegiatan = APP_DATA.KEGIATAN.find(x => x.id === currentKegiatanId); if(!kegiatan) return;
             document.getElementById('detail-keg-title').innerText = kegiatan.nama_kegiatan; 
             document.getElementById('detail-keg-info').innerText = `📅 ${formatDate(kegiatan.tgl)} ${kegiatan.waktu ? ' | ⏰ '+kegiatan.waktu : ''} | 📍 ${kegiatan.lokasi}`;
-            document.getElementById('detail-keg-desc').innerText = kegiatan.keterangan ? `📝 ${keterangan}` : "📝 Tidak ada deskripsi tambahan.";
-            if(kegiatan.keterangan) { document.getElementById('detail-keg-desc').style.display = 'block'; document.getElementById('detail-keg-desc').innerText = `📝 ${kegiatan.keterangan}`; } else { document.getElementById('detail-keg-desc').style.display = 'none'; }
+            let descEl = document.getElementById('detail-keg-desc');
+            if(kegiatan.keterangan) { descEl.style.display = 'block'; descEl.innerText = `📝 ${kegiatan.keterangan}`; } else { descEl.style.display = 'none'; }
 
             // Petugas
             let pContainer = document.getElementById('list-petugas-container'); let petugas = APP_DATA.PETUGAS.filter(x => x.id_kegiatan === currentKegiatanId);
             if(petugas.length === 0) pContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada panitia.</p>`;
-            else { let html = ''; petugas.forEach(p => html += `<div class="list-item flex-between"><div><div style="font-weight:600; font-size:0.9rem;">${p.nama}</div><div style="font-size:0.75rem; color:var(--text-muted);">${p.jabatan}</div></div></div>`); pContainer.innerHTML = html; }
+            else { 
+                let html = ''; petugas.forEach(p => { 
+                    html += `<div class="list-item flex-between">
+                        <div>
+                            <div style="font-weight:600; font-size:0.9rem;">${p.nama}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">${p.jabatan}</div>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn btn-outline btn-sm" onclick="editRecord('PETUGAS', '${p.id}')">✏️</button>
+                            <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('PETUGAS', '${p.id}')">🗑️</button>
+                        </div>
+                    </div>`; 
+                }); 
+                pContainer.innerHTML = html; 
+            }
 
             // Kalkulator RAB
             let aContainer = document.getElementById('list-anggaran-container'); let anggaran = APP_DATA.ANGGARAN.filter(x => x.id_kegiatan === currentKegiatanId); 
@@ -527,9 +707,15 @@
                             <div style="font-weight:600; font-size:0.9rem;">${a.nama_kebutuhan}</div>
                             <div style="font-size:0.75rem; color:var(--text-muted);">${a.jumlah} unit x ${formatRp(a.harga_satuan)}</div>
                         </div>
-                        <div style="text-align:right;">
-                            <div style="font-weight:700; font-size:0.9rem;">${formatRp(r)}</div>
-                            <div style="font-size:0.7rem; color:var(--danger)">Real: ${formatRp(l)}</div>
+                        <div style="text-align:right; display:flex; align-items:center; gap:10px;">
+                            <div>
+                                <div style="font-weight:700; font-size:0.9rem;">${formatRp(r)}</div>
+                                <div style="font-size:0.7rem; color:var(--danger)">Real: ${formatRp(l)}</div>
+                            </div>
+                            <div style="display:flex; gap:4px;">
+                                <button class="btn btn-outline btn-sm" onclick="editRecord('ANGGARAN', '${a.id}')">✏️</button>
+                                <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('ANGGARAN', '${a.id}')">🗑️</button>
+                            </div>
                         </div>
                     </div>`; 
                 }); 
@@ -542,19 +728,62 @@
             // Dokumentasi
             let dContainer = document.getElementById('list-dokumentasi-container'); let dok = APP_DATA.DOKUMENTASI.filter(x => x.id_kegiatan === currentKegiatanId);
             if(dok.length === 0) dContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada dokumentasi foto.</p>`;
-            else { let html = ''; dok.forEach(d => html += `<div class="list-item"><div style="font-weight:600; font-size:0.9rem;">🖼️ ${d.keterangan}</div><a href="${d.url_foto}" target="_blank" style="font-size:0.75rem; color:var(--primary); text-decoration:underline;">🔗 Buka Link Foto / Berkas</a></div>`); dContainer.innerHTML = html; }
+            else { 
+                let html = ''; dok.forEach(d => { 
+                    html += `<div class="list-item flex-between">
+                        <div>
+                            <div style="font-weight:600; font-size:0.9rem;">🖼️ ${d.keterangan}</div>
+                            <a href="${d.url_foto}" target="_blank" style="font-size:0.75rem; color:var(--primary); text-decoration:underline;">🔗 Buka Link Foto / Berkas</a>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn btn-outline btn-sm" onclick="editRecord('DOKUMENTASI', '${d.id}')">✏️</button>
+                            <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('DOKUMENTASI', '${d.id}')">🗑️</button>
+                        </div>
+                    </div>`; 
+                }); 
+                dContainer.innerHTML = html; 
+            }
 
             // Kehadiran
             let hContainer = document.getElementById('list-kehadiran-container'); let kehadiran = APP_DATA.KEHADIRAN.filter(x => x.id_kegiatan === currentKegiatanId);
             let tHadir = 0; let tIzin = 0; let tAlpa = 0; kehadiran.forEach(h => { if(h.status_hadir==='Hadir') tHadir++; else if(h.status_hadir==='Izin') tIzin++; else tAlpa++; });
             document.getElementById('summary-kehadiran').innerHTML = `<span style="color:var(--secondary)">Hadir: ${tHadir}</span><span style="color:var(--warning)">Izin: ${tIzin}</span><span style="color:var(--danger)">Alpa: ${tAlpa}</span>`;
             if(kehadiran.length === 0) hContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem; margin-top:8px;">Belum ada presensi.</p>`;
-            else { let html = ''; kehadiran.forEach(h => html += `<div class="list-item flex-between"><div><div style="font-weight:600; font-size:0.9rem;">${h.nama}</div><div style="font-size:0.75rem; color:var(--text-muted);">${h.no_rumah||''}</div></div><div><span class="badge ${getBadgeHadir(h.status_hadir)}">${h.status_hadir}</span></div></div>`); hContainer.innerHTML = html; }
+            else { 
+                let html = ''; kehadiran.forEach(h => { 
+                    html += `<div class="list-item flex-between">
+                        <div>
+                            <div style="font-weight:600; font-size:0.9rem;">${h.nama}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">${h.no_rumah||''}</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="badge ${getBadgeHadir(h.status_hadir)}">${h.status_hadir}</span>
+                            <button class="btn btn-outline btn-sm" onclick="editRecord('KEHADIRAN', '${h.id}')">✏️</button>
+                            <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('KEHADIRAN', '${h.id}')">🗑️</button>
+                        </div>
+                    </div>`; 
+                }); 
+                hContainer.innerHTML = html; 
+            }
 
             // Pelaksanaan
             let pelContainer = document.getElementById('list-pelaksanaan-container'); let pelaksanaan = APP_DATA.PELAKSANAAN.filter(x => x.id_kegiatan === currentKegiatanId);
             if(pelaksanaan.length === 0) pelContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada catatan.</p>`;
-            else { let html = ''; pelaksanaan.forEach(p => html += `<div class="list-item"><div style="font-weight:600; color:var(--primary); font-size:0.85rem;">${formatDate(p.tgl_pelaksanaan)}</div><div style="font-size:0.85rem; margin-top:2px;">${p.keg_dilaksanakan}</div></div>`); pelContainer.innerHTML = html; }
+            else { 
+                let html = ''; pelaksanaan.forEach(p => { 
+                    html += `<div class="list-item flex-between">
+                        <div>
+                            <div style="font-weight:600; color:var(--primary); font-size:0.85rem;">${formatDate(p.tgl_pelaksanaan)}</div>
+                            <div style="font-size:0.85rem; margin-top:2px;">${p.keg_dilaksanakan}</div>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn btn-outline btn-sm" onclick="editRecord('PELAKSANAAN', '${p.id}')">✏️</button>
+                            <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('PELAKSANAAN', '${p.id}')">🗑️</button>
+                        </div>
+                    </div>`; 
+                }); 
+                pelContainer.innerHTML = html; 
+            }
 
             // Evaluasi Detail
             let evContainer = document.getElementById('detail-evaluasi-container');
@@ -565,7 +794,11 @@
                 evContainer.innerHTML = `
                     <div style="font-size:0.85rem; margin-bottom:8px;"><strong>⚠️ Kendala:</strong><br>${ev.kendala || '-'}</div>
                     <div style="font-size:0.85rem; margin-bottom:8px;"><strong>💡 Solusi:</strong><br>${ev.solusi || '-'}</div>
-                    <div style="font-size:0.85rem;"><strong>✅ Kesimpulan:</strong><br>${ev.hasil || '-'}</div>
+                    <div style="font-size:0.85rem; margin-bottom:12px;"><strong>✅ Kesimpulan:</strong><br>${ev.hasil || '-'}</div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-outline btn-sm" onclick="editRecord('EVALUASI', '${ev.id}')">✏️ Edit Evaluasi</button>
+                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('EVALUASI', '${ev.id}')">🗑️ Hapus Evaluasi</button>
+                    </div>
                 `;
             }
         }
@@ -573,7 +806,19 @@
         function renderSuratUI() {
             let container = document.getElementById('list-surat-container');
             if(!APP_DATA.SURAT || APP_DATA.SURAT.length === 0) { container.innerHTML = `<p class="text-muted text-center" style="padding:15px; font-size:0.85rem;">Belum ada surat yang dibuat.</p>`; return; }
-            let html = ''; [...APP_DATA.SURAT].reverse().forEach(s => { html += `<div class="list-item"><div style="font-weight:700; color:var(--primary); font-size:0.95rem;">${s.perihal}</div><div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">No: ${s.no_surat} | ${formatDate(s.tgl_surat)}</div><div class="action-bar"><button class="btn btn-outline btn-sm" onclick="bukaEditorSurat('${s.jenis_surat}', '${s.id}')">✏️ Edit</button><button class="btn btn-outline btn-sm" onclick="cetakSuratId('${s.id}')">🖨️ Cetak</button><button class="btn btn-success btn-sm" onclick="shareWhatsAppSurat('${s.id}')">📤 WA</button></div></div>`; }); container.innerHTML = html;
+            let html = ''; [...APP_DATA.SURAT].reverse().forEach(s => { 
+                html += `<div class="list-item">
+                    <div style="font-weight:700; color:var(--primary); font-size:0.95rem;">${s.perihal}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">No: ${s.no_surat} | ${formatDate(s.tgl_surat)}</div>
+                    <div class="action-bar">
+                        <button class="btn btn-outline btn-sm" onclick="bukaEditorSurat('${s.jenis_surat}', '${s.id}')">✏️ Edit</button>
+                        <button class="btn btn-outline btn-sm" onclick="cetakSuratId('${s.id}')">🖨️ Cetak</button>
+                        <button class="btn btn-success btn-sm" onclick="shareWhatsAppSurat('${s.id}')">📤 WA</button>
+                        <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="deleteRecord('SURAT', '${s.id}')">🗑️ Hapus</button>
+                    </div>
+                </div>`; 
+            }); 
+            container.innerHTML = html;
         }
 
         // ==========================================
@@ -620,7 +865,7 @@
         function tutupPreview() { document.getElementById('print-area').style.display = 'none'; }
 
         // ==========================================
-        // LAPORAN & SHARE LOGIC (DENGAN RINCIAN NOTA & EVALUASI LENGKAP)
+        // LAPORAN & SHARE LOGIC
         // ==========================================
         function renderLaporanUI() {
             let fBulan = document.getElementById('filter-bulan').value; let fTahun = document.getElementById('filter-tahun').value;
