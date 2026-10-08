@@ -115,18 +115,36 @@
         <section id="sec-surat" class="section">
             <div class="flex-between" style="margin-bottom: 16px;"><h2 style="font-size: 1.15rem; font-weight:700;">Surat Resmi RT</h2><button class="btn btn-outline btn-sm" onclick="openModal('modal-kop-surat')">⚙️ Kop Surat</button></div>
             <div class="quick-actions"><button class="btn btn-primary" onclick="openModal('modal-pilih-template')">+ Buat Surat</button><button class="btn btn-success" onclick="shareWaGroupRT()">📢 Info ke Grup</button></div>
-            <div class="card"><div class="card-header"><div class="card-title">📂 Riwayat Surat</div></div><div id="list-surat-container"></div></div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📂 Riwayat Surat</div>
+                    <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('SURAT', 'Riwayat Surat')">🗑️ Reset Riwayat</button>
+                </div>
+                <div id="list-surat-container"></div>
+            </div>
         </section>
 
         <!-- WARGA -->
         <section id="sec-warga" class="section">
-            <div class="flex-between" style="margin-bottom: 16px;"><h2 style="font-size: 1.15rem; font-weight:700;">Daftar Warga</h2><button class="btn btn-primary btn-sm" onclick="openModal('modal-warga')">+ Warga</button></div>
+            <div class="flex-between" style="margin-bottom: 16px;">
+                <h2 style="font-size: 1.15rem; font-weight:700;">Daftar Warga</h2>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('WARGA', 'Data Warga')">🗑️ Reset</button>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('modal-warga')">+ Warga</button>
+                </div>
+            </div>
             <div class="card" id="list-warga-container"></div>
         </section>
 
         <!-- NOTULEN -->
         <section id="sec-notulen" class="section">
-            <div class="flex-between" style="margin-bottom: 16px;"><h2 style="font-size: 1.15rem; font-weight:700;">Notulen Rapat</h2><button class="btn btn-primary btn-sm" onclick="openModal('modal-notulen')">+ Notulen</button></div>
+            <div class="flex-between" style="margin-bottom: 16px;">
+                <h2 style="font-size: 1.15rem; font-weight:700;">Notulen Rapat</h2>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('NOTULEN', 'Notulen Rapat')">🗑️ Reset</button>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('modal-notulen')">+ Notulen</button>
+                </div>
+            </div>
             <div id="list-notulen-container"></div>
         </section>
         
@@ -138,7 +156,13 @@
 
         <!-- KEGIATAN -->
         <section id="sec-kegiatan" class="section">
-            <div class="flex-between" style="margin-bottom: 16px;"><h2 style="font-size: 1.15rem; font-weight:700;">Kegiatan</h2><button class="btn btn-primary btn-sm" onclick="openModal('modal-kegiatan')">+ Kegiatan</button></div>
+            <div class="flex-between" style="margin-bottom: 16px;">
+                <h2 style="font-size: 1.15rem; font-weight:700;">Kegiatan</h2>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('KEGIATAN', 'Data Kegiatan')">🗑️ Reset</button>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('modal-kegiatan')">+ Kegiatan</button>
+                </div>
+            </div>
             <div id="list-kegiatan-container"></div>
         </section>
 
@@ -186,7 +210,10 @@
         
         <!-- LAPORAN -->
         <section id="sec-laporan" class="section">
-            <h2 style="font-size: 1.15rem; font-weight:700; margin-bottom: 16px;">Laporan & Rekap</h2>
+            <div class="flex-between" style="margin-bottom: 16px;">
+                <h2 style="font-size: 1.15rem; font-weight:700;">Laporan & Rekap</h2>
+                <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="resetTableData('EVALUASI', 'Data Laporan / Evaluasi')">🗑️ Reset Laporan</button>
+            </div>
             <div class="grid-2" style="margin-bottom:14px;">
                 <select id="filter-bulan" class="form-control" onchange="renderLaporanUI()"><option value="all">Semua Bulan</option><option value="01">Jan</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Apr</option><option value="05">Mei</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Agu</option><option value="09">Sep</option><option value="10">Okt</option><option value="11">Nov</option><option value="12">Des</option></select>
                 <select id="filter-tahun" class="form-control" onchange="renderLaporanUI()"><option value="all">Semua Tahun</option></select>
@@ -200,12 +227,22 @@
 
         <!-- PENGATURAN -->
         <section id="sec-pengaturan" class="section">
-            <h2 style="font-size: 1.15rem; font-weight:700; margin-bottom: 16px;">Pengaturan</h2>
-            <div class="card"><form onsubmit="savePengaturan(event)"><div class="form-group"><label class="form-label">Nama Lingkungan (RT/RW)</label><input type="text" id="set_nama_rt" class="form-control" required></div><div class="form-group"><label class="form-label">Desa / Kelurahan</label><input type="text" id="set_desa" class="form-control" required></div><button type="submit" class="btn btn-primary">Simpan</button></form></div>
+            <h2 style="font-size: 1.15rem; font-weight:700; margin-bottom: 16px;">Pengaturan & Database</h2>
+            <div class="card">
+                <form onsubmit="savePengaturan(event)">
+                    <div class="form-group"><label class="form-label">Nama Lingkungan (RT/RW)</label><input type="text" id="set_nama_rt" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">Desa / Kelurahan</label><input type="text" id="set_desa" class="form-control" required></div>
+                    <div class="form-group">
+                        <label class="form-label">URL Database (Google Apps Script / Web App URL)</label>
+                        <input type="text" id="set_gas_url" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                </form>
+            </div>
             <div class="card text-center"><button class="btn btn-outline" onclick="syncDataFromCloud(true)">🔄 Force Sync ke Server</button></div>
         </section>
         
-        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.6.2</span><br><strong>Powered by Ari GPM</strong></div>
+        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.6.4</span><br><strong>Powered by Ari GPM</strong></div>
     </div>
 
     <!-- ============================================== -->
@@ -329,9 +366,10 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const APP_VERSION = "v2.6.2";
+        const APP_VERSION = "v2.6.4";
         const APP_AUTHOR = "Ari GPM";
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
+        
+        let GAS_URL = localStorage.getItem('rt_gas_url') || "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
         
         let APP_DATA = { WARGA: [], NOTULEN: [], KEPUTUSAN: [], KEGIATAN: [], PETUGAS: [], ANGGARAN: [], KEHADIRAN: [], PELAKSANAAN: [], DOKUMENTASI: [], EVALUASI: [], SURAT: [], PENGATURAN: [] };
         let SYNC_QUEUE = JSON.parse(localStorage.getItem('rt_sync_queue')) || [];
@@ -411,6 +449,14 @@
             saveLocalData(); refreshAllUI(); showToast("Data berhasil dihapus");
             let payload = { action: 'delete', table: tableName, id: id };
             if(navigator.onLine && GAS_URL !== "") sendToCloud(payload);
+        }
+
+        function resetTableData(tableName, titleName) {
+            if(!confirm(`⚠️ Apakah Anda yakin ingin mereset/menghapus seluruh data ${titleName}? Tindakan ini tidak dapat dibatalkan.`)) return;
+            APP_DATA[tableName] = [];
+            saveLocalData();
+            refreshAllUI();
+            showToast(`Data ${titleName} berhasil direset.`);
         }
 
         function editRecord(tableName, id) {
@@ -598,6 +644,9 @@
             if(p_rt && document.getElementById('set_nama_rt')) document.getElementById('set_nama_rt').value = p_rt.nilai;
             let p_desa = APP_DATA.PENGATURAN.find(x => x.kunci === 'desa');
             if(p_desa && document.getElementById('set_desa')) document.getElementById('set_desa').value = p_desa.nilai;
+            let p_gas = APP_DATA.PENGATURAN.find(x => x.kunci === 'gas_url');
+            let storedGas = p_gas ? p_gas.nilai : localStorage.getItem('rt_gas_url') || GAS_URL;
+            if(document.getElementById('set_gas_url')) document.getElementById('set_gas_url').value = storedGas;
         }
 
         function updateDashboardUI() { 
@@ -1001,16 +1050,27 @@
             e.preventDefault(); 
             let pr = document.getElementById('set_nama_rt').value; 
             let pd = document.getElementById('set_desa').value; 
-            APP_DATA.PENGATURAN = APP_DATA.PENGATURAN.filter(x => !['nama_rt', 'desa'].includes(x.kunci)); 
-            APP_DATA.PENGATURAN.push({id: 'set_1', kunci: 'nama_rt', nilai: pr}, {id: 'set_2', kunci: 'desa', nilai: pd}); 
+            let pgs = document.getElementById('set_gas_url').value.trim();
+            
+            if(pgs !== "") {
+                GAS_URL = pgs;
+                localStorage.setItem('rt_gas_url', pgs);
+            }
+
+            APP_DATA.PENGATURAN = APP_DATA.PENGATURAN.filter(x => !['nama_rt', 'desa', 'gas_url'].includes(x.kunci)); 
+            APP_DATA.PENGATURAN.push(
+                {id: 'set_1', kunci: 'nama_rt', nilai: pr}, 
+                {id: 'set_2', kunci: 'desa', nilai: pd},
+                {id: 'set_3', kunci: 'gas_url', nilai: pgs}
+            ); 
             saveLocalData(); 
-            showToast("Pengaturan disimpan"); 
+            showToast("Pengaturan & Database disimpan"); 
             refreshAllUI(); 
         }
 
         function initDemoData() { 
             if(APP_DATA.PENGATURAN.length === 0) { 
-                APP_DATA.PENGATURAN.push({id: 'k1', kunci: 'kop_1', nilai: 'PENGURUS RT 05'}, {id: 'k2', kunci: 'nama_rt', nilai: 'RT 05 / RW 02'}, {id: 'k3', kunci: 'desa', nilai: 'Sukamaju'}); 
+                APP_DATA.PENGATURAN.push({id: 'k1', kunci: 'kop_1', nilai: 'PENGURUS RT 05'}, {id: 'k2', kunci: 'nama_rt', nilai: 'RT 05 / RW 02'}, {id: 'k3', kunci: 'desa', nilai: 'Sukamaju'}, {id: 'k4', kunci: 'gas_url', nilai: GAS_URL}); 
                 saveLocalData(); 
                 loadPengaturanInput();
             } 
