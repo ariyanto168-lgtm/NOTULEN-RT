@@ -69,20 +69,23 @@
         .spinner { width: 38px; height: 38px; border: 3px solid var(--border); border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
+        /* PRINT AREA MODAL STYLING FIX */
+        #print-area { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 99999; overflow-y: auto; padding: 24px; }
+        .kop-surat-print { text-align: center; border-bottom: 3px solid black; margin-bottom: 20px; padding-bottom: 10px; }
+        .kop-title { font-weight: bold; font-size: 16pt; margin: 0; } .kop-subtitle { font-weight: bold; font-size: 14pt; margin: 0; }
+        .kop-address { font-size: 11pt; margin: 0; } .surat-body { font-size: 12pt; line-height: 1.5; font-family: 'Times New Roman', Times, serif; }
+
         @media print {
             body * { visibility: hidden; } #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; background: white; padding: 20px; margin:0; }
-            .modal-overlay, .modal-content, header { display: none !important; }
-            .kop-surat-print { text-align: center; border-bottom: 3px solid black; margin-bottom: 20px; padding-bottom: 10px; }
-            .kop-title { font-weight: bold; font-size: 16pt; margin: 0; } .kop-subtitle { font-weight: bold; font-size: 14pt; margin: 0; }
-            .kop-address { font-size: 11pt; margin: 0; } .surat-body { font-size: 12pt; line-height: 1.5; font-family: 'Times New Roman', Times, serif;}
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; height: auto; background: white; padding: 10px; margin: 0; z-index: 999999; }
+            #preview-actions { display: none !important; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-title"><span id="app-rt-name">Sistem RT</span><span class="header-subtitle" id="app-version-head">v2.5.2</span></div>
+        <div class="header-title"><span id="app-rt-name">Sistem RT</span><span class="header-subtitle" id="app-version-head">v2.5.6</span></div>
         <div style="display:flex; gap:10px; align-items:center;">
             <div class="sync-status" id="syncStatus">🟢</div>
             <button onclick="navTo('sec-dashboard')" style="background:var(--primary-light); color:var(--primary); border:none; padding:8px 14px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">🏠 Home</button>
@@ -136,14 +139,16 @@
             <div id="list-kegiatan-container"></div>
         </section>
 
-        <!-- DETAIL KEGIATAN & KALKULATOR RAB -->
+        <!-- DETAIL KEGIATAN & KELENGKAPAN (RAB, DOKUMENTASI, EVALUASI) -->
         <section id="sec-detail-kegiatan" class="section">
             <div class="flex-between" style="margin-bottom: 16px;"><button class="btn btn-outline btn-sm" onclick="navTo('sec-kegiatan')">← Kembali</button></div>
-            <h2 id="detail-keg-title" style="color: var(--primary); font-size:1.15rem; font-weight:700;">Nama Kegiatan</h2><p id="detail-keg-info" class="text-muted" style="font-size: 0.8rem; margin-bottom: 16px;"></p>
+            <h2 id="detail-keg-title" style="color: var(--primary); font-size:1.15rem; font-weight:700;">Nama Kegiatan</h2>
+            <p id="detail-keg-info" class="text-muted" style="font-size: 0.8rem; margin-bottom: 6px;"></p>
+            <p id="detail-keg-desc" class="text-main" style="font-size: 0.85rem; margin-bottom: 16px; background:#f1f5f9; padding:8px 12px; border-radius:8px;"></p>
             
             <div class="card"><div class="card-header"><div class="card-title">👥 Panitia</div><button class="btn btn-primary btn-sm" onclick="openModalRel('modal-petugas')">+ Petugas</button></div><div id="list-petugas-container"></div></div>
             
-            <!-- KALKULATOR RAB AKTIF & LENGKAP -->
+            <!-- KALKULATOR RAB -->
             <div class="card" style="border: 2px solid var(--primary);">
                 <div class="card-header">
                     <div class="card-title">💰 Kalkulator RAB & Realisasi Kas</div>
@@ -157,9 +162,23 @@
                 </div>
             </div>
 
+            <!-- DOKUMENTASI KEGIATAN (LENGKAP) -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🖼️ Dokumentasi & Foto</div>
+                    <button class="btn btn-primary btn-sm" onclick="openModalRel('modal-dokumentasi')">+ Dokumentasi</button>
+                </div>
+                <div id="list-dokumentasi-container"></div>
+            </div>
+
             <div class="card"><div class="card-header"><div class="card-title">📝 Daftar Hadir</div><button class="btn btn-primary btn-sm" onclick="openModalRel('modal-kehadiran')">+ Presensi</button></div><div id="summary-kehadiran" style="display:flex; justify-content:space-around; font-weight:bold; background:#f8fafc; padding:10px; border-radius:10px; font-size:0.85rem; margin-bottom:10px;"></div><div id="list-kehadiran-container"></div></div>
             <div class="card"><div class="card-header"><div class="card-title">🏃‍♂️ Pelaksanaan</div><button class="btn btn-primary btn-sm" onclick="openModalRel('modal-pelaksanaan')">+ Catat</button></div><div id="list-pelaksanaan-container"></div></div>
-            <div class="card" style="background-color: #fafaf9;"><div class="card-header"><div class="card-title">✅ Evaluasi</div></div><div id="detail-evaluasi-container"><button class="btn btn-warning" onclick="openModalRel('modal-evaluasi')">Buat Laporan Evaluasi</button></div></div>
+            
+            <!-- EVALUASI LENGKAP -->
+            <div class="card" style="background-color: #fafaf9;">
+                <div class="card-header"><div class="card-title">✅ Evaluasi & Kendala</div></div>
+                <div id="detail-evaluasi-container"></div>
+            </div>
         </section>
         
         <!-- LAPORAN -->
@@ -173,7 +192,7 @@
                 <div class="flex-between"><span>Total RAB:</span><strong id="lap-tot-rab" style="color:var(--primary)">Rp 0</strong></div>
                 <div class="flex-between"><span>Total Realisasi:</span><strong id="lap-tot-real" style="color:var(--danger)">Rp 0</strong></div>
             </div>
-            <div class="card"><h3 style="font-size: 0.95rem; margin-bottom: 10px;">Rincian Evaluasi</h3><div id="list-laporan-container"></div></div>
+            <div class="card"><h3 style="font-size: 0.95rem; margin-bottom: 10px;">Rincian Evaluasi & Kendala</h3><div id="list-laporan-container"></div></div>
         </section>
 
         <!-- PENGATURAN -->
@@ -183,7 +202,7 @@
             <div class="card text-center"><button class="btn btn-outline" onclick="syncDataFromCloud(true)">🔄 Force Sync ke Server</button></div>
         </section>
         
-        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.5.2</span><br><strong>Powered by Ari GPM</strong></div>
+        <div style="text-align: center; padding: 20px; font-size: 0.75rem; color: var(--text-muted);"><span id="foot-version">v2.5.6</span><br><strong>Powered by Ari GPM</strong></div>
     </div>
 
     <!-- ============================================== -->
@@ -200,7 +219,28 @@
     <div id="modal-notulen" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Form Notulen</h3><button class="modal-close" onclick="closeModal('modal-notulen')">&times;</button></div><form onsubmit="submitForm(event, 'NOTULEN', 'modal-notulen')"><input type="hidden" name="id"><div class="form-group"><label class="form-label">Nomor</label><input type="text" name="no_notulen" class="form-control" required></div><div class="grid-2"><div class="form-group"><label class="form-label">Tanggal</label><input type="date" name="tgl_rapat" class="form-control" required></div><div class="form-group"><label class="form-label">Waktu</label><input type="time" name="waktu" class="form-control" required></div></div><div class="form-group"><label class="form-label">Tempat</label><select name="tempat" id="sel_tempat_notulen" class="form-control" onchange="document.getElementById('input_tempat_manual').value = this.value"></select><input type="text" name="tempat_manual" id="input_tempat_manual" class="form-control" style="margin-top:8px;"></div><div class="form-group"><label class="form-label">Agenda</label><input type="text" name="agenda" class="form-control" required></div><div class="form-group"><label class="form-label">Pimpinan</label><input type="text" name="pimpinan" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
     <div id="modal-keputusan" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Item Keputusan</h3><button class="modal-close" onclick="closeModal('modal-keputusan')">&times;</button></div><form onsubmit="submitForm(event, 'KEPUTUSAN', 'modal-keputusan')"><input type="hidden" name="id"><input type="hidden" name="id_notulen" class="rel_id_notulen"><div class="form-group"><label class="form-label">Isi Keputusan</label><textarea name="isi_keputusan" class="form-control" required></textarea></div><div class="form-group"><label class="form-label">Penanggung Jawab</label><input type="text" name="penanggung_jawab" class="form-control"></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
 
-    <div id="modal-kegiatan" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Form Kegiatan</h3><button class="modal-close" onclick="closeModal('modal-kegiatan')">&times;</button></div><form onsubmit="submitForm(event, 'KEGIATAN', 'modal-kegiatan')"><input type="hidden" name="id"><div class="form-group"><label class="form-label">Nama Kegiatan</label><input type="text" name="nama_kegiatan" id="keg_nama" class="form-control" required></div><div class="form-group"><label class="form-label">Dasar Keputusan</label><input type="text" name="dasar_keputusan" id="keg_dasar" class="form-control" readonly></div><div class="grid-2"><div class="form-group"><label class="form-label">Jenis</label><select name="jenis_kegiatan" class="form-control"><option value="Kerja Bakti">Kerja Bakti</option><option value="Rapat RT">Rapat RT</option><option value="Lainnya">Lainnya</option></select></div><div class="form-group"><label class="form-label">Status</label><select name="status" class="form-control"><option value="Rencana">Rencana</option><option value="Berjalan">Berjalan</option></select></div></div><div class="grid-2"><div class="form-group"><label class="form-label">Tanggal</label><input type="date" name="tgl" id="keg_tgl" class="form-control" required></div><div class="form-group"><label class="form-label">Lokasi</label><input type="text" name="lokasi" class="form-control" required></div></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
+    <!-- FORM KEGIATAN LENGKAP -->
+    <div id="modal-kegiatan" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Form Kegiatan</h3><button class="modal-close" onclick="closeModal('modal-kegiatan')">&times;</button></div>
+            <form onsubmit="submitForm(event, 'KEGIATAN', 'modal-kegiatan')">
+                <input type="hidden" name="id">
+                <div class="form-group"><label class="form-label">Nama Kegiatan</label><input type="text" name="nama_kegiatan" id="keg_nama" class="form-control" required></div>
+                <div class="form-group"><label class="form-label">Dasar Keputusan</label><input type="text" name="dasar_keputusan" id="keg_dasar" class="form-control" readonly></div>
+                <div class="grid-2">
+                    <div class="form-group"><label class="form-label">Jenis</label><select name="jenis_kegiatan" class="form-control"><option value="Kerja Bakti">Kerja Bakti</option><option value="Rapat RT">Rapat RT</option><option value="Lainnya">Lainnya</option></select></div>
+                    <div class="form-group"><label class="form-label">Status</label><select name="status" class="form-control"><option value="Rencana">Rencana</option><option value="Berjalan">Berjalan</option></select></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label class="form-label">Tanggal</label><input type="date" name="tgl" id="keg_tgl" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">Waktu</label><input type="time" name="waktu" class="form-control"></div>
+                </div>
+                <div class="form-group"><label class="form-label">Lokasi</label><input type="text" name="lokasi" class="form-control" required></div>
+                <div class="form-group"><label class="form-label">Keterangan / Deskripsi</label><textarea name="keterangan" class="form-control" placeholder="Keterangan lengkap kegiatan..."></textarea></div>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </form>
+        </div>
+    </div>
     
     <div id="modal-petugas" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Tambah Panitia</h3><button class="modal-close" onclick="closeModal('modal-petugas')">&times;</button></div><form onsubmit="submitForm(event, 'PETUGAS', 'modal-petugas')"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Pilih Warga</label><select name="nama" id="sel_petugas_warga" class="form-control" onchange="autoFillWarga(this, 'petugas_rumah', 'petugas_wa')" required></select></div><div class="grid-2"><div class="form-group"><label class="form-label">No Rumah</label><input type="text" name="no_rumah" id="petugas_rumah" class="form-control" readonly></div><div class="form-group"><label class="form-label">No WA</label><input type="text" name="no_wa" id="petugas_wa" class="form-control" readonly></div></div><div class="form-group"><label class="form-label">Tugas</label><input type="text" name="jabatan" class="form-control" required></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
 
@@ -229,17 +269,42 @@
         </div>
     </div>
 
+    <!-- MODAL DOKUMENTASI -->
+    <div id="modal-dokumentasi" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Tambah Dokumentasi Foto</h3><button class="modal-close" onclick="closeModal('modal-dokumentasi')">&times;</button></div>
+            <form onsubmit="submitForm(event, 'DOKUMENTASI', 'modal-dokumentasi')">
+                <input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan">
+                <div class="form-group"><label class="form-label">Keterangan / Judul Foto</label><input type="text" name="keterangan" class="form-control" placeholder="Cth: Suasana kerja bakti" required></div>
+                <div class="form-group"><label class="form-label">Link / URL Foto (Google Drive/Imgur/dll)</label><input type="url" name="url_foto" class="form-control" placeholder="https://..." required></div>
+                <button type="submit" class="btn btn-primary">Simpan Dokumentasi</button>
+            </form>
+        </div>
+    </div>
+
     <div id="modal-kehadiran" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Form Presensi</h3><button class="modal-close" onclick="closeModal('modal-kehadiran')">&times;</button></div><form onsubmit="submitForm(event, 'KEHADIRAN', 'modal-kehadiran')"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Pilih Warga</label><select name="nama" id="sel_hadir_warga" class="form-control" onchange="autoFillWarga(this, 'hadir_rumah', null)" required></select></div><div class="grid-2"><div class="form-group"><label class="form-label">No Rumah</label><input type="text" name="no_rumah" id="hadir_rumah" class="form-control" readonly></div><div class="form-group"><label class="form-label">Status</label><select name="status_hadir" class="form-control" required><option value="Hadir">Hadir</option><option value="Izin">Izin</option><option value="Tidak Hadir">Alpa</option></select></div></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
 
     <div id="modal-pelaksanaan" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Catatan Hari-H</h3><button class="modal-close" onclick="closeModal('modal-pelaksanaan')">&times;</button></div><form onsubmit="submitForm(event, 'PELAKSANAAN', 'modal-pelaksanaan')"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Tanggal Pelaksanaan</label><input type="date" name="tgl_pelaksanaan" class="form-control" required></div><div class="form-group"><label class="form-label">Kegiatan yang Terlaksana</label><textarea name="keg_dilaksanakan" class="form-control" required></textarea></div><button type="submit" class="btn btn-primary">Simpan</button></form></div></div>
 
-    <div id="modal-evaluasi" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Tutup Kegiatan</h3><button class="modal-close" onclick="closeModal('modal-evaluasi')">&times;</button></div><form onsubmit="submitEvaluasi(event)"><input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan"><div class="form-group"><label class="form-label">Hasil Evaluasi / Kesimpulan</label><textarea name="hasil" class="form-control" required></textarea></div><button type="submit" class="btn btn-warning" style="width:100%;">Selesaikan & Tutup Kegiatan</button></form></div></div>
+    <!-- MODAL EVALUASI LENGKAP -->
+    <div id="modal-evaluasi" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Tutup & Evaluasi Kegiatan</h3><button class="modal-close" onclick="closeModal('modal-evaluasi')">&times;</button></div>
+            <form onsubmit="submitEvaluasi(event)">
+                <input type="hidden" name="id"><input type="hidden" name="id_kegiatan" class="rel_id_kegiatan">
+                <div class="form-group"><label class="form-label">Kendala di Lapangan</label><textarea name="kendala" class="form-control" placeholder="Tuliskan kendala atau hambatan..."></textarea></div>
+                <div class="form-group"><label class="form-label">Solusi / Tindak Lanjut</label><textarea name="solusi" class="form-control" placeholder="Tuliskan solusi yang diambil..."></textarea></div>
+                <div class="form-group"><label class="form-label">Hasil Akhir / Kesimpulan</label><textarea name="hasil" class="form-control" placeholder="Kesimpulan akhir kegiatan..." required></textarea></div>
+                <button type="submit" class="btn btn-warning" style="width:100%;">Selesaikan & Tutup Kegiatan</button>
+            </form>
+        </div>
+    </div>
 
-    <!-- Print Area -->
-    <div id="print-area" style="display:none;">
+    <!-- Print / Preview Area Modal -->
+    <div id="print-area">
         <div class="kop-surat-print"><h1 class="kop-title" id="p_kop1"></h1><h2 class="kop-subtitle" id="p_kop2"></h2><h2 class="kop-subtitle" id="p_kop3" style="font-size:12pt; font-weight:normal;"></h2><p class="kop-address" id="p_kop4"></p></div>
         <div class="surat-body"><div style="display:flex; justify-content:space-between; margin-bottom:20px;"><div><div>Nomor : <span id="p_no"></span></div><div>Perihal : <span id="p_perihal"></span></div></div><div><span id="p_tgl"></span></div></div><div style="margin-bottom:20px;">Kepada Yth.<br><div id="p_penerima" style="white-space:pre-wrap;"></div></div><div id="p_isi" style="text-align:justify; margin-bottom:30px; min-height:200px;"></div><div style="display:flex; justify-content:flex-end;"><div style="text-align:center; white-space:pre-wrap; min-width:200px;" id="p_ttd"></div></div></div>
-        <div id="preview-actions" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); padding:10px 20px; border-radius:30px; display:flex; gap:15px; box-shadow:0 10px 25px rgba(0,0,0,0.3); z-index:9999;"><button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Cetak / PDF</button><button class="btn btn-outline btn-sm" style="color:white; border-color:white;" onclick="tutupPreview()">❌ Tutup</button></div>
+        <div id="preview-actions" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); padding:10px 20px; border-radius:30px; display:flex; gap:15px; box-shadow:0 10px 25px rgba(0,0,0,0.3); z-index:999999;"><button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Cetak / PDF</button><button class="btn btn-outline btn-sm" style="color:white; border-color:white;" onclick="tutupPreview()">❌ Tutup</button></div>
     </div>
 
     <!-- Loader & Toast -->
@@ -248,10 +313,8 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const APP_VERSION = "v2.5.2";
+        const APP_VERSION = "v2.5.6";
         const APP_AUTHOR = "Ari GPM";
-        
-        // GAS URL SUDAH TER-KOMBINASI SECARA PERMANEN
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
         
         let APP_DATA = { WARGA: [], NOTULEN: [], KEPUTUSAN: [], KEGIATAN: [], PETUGAS: [], ANGGARAN: [], KEHADIRAN: [], PELAKSANAAN: [], DOKUMENTASI: [], EVALUASI: [], SURAT: [], PENGATURAN: [] };
@@ -274,8 +337,25 @@
             yearSelect.innerHTML = options;
         }
 
-        function loadLocalData() { let cache = localStorage.getItem('rt_app_data'); if (cache) { APP_DATA = JSON.parse(cache); if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; if(!APP_DATA.PENGATURAN) APP_DATA.PENGATURAN = []; } }
+        function loadLocalData() { let cache = localStorage.getItem('rt_app_data'); if (cache) { APP_DATA = JSON.parse(cache); if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; if(!APP_DATA.DOKUMENTASI) APP_DATA.DOKUMENTASI = []; if(!APP_DATA.EVALUASI) APP_DATA.EVALUASI = []; if(!APP_DATA.PENGATURAN) APP_DATA.PENGATURAN = []; } }
         function saveLocalData() { localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); }
+
+        function formatDate(dateStr) {
+            if(!dateStr) return '-';
+            try {
+                let d = new Date(dateStr);
+                if(!isNaN(d.getTime())) {
+                    let day = String(d.getDate()).padStart(2, '0');
+                    let month = String(d.getMonth() + 1).padStart(2, '0');
+                    let year = d.getFullYear();
+                    return `${day}-${month}-${year}`;
+                }
+            } catch(e) {}
+            if(dateStr.includes('T')) {
+                return dateStr.split('T')[0].split('-').reverse().join('-');
+            }
+            return dateStr;
+        }
 
         async function syncDataFromCloud(force = false) {
             if (GAS_URL === "") {
@@ -286,7 +366,7 @@
             if(force) showLoader();
             try {
                 let res = await fetch(`${GAS_URL}?action=sync`); let result = await res.json();
-                if (result.status === "success") { APP_DATA = result.data; if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; saveLocalData(); refreshAllUI(); loadPengaturanInput(); if(force) showToast("Sinkronisasi Berhasil!"); }
+                if (result.status === "success") { APP_DATA = result.data; if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; if(!APP_DATA.DOKUMENTASI) APP_DATA.DOKUMENTASI = []; if(!APP_DATA.EVALUASI) APP_DATA.EVALUASI = []; saveLocalData(); refreshAllUI(); loadPengaturanInput(); if(force) showToast("Sinkronisasi Berhasil!"); }
             } catch (e) { if(force) showToast("Gagal sinkronisasi server."); }
             if(force) hideLoader();
         }
@@ -388,7 +468,7 @@
             
             let agendaHtml = '';
             if(APP_DATA.KEGIATAN && APP_DATA.KEGIATAN.length > 0) {
-                APP_DATA.KEGIATAN.filter(k=>k.status!=='Selesai').slice(-3).reverse().forEach(k => { agendaHtml += `<div style="padding: 10px 0; border-bottom: 1px solid var(--border);"><strong style="color: var(--text-main); font-size:0.9rem;">${k.nama_kegiatan}</strong><span class="badge ${getBadgeClass(k.status)}" style="float:right;">${k.status || 'Rencana'}</span><br><small style="color: var(--text-muted);">📅 ${k.tgl || '-'} | 📍 ${k.lokasi || '-'}</small></div>`; });
+                APP_DATA.KEGIATAN.filter(k=>k.status!=='Selesai').slice(-3).reverse().forEach(k => { agendaHtml += `<div style="padding: 10px 0; border-bottom: 1px solid var(--border);"><strong style="color: var(--text-main); font-size:0.9rem;">${k.nama_kegiatan}</strong><span class="badge ${getBadgeClass(k.status)}" style="float:right;">${k.status || 'Rencana'}</span><br><small style="color: var(--text-muted);">📅 ${formatDate(k.tgl)} ${k.waktu ? ' | ⏰ '+k.waktu : ''} | 📍 ${k.lokasi || '-'}</small></div>`; });
             } else { agendaHtml = `<p class="text-muted" style="font-size:0.85rem;">Tidak ada agenda terdekat.</p>`; }
             document.getElementById('list-agenda-terdekat').innerHTML = agendaHtml;
         }
@@ -402,13 +482,13 @@
         function renderNotulenUI() {
             let container = document.getElementById('list-notulen-container');
             if(!APP_DATA.NOTULEN || APP_DATA.NOTULEN.length === 0) { container.innerHTML = `<div class="card text-muted" style="font-size:0.85rem;">Belum ada notulen rapat.</div>`; return; }
-            let html = ''; [...APP_DATA.NOTULEN].reverse().forEach(n => { html += `<div class="card"><div class="card-header"><div class="card-title">${n.agenda}</div><span style="font-size:0.75rem; color:var(--text-muted);">${n.tgl_rapat}</span></div><p style="font-size:0.85rem; margin-bottom:10px;"><strong>Tempat:</strong> ${n.tempat}</p><button class="btn btn-primary btn-sm" onclick="openDetailNotulen('${n.id}')">Buka Keputusan Rapat</button></div>`; }); container.innerHTML = html;
+            let html = ''; [...APP_DATA.NOTULEN].reverse().forEach(n => { html += `<div class="card"><div class="card-header"><div class="card-title">${n.agenda}</div><span style="font-size:0.75rem; color:var(--text-muted);">${formatDate(n.tgl_rapat)}</span></div><p style="font-size:0.85rem; margin-bottom:10px;"><strong>Tempat:</strong> ${n.tempat}</p><button class="btn btn-primary btn-sm" onclick="openDetailNotulen('${n.id}')">Buka Keputusan Rapat</button></div>`; }); container.innerHTML = html;
         }
 
         function openDetailNotulen(id) { currentNotulenId = id; navTo('sec-detail-notulen'); renderDetailNotulenUI(); }
         function renderDetailNotulenUI() {
             let n = APP_DATA.NOTULEN.find(x => x.id === currentNotulenId); if(!n) return;
-            document.getElementById('det-not-agenda').innerText = n.agenda; document.getElementById('det-not-info').innerText = `📅 ${n.tgl_rapat} | 📍 ${n.tempat}`;
+            document.getElementById('det-not-agenda').innerText = n.agenda; document.getElementById('det-not-info').innerText = `📅 ${formatDate(n.tgl_rapat)} | 📍 ${n.tempat}`;
             let kContainer = document.getElementById('list-keputusan-container'); let kep = APP_DATA.KEPUTUSAN.filter(x => x.id_notulen === currentNotulenId);
             if(kep.length === 0) kContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada keputusan.</p>`;
             else { let html = ''; kep.forEach(k => { html += `<div class="list-item"><div style="font-weight:600; font-size:0.9rem; margin-bottom:4px;">${k.isi_keputusan}</div><div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">PJ: ${k.penanggung_jawab||'-'}</div><button class="btn btn-outline btn-sm" onclick="jadikanKegiatan('${k.id}')">Jadikan Rencana Kegiatan</button></div>`; }); kContainer.innerHTML = html; }
@@ -419,13 +499,16 @@
         function renderKegiatanUI() {
             let container = document.getElementById('list-kegiatan-container');
             if(!APP_DATA.KEGIATAN || APP_DATA.KEGIATAN.length === 0) { container.innerHTML = `<div class="card text-muted" style="font-size:0.85rem;">Belum ada kegiatan.</div>`; return; }
-            let html = ''; [...APP_DATA.KEGIATAN].reverse().forEach(k => { html += `<div class="card"><div class="card-header"><div class="card-title">${k.nama_kegiatan}</div><span class="badge ${getBadgeClass(k.status)}">${k.status || 'Rencana'}</span></div><p style="font-size:0.85rem; margin-bottom:10px;">📅 ${k.tgl || '-'}</p><button class="btn btn-primary btn-sm" onclick="openDetailKegiatan('${k.id}')">Buka Detail & RAB</button></div>`; }); container.innerHTML = html;
+            let html = ''; [...APP_DATA.KEGIATAN].reverse().forEach(k => { html += `<div class="card"><div class="card-header"><div class="card-title">${k.nama_kegiatan}</div><span class="badge ${getBadgeClass(k.status)}">${k.status || 'Rencana'}</span></div><p style="font-size:0.85rem; margin-bottom:4px;">📅 ${formatDate(k.tgl)} ${k.waktu ? ' | ⏰ '+k.waktu : ''}</p><p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">📍 ${k.lokasi || '-'}</p><button class="btn btn-primary btn-sm" onclick="openDetailKegiatan('${k.id}')">Buka Detail & RAB</button></div>`; }); container.innerHTML = html;
         }
 
         function openDetailKegiatan(id) { currentKegiatanId = id; navTo('sec-detail-kegiatan'); renderDetailKegiatanUI(); }
         function renderDetailKegiatanUI() {
             if(!currentKegiatanId) return; let kegiatan = APP_DATA.KEGIATAN.find(x => x.id === currentKegiatanId); if(!kegiatan) return;
-            document.getElementById('detail-keg-title').innerText = kegiatan.nama_kegiatan; document.getElementById('detail-keg-info').innerText = `📅 ${kegiatan.tgl} | 📍 ${kegiatan.lokasi}`;
+            document.getElementById('detail-keg-title').innerText = kegiatan.nama_kegiatan; 
+            document.getElementById('detail-keg-info').innerText = `📅 ${formatDate(kegiatan.tgl)} ${kegiatan.waktu ? ' | ⏰ '+kegiatan.waktu : ''} | 📍 ${kegiatan.lokasi}`;
+            document.getElementById('detail-keg-desc').innerText = kegiatan.keterangan ? `📝 ${keterangan}` : "📝 Tidak ada deskripsi tambahan.";
+            if(kegiatan.keterangan) { document.getElementById('detail-keg-desc').style.display = 'block'; document.getElementById('detail-keg-desc').innerText = `📝 ${kegiatan.keterangan}`; } else { document.getElementById('detail-keg-desc').style.display = 'none'; }
 
             // Petugas
             let pContainer = document.getElementById('list-petugas-container'); let petugas = APP_DATA.PETUGAS.filter(x => x.id_kegiatan === currentKegiatanId);
@@ -456,6 +539,11 @@
             document.getElementById('det-ang-real').innerText = formatRp(totReal); 
             document.getElementById('det-ang-sisa').innerText = formatRp(totRab - totReal);
 
+            // Dokumentasi
+            let dContainer = document.getElementById('list-dokumentasi-container'); let dok = APP_DATA.DOKUMENTASI.filter(x => x.id_kegiatan === currentKegiatanId);
+            if(dok.length === 0) dContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada dokumentasi foto.</p>`;
+            else { let html = ''; dok.forEach(d => html += `<div class="list-item"><div style="font-weight:600; font-size:0.9rem;">🖼️ ${d.keterangan}</div><a href="${d.url_foto}" target="_blank" style="font-size:0.75rem; color:var(--primary); text-decoration:underline;">🔗 Buka Link Foto / Berkas</a></div>`); dContainer.innerHTML = html; }
+
             // Kehadiran
             let hContainer = document.getElementById('list-kehadiran-container'); let kehadiran = APP_DATA.KEHADIRAN.filter(x => x.id_kegiatan === currentKegiatanId);
             let tHadir = 0; let tIzin = 0; let tAlpa = 0; kehadiran.forEach(h => { if(h.status_hadir==='Hadir') tHadir++; else if(h.status_hadir==='Izin') tIzin++; else tAlpa++; });
@@ -466,13 +554,26 @@
             // Pelaksanaan
             let pelContainer = document.getElementById('list-pelaksanaan-container'); let pelaksanaan = APP_DATA.PELAKSANAAN.filter(x => x.id_kegiatan === currentKegiatanId);
             if(pelaksanaan.length === 0) pelContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Belum ada catatan.</p>`;
-            else { let html = ''; pelaksanaan.forEach(p => html += `<div class="list-item"><div style="font-weight:600; color:var(--primary); font-size:0.85rem;">${p.tgl_pelaksanaan || ''}</div><div style="font-size:0.85rem; margin-top:2px;">${p.keg_dilaksanakan}</div></div>`); pelContainer.innerHTML = html; }
+            else { let html = ''; pelaksanaan.forEach(p => html += `<div class="list-item"><div style="font-weight:600; color:var(--primary); font-size:0.85rem;">${formatDate(p.tgl_pelaksanaan)}</div><div style="font-size:0.85rem; margin-top:2px;">${p.keg_dilaksanakan}</div></div>`); pelContainer.innerHTML = html; }
+
+            // Evaluasi Detail
+            let evContainer = document.getElementById('detail-evaluasi-container');
+            let ev = APP_DATA.EVALUASI.find(e => e.id_kegiatan === currentKegiatanId);
+            if(!ev) {
+                evContainer.innerHTML = `<button class="btn btn-warning" onclick="openModalRel('modal-evaluasi')">Buat Laporan Evaluasi & Kendala</button>`;
+            } else {
+                evContainer.innerHTML = `
+                    <div style="font-size:0.85rem; margin-bottom:8px;"><strong>⚠️ Kendala:</strong><br>${ev.kendala || '-'}</div>
+                    <div style="font-size:0.85rem; margin-bottom:8px;"><strong>💡 Solusi:</strong><br>${ev.solusi || '-'}</div>
+                    <div style="font-size:0.85rem;"><strong>✅ Kesimpulan:</strong><br>${ev.hasil || '-'}</div>
+                `;
+            }
         }
 
         function renderSuratUI() {
             let container = document.getElementById('list-surat-container');
             if(!APP_DATA.SURAT || APP_DATA.SURAT.length === 0) { container.innerHTML = `<p class="text-muted text-center" style="padding:15px; font-size:0.85rem;">Belum ada surat yang dibuat.</p>`; return; }
-            let html = ''; [...APP_DATA.SURAT].reverse().forEach(s => { html += `<div class="list-item"><div style="font-weight:700; color:var(--primary); font-size:0.95rem;">${s.perihal}</div><div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">No: ${s.no_surat} | ${s.tgl_surat}</div><div class="action-bar"><button class="btn btn-outline btn-sm" onclick="bukaEditorSurat('${s.jenis_surat}', '${s.id}')">✏️ Edit</button><button class="btn btn-outline btn-sm" onclick="cetakSuratId('${s.id}')">🖨️ Cetak</button><button class="btn btn-success btn-sm" onclick="shareWhatsAppSurat('${s.id}')">📤 WA</button></div></div>`; }); container.innerHTML = html;
+            let html = ''; [...APP_DATA.SURAT].reverse().forEach(s => { html += `<div class="list-item"><div style="font-weight:700; color:var(--primary); font-size:0.95rem;">${s.perihal}</div><div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">No: ${s.no_surat} | ${formatDate(s.tgl_surat)}</div><div class="action-bar"><button class="btn btn-outline btn-sm" onclick="bukaEditorSurat('${s.jenis_surat}', '${s.id}')">✏️ Edit</button><button class="btn btn-outline btn-sm" onclick="cetakSuratId('${s.id}')">🖨️ Cetak</button><button class="btn btn-success btn-sm" onclick="shareWhatsAppSurat('${s.id}')">📤 WA</button></div></div>`; }); container.innerHTML = html;
         }
 
         // ==========================================
@@ -507,19 +608,19 @@
             document.getElementById('surat_no').value = autoNum;
         }
 
-        function injectKegiatanKeSurat(idKeg) { if(!idKeg) return; let k = APP_DATA.KEGIATAN.find(x => x.id === idKeg); if(k) { let cText = document.getElementById('surat_isi_editor').innerText; document.getElementById('surat_isi_editor').innerText = cText + `\n\nKegiatan: ${k.nama_kegiatan}\nTanggal: ${k.tgl}\nTempat: ${k.lokasi}\n`; } }
+        function injectKegiatanKeSurat(idKeg) { if(!idKeg) return; let k = APP_DATA.KEGIATAN.find(x => x.id === idKeg); if(k) { let cText = document.getElementById('surat_isi_editor').innerText; document.getElementById('surat_isi_editor').innerText = cText + `\n\nKegiatan: ${k.nama_kegiatan}\nTanggal: ${formatDate(k.tgl)}\nTempat: ${k.lokasi}\n`; } }
 
         function simpanSurat(e) { e.preventDefault(); document.getElementById('surat_isi_hidden').value = document.getElementById('surat_isi_editor').innerHTML; let formData = new FormData(e.target); let data = Object.fromEntries(formData.entries()); saveRecord('SURAT', data); closeModal('modal-form-surat'); showToast("Surat disimpan"); }
         function simpanKopSurat(e) { e.preventDefault(); APP_DATA.PENGATURAN = APP_DATA.PENGATURAN.filter(x => !x.kunci.startsWith('kop_')); APP_DATA.PENGATURAN.push({id: 'kop1', kunci: 'kop_1', nilai: document.getElementById('kop_1').value},{id: 'kop2', kunci: 'kop_2', nilai: document.getElementById('kop_2').value},{id: 'kop3', kunci: 'kop_3', nilai: document.getElementById('kop_3').value},{id: 'kop4', kunci: 'kop_4', nilai: document.getElementById('kop_4').value}); saveLocalData(); closeModal('modal-kop-surat'); showToast("Kop Tersimpan"); }
         function loadKopSuratConfig() { let k1 = APP_DATA.PENGATURAN.find(x => x.kunci === 'kop_1'); if(k1) document.getElementById('kop_1').value = k1.nilai; let k2 = APP_DATA.PENGATURAN.find(x => x.kunci === 'kop_2'); if(k2) document.getElementById('kop_2').value = k2.nilai; let k3 = APP_DATA.PENGATURAN.find(x => x.kunci === 'kop_3'); if(k3) document.getElementById('kop_3').value = k3.nilai; let k4 = APP_DATA.PENGATURAN.find(x => x.kunci === 'kop_4'); if(k4) document.getElementById('kop_4').value = k4.nilai; }
         
         function setKopToPrint() { document.getElementById('p_kop1').innerText = document.getElementById('kop_1').value || "PENGURUS RUKUN TETANGGA"; document.getElementById('p_kop2').innerText = document.getElementById('kop_2').value || "DESA / KELURAHAN"; document.getElementById('p_kop3').innerText = document.getElementById('kop_3').value || "KECAMATAN / KABUPATEN"; document.getElementById('p_kop4').innerText = document.getElementById('kop_4').value || "Alamat lengkap"; }
-        function previewSurat() { setKopToPrint(); document.getElementById('p_no').innerText = document.getElementById('surat_no').value; document.getElementById('p_perihal').innerText = document.getElementById('surat_perihal').value; let tgl = document.getElementById('surat_tgl').value; document.getElementById('p_tgl').innerText = tgl ? tgl.split('-').reverse().join('-') : ""; document.getElementById('p_penerima').innerText = document.getElementById('surat_penerima').value; document.getElementById('p_isi').innerHTML = document.getElementById('surat_isi_editor').innerHTML; document.getElementById('p_ttd').innerText = document.getElementById('surat_ttd').value; document.getElementById('print-area').style.display = 'block'; }
-        function cetakSuratId(id) { let s = APP_DATA.SURAT.find(x => x.id === id); if(!s) return; setKopToPrint(); document.getElementById('p_no').innerText = s.no_surat; document.getElementById('p_perihal').innerText = s.perihal; document.getElementById('p_tgl').innerText = s.tgl_surat; document.getElementById('p_penerima').innerText = s.penerima; document.getElementById('p_isi').innerHTML = s.isi_surat; document.getElementById('p_ttd').innerText = s.penandatangan; document.getElementById('print-area').style.display = 'block'; }
+        function previewSurat() { setKopToPrint(); document.getElementById('p_no').innerText = document.getElementById('surat_no').value; document.getElementById('p_perihal').innerText = document.getElementById('surat_perihal').value; let tgl = document.getElementById('surat_tgl').value; document.getElementById('p_tgl').innerText = tgl ? formatDate(tgl) : ""; document.getElementById('p_penerima').innerText = document.getElementById('surat_penerima').value; document.getElementById('p_isi').innerHTML = document.getElementById('surat_isi_editor').innerHTML; document.getElementById('p_ttd').innerText = document.getElementById('surat_ttd').value; document.getElementById('print-area').style.display = 'block'; }
+        function cetakSuratId(id) { let s = APP_DATA.SURAT.find(x => x.id === id); if(!s) return; setKopToPrint(); document.getElementById('p_no').innerText = s.no_surat; document.getElementById('p_perihal').innerText = s.perihal; document.getElementById('p_tgl').innerText = formatDate(s.tgl_surat); document.getElementById('p_penerima').innerText = s.penerima; document.getElementById('p_isi').innerHTML = s.isi_surat; document.getElementById('p_ttd').innerText = s.penandatangan; document.getElementById('print-area').style.display = 'block'; }
         function tutupPreview() { document.getElementById('print-area').style.display = 'none'; }
 
         // ==========================================
-        // LAPORAN & SHARE LOGIC
+        // LAPORAN & SHARE LOGIC (DENGAN RINCIAN NOTA & EVALUASI LENGKAP)
         // ==========================================
         function renderLaporanUI() {
             let fBulan = document.getElementById('filter-bulan').value; let fTahun = document.getElementById('filter-tahun').value;
@@ -528,20 +629,50 @@
             document.getElementById('lap-tot-rab').innerText = formatRp(totRab); document.getElementById('lap-tot-real').innerText = formatRp(totReal);
             let lapContainer = document.getElementById('list-laporan-container'); 
             if(dataLaporan.length === 0) lapContainer.innerHTML = `<p class="text-muted" style="font-size:0.85rem;">Tidak ada laporan selesai pada periode ini.</p>`;
-            else { let html = ''; [...dataLaporan].reverse().forEach(k => { let ev = APP_DATA.EVALUASI.find(e => e.id_kegiatan === k.id); html += `<div class="list-item" style="padding-bottom:12px;"><div class="flex-between" style="margin-bottom:4px;"><div style="font-weight:700; color:var(--primary); font-size:0.95rem;">${k.nama_kegiatan}</div><button class="btn btn-success btn-sm" onclick="shareWaLaporan('${k.id}')">📤 WA</button></div><div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:6px;">📅 ${k.tgl}</div><div style="font-size:0.85rem; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid var(--border);"><strong>Hasil Evaluasi:</strong><br>${ev ? ev.hasil : 'Tidak ada catatan'}</div></div>`; }); lapContainer.innerHTML = html; }
+            else { 
+                let html = ''; [...dataLaporan].reverse().forEach(k => { 
+                    let ev = APP_DATA.EVALUASI.find(e => e.id_kegiatan === k.id); 
+                    html += `<div class="list-item" style="padding-bottom:12px;">
+                        <div class="flex-between" style="margin-bottom:4px;"><div style="font-weight:700; color:var(--primary); font-size:0.95rem;">${k.nama_kegiatan}</div><button class="btn btn-success btn-sm" onclick="shareWaLaporan('${k.id}')">📤 WA</button></div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:6px;">📅 ${formatDate(k.tgl)}</div>
+                        <div style="font-size:0.85rem; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid var(--border);">
+                            <div><strong>⚠️ Kendala:</strong> ${ev ? ev.kendala || '-' : '-'}</div>
+                            <div style="margin-top:4px;"><strong>💡 Solusi:</strong> ${ev ? ev.solusi || '-' : '-'}</div>
+                            <div style="margin-top:4px;"><strong>✅ Kesimpulan:</strong> ${ev ? ev.hasil || '-' : '-'}</div>
+                        </div>
+                    </div>`; 
+                }); 
+                lapContainer.innerHTML = html; 
+            }
         }
 
-        function shareWaLaporan(id) { let k = APP_DATA.KEGIATAN.find(x => x.id === id); if(!k) return; let ev = APP_DATA.EVALUASI.find(x => x.id_kegiatan === id); let ang = APP_DATA.ANGGARAN.filter(a => a.id_kegiatan === id); let totRab = 0; let totReal = 0; ang.forEach(a => { totRab += parseInt(a.total||0); totReal += parseInt(a.realisasi||0); }); let text = `*📊 LAPORAN KEGIATAN RT*\n\n*Kegiatan:* ${k.nama_kegiatan}\n*Tanggal:* ${k.tgl}\n\n*💰 Keuangan:*\n- RAB: ${formatRp(totRab)}\n- Realisasi: ${formatRp(totReal)}\n- Sisa: ${formatRp(totRab - totReal)}\n\n*✅ Hasil Evaluasi:*\n${ev ? ev.hasil : '-'}\n\n_Powered by ${APP_AUTHOR}_`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); }
+        function shareWaLaporan(id) { 
+            let k = APP_DATA.KEGIATAN.find(x => x.id === id); if(!k) return; 
+            let ev = APP_DATA.EVALUASI.find(x => x.id_kegiatan === id); 
+            let ang = APP_DATA.ANGGARAN.filter(a => a.id_kegiatan === id); 
+            let totRab = 0; let totReal = 0; 
+            
+            let rincianList = ang.map((a, i) => {
+                let r = parseInt(a.total||0);
+                let l = parseInt(a.realisasi||0);
+                totRab += r; totReal += l;
+                return `• ${a.nama_kebutuhan} (${a.jumlah} unit)\n  - RAB: ${formatRp(r)}\n  - Real: ${formatRp(l)}`;
+            }).join('\n\n');
+
+            let text = `*📊 LAPORAN & NOTA RINCIAN KEGIATAN*\n\n*Kegiatan:* ${k.nama_kegiatan}\n*Tanggal:* ${formatDate(k.tgl)}\n\n*🧾 Rincian Nota / Kebutuhan:*\n${rincianList || 'Belum ada rincian nota'}\n\n*💰 Rekap Keuangan:*\n- Total RAB: ${formatRp(totRab)}\n- Total Realisasi: ${formatRp(totReal)}\n- Sisa Kas: ${formatRp(totRab - totReal)}\n\n*⚠️ Kendala:*\n${ev ? ev.kendala || '-' : '-'}\n\n*💡 Solusi:*\n${ev ? ev.solusi || '-' : '-'}\n\n*✅ Hasil Evaluasi:*\n${ev ? ev.hasil || '-' : '-'}\n\n_Powered by ${APP_AUTHOR}_`; 
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); 
+        }
+
         function shareWhatsAppSurat(id) { let s = APP_DATA.SURAT.find(x => x.id === id); if(!s) return; let text = `*📄 SURAT RT*\n\n*Nomor:* ${s.no_surat}\n*Perihal:* ${s.perihal}\n\n*Kepada:*\n${s.penerima}\n\nSilakan cek dokumen terlampir.\n\n_Powered by ${APP_AUTHOR}_`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); }
         function shareWaGroupRT() { let text = `*📢 PEMBERITAHUAN RT*\n\nAssalamu'alaikum.\nDiberitahukan kepada seluruh warga RT bahwa...\n\nTerima kasih.\n\n_Powered by ${APP_AUTHOR}_`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); }
-        function shareWhatsAppNotulen() { if(!currentNotulenId) return; let n = APP_DATA.NOTULEN.find(x => x.id === currentNotulenId); if(!n) return; let kep = APP_DATA.KEPUTUSAN.filter(x => x.id_notulen === currentNotulenId); let kepTxt = kep.map((k, i) => `${i+1}. ${k.isi_keputusan}`).join('%0A'); let text = `*📋 NOTULEN RAPAT RT*\n\n*Tanggal:* ${n.tgl_rapat}\n*Tempat:* ${n.tempat}\n*Agenda:* ${n.agenda}\n\n*Keputusan:*\n${kepTxt || '-'}\n\n_Powered by ${APP_AUTHOR}_`; window.open(`https://wa.me/?text=${text}`, '_blank'); }
+        function shareWhatsAppNotulen() { if(!currentNotulenId) return; let n = APP_DATA.NOTULEN.find(x => x.id === currentNotulenId); if(!n) return; let kep = APP_DATA.KEPUTUSAN.filter(x => x.id_notulen === currentNotulenId); let kepTxt = kep.map((k, i) => `${i+1}. ${k.isi_keputusan}`).join('%0A'); let text = `*📋 NOTULEN RAPAT RT*\n\n*Tanggal:* ${formatDate(n.tgl_rapat)}\n*Tempat:* ${n.tempat}\n*Agenda:* ${n.agenda}\n\n*Keputusan:*\n${kepTxt || '-'}\n\n_Powered by ${APP_AUTHOR}_`; window.open(`https://wa.me/?text=${text}`, '_blank'); }
 
         function searchApp() {
             let q = document.getElementById('searchGlobal').value.toLowerCase(); if(q.length === 0) { updateDashboardUI(); return; }
             let fKeg = APP_DATA.KEGIATAN.filter(k => k.nama_kegiatan.toLowerCase().includes(q)); let fNot = APP_DATA.NOTULEN.filter(n => n.agenda.toLowerCase().includes(q));
             let html = '<p class="text-muted" style="font-size:0.75rem; margin-bottom:6px;">Hasil Pencarian:</p>';
-            fKeg.forEach(k => { html += `<div style="padding: 8px 0; border-bottom: 1px solid var(--border);"><strong style="color:var(--primary); cursor:pointer;" onclick="openDetailKegiatan('${k.id}')">📋 ${k.nama_kegiatan}</strong><br><small>📅 ${k.tgl}</small></div>`; });
-            fNot.forEach(n => { html += `<div style="padding: 8px 0; border-bottom: 1px solid var(--border);"><strong style="color:var(--secondary); cursor:pointer;" onclick="openDetailNotulen('${n.id}')">📁 ${n.agenda}</strong><br><small>📅 ${n.tgl_rapat}</small></div>`; });
+            fKeg.forEach(k => { html += `<div style="padding: 8px 0; border-bottom: 1px solid var(--border);"><strong style="color:var(--primary); cursor:pointer;" onclick="openDetailKegiatan('${k.id}')">📋 ${k.nama_kegiatan}</strong><br><small>📅 ${formatDate(k.tgl)}</small></div>`; });
+            fNot.forEach(n => { html += `<div style="padding: 8px 0; border-bottom: 1px solid var(--border);"><strong style="color:var(--secondary); cursor:pointer;" onclick="openDetailNotulen('${n.id}')">📁 ${n.agenda}</strong><br><small>📅 ${formatDate(n.tgl_rapat)}</small></div>`; });
             if(fKeg.length === 0 && fNot.length === 0) html += '<p class="text-muted" style="font-size:0.85rem;">Tidak ditemukan.</p>';
             document.getElementById('list-agenda-terdekat').innerHTML = html;
         }
