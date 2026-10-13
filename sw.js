@@ -1,12 +1,11 @@
-const CACHE_NAME = 'rt-cache-v3.0.0';
+const CACHE_NAME = 'rt-cache-v3.0.1';
 const urlsToCache = [
   './',
   './index.html',
-  './manifest.json?v=3.0.0',
+  './manifest.json?v=3.0.1',
   './notulen.jpg'
 ];
 
-// Memaksa instalasi SW baru tanpa menunggu
 self.addEventListener('install', (e) => {
   self.skipWaiting();
   e.waitUntil(
@@ -16,7 +15,6 @@ self.addEventListener('install', (e) => {
   );
 });
 
-// Menghapus cache versi lama secara brutal
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keyList) => {
@@ -29,7 +27,6 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Mode Network-First (Ambil dari internet dulu, kalau gagal baru dari cache)
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     fetch(e.request).catch(() => caches.match(e.request))
