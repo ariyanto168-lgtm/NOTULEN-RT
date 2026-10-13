@@ -1,8 +1,8 @@
-const CACHE_NAME = 'rt-cache-v3.0.1';
+const CACHE_NAME = 'rt-cache-v3.0.2';
 const urlsToCache = [
   './',
   './index.html',
-  './manifest.json?v=3.0.1',
+  './manifest.json?v=3.0.2',
   './notulen.jpg'
 ];
 
