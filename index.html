@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Sistem RT - Smart Dashboard Full</title>
 
-<!-- Konfigurasi PWA & Logo -->
-<link rel="icon" type="image/jpeg" href="notulen.jpg">
-<link rel="apple-touch-icon" href="notulen.jpg">
-<link rel="manifest" href="manifest.json">
+<!-- Konfigurasi PWA & Logo v2.6.8 -->
+<link rel="icon" type="image/jpeg" href="./notulen.jpg">
+<link rel="apple-touch-icon" href="./notulen.jpg">
+<link rel="manifest" href="manifest.json?v=2.6.8">
 <meta name="theme-color" content="#4f46e5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -206,7 +206,7 @@ textarea.form-control { min-height: 90px; resize: vertical; }
 
 <!-- FOOTER MODERN -->
 <footer class="footer-modern">
-<div style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; margin-bottom: 4px;" id="foot-version">v2.6.7 (Secure)</div>
+<div style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; margin-bottom: 4px;" id="foot-version">v2.6.8 (Secure)</div>
 <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 500;" id="foot-author">Powered by Ari GPM</div>
 </footer>
 
@@ -236,7 +236,7 @@ textarea.form-control { min-height: 90px; resize: vertical; }
 <div id="toast" class="toast"><span id="toast-icon">ℹ️</span> <span id="toast-msg">Notifikasi</span></div>
 
 <script>
-const APP_VERSION = "v2.6.7";
+const APP_VERSION = "v2.6.8";
 const APP_AUTHOR = "Ari GPM";
 const DEFAULT_PIN = "123456";
 let GAS_URL = localStorage.getItem('rt_gas_url') || "";
@@ -264,10 +264,10 @@ if (GAS_URL !== "") {
 if (SYNC_QUEUE.length > 0) { await processQueue(); } else { syncDataFromCloud(); }
 } else { showToast("Mode Lokal / Demo Aktif", "ℹ️"); initDemoData(); }
 
-// Registrasi Service Worker untuk PWA Real Instalasi
+// Registrasi Service Worker PWA (Update v2.6.8)
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(function(err) {
-    console.log('Service Worker tidak aktif:', err);
+  navigator.serviceWorker.register('sw.js?v=2.6.8').catch(function(err) {
+    console.log('SW Gagal:', err);
   });
 }
 };
@@ -328,7 +328,7 @@ SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(S
 }
 }
 
-// PERBAIKAN: Reset Table kini mengirim perintah hapus satu per satu ke server
+// PERBAIKAN v2.6.8: Kirim array kosong ke server agar menimpa isi database tanpa auto-sync di awal
 function resetTableData(tableName, titleName) {
 vibrate([100, 100]);
 let inputPin = prompt(`🔐 Otorisasi Reset Data\nMasukkan PIN Admin untuk mereset ${titleName}:`);
@@ -336,24 +336,21 @@ if(inputPin === null) return;
 if(inputPin !== getAdminPin()) { showToast("PIN Salah!", "❌"); return; }
 if(!window.confirm(`PERINGATAN: Apakah Anda yakin mereset seluruh data ${titleName} secara permanen?`)) return;
 
-let itemsToDel = APP_DATA[tableName] ? [...APP_DATA[tableName]] : [];
 APP_DATA[tableName] = []; 
 saveLocalData(); refreshAllUI(); showToast(`${titleName} direset`, "⚠️");
 
+let payload = { action: 'save_bulk', table: tableName, data: [] };
 if(navigator.onLine && GAS_URL !== "") {
     showLoader();
-    itemsToDel.forEach(item => {
-        sendToCloud({ action: 'delete', table: tableName, id: item.id }, false);
-    });
-    setTimeout(() => { hideLoader(); syncDataFromCloud(); }, 2500);
+    sendToCloud(payload, false); // false = jangan auto sync dulu, biar server tenang
+    setTimeout(() => { hideLoader(); showToast("Server berhasil ditimpa", "✅"); }, 1500);
 } else {
-    // Mode lokal masukkan ke antrian
-    itemsToDel.forEach(item => SYNC_QUEUE.push({ action: 'delete', table: tableName, id: item.id }));
+    SYNC_QUEUE.push(payload);
     localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE));
 }
 }
 
-// FITUR BARU: Hapus Seluruh Riwayat Permanen Server & Lokal
+// PERBAIKAN v2.6.8: Hapus seluruh riwayat lokal dan kirim perintah save_bulk ke semua tabel
 function factoryReset() {
 vibrate([100, 100]);
 let inputPin = prompt(`🔐 OTORISASI ZONA BERBAHAYA\nMasukkan PIN Admin untuk KOSONGKAN SEMUA DATA:`);
@@ -363,19 +360,21 @@ if(!window.confirm(`PERINGATAN AKHIR!\nTindakan ini akan menghapus SEMUA SURAT, 
 
 showLoader();
 let tables = ['WARGA', 'NOTULEN', 'KEPUTUSAN', 'KEGIATAN', 'PETUGAS', 'ANGGARAN', 'KEHADIRAN', 'PELAKSANAAN', 'DOKUMENTASI', 'EVALUASI', 'SURAT'];
-let itemsToDel = [];
 
-tables.forEach(t => {
-    if(APP_DATA[t]) {
-        APP_DATA[t].forEach(item => itemsToDel.push({ table: t, id: item.id }));
-        APP_DATA[t] = [];
-    }
-});
-saveLocalData(); refreshAllUI();
+// Kosongkan lokal
+tables.forEach(t => { APP_DATA[t] = []; });
+SYNC_QUEUE = []; localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE));
+saveLocalData(); 
+refreshAllUI();
 
 if(navigator.onLine && GAS_URL !== "") {
-    itemsToDel.forEach(req => { sendToCloud({ action: 'delete', table: req.table, id: req.id }, false); });
-    setTimeout(() => { hideLoader(); syncDataFromCloud(); showToast("Semua Riwayat Berhasil Dihapus!", "✅"); }, 3000);
+    tables.forEach(t => {
+        sendToCloud({ action: 'save_bulk', table: t, data: [] }, false);
+    });
+    setTimeout(() => { 
+        hideLoader(); 
+        showToast("Semua Riwayat Dihapus Permanen!", "✅"); 
+    }, 2000);
 } else {
     hideLoader(); showToast("Semua Riwayat Dihapus Lokal!", "✅");
 }
