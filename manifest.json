@@ -1,8 +1,8 @@
 {
-  "id": "SistemRT-App-v3.0.1",
+  "id": "SistemRT-App-v3.0.2",
   "name": "Sistem RT",
   "short_name": "SistemRT",
-  "start_url": "./index.html?v=3.0.1",
+  "start_url": "./index.html?v=3.0.2",
   "display": "standalone",
   "background_color": "#f1f5f9",
   "theme_color": "#4f46e5",
