@@ -1,20 +1,21 @@
 {
-  "id": "SistemRT-v2.6.8",
+  "id": "/SistemRT-Final/",
   "name": "Sistem RT",
   "short_name": "SistemRT",
-  "start_url": "./index.html?v=2.6.8",
+  "start_url": "/NOTULEN-RT/index.html",
+  "scope": "/NOTULEN-RT/",
   "display": "standalone",
   "background_color": "#f1f5f9",
   "theme_color": "#4f46e5",
   "icons": [
     {
-      "src": "./notulen.jpg",
+      "src": "notulen.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "./notulen.jpg",
+      "src": "notulen.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any maskable"
