@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Sistem RT - Smart Dashboard Full</title>
 
-<!-- Konfigurasi PWA & Logo v2.6.8 -->
-<link rel="icon" type="image/jpeg" href="./notulen.jpg">
-<link rel="apple-touch-icon" href="./notulen.jpg">
-<link rel="manifest" href="manifest.json?v=2.6.8">
+<!-- Konfigurasi PWA & Logo v2.6.9 -->
+<link rel="icon" type="image/jpeg" href="notulen.jpg">
+<link rel="apple-touch-icon" href="notulen.jpg">
+<link rel="manifest" href="manifest.json?v=2.6.9">
 <meta name="theme-color" content="#4f46e5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -195,7 +195,6 @@ textarea.form-control { min-height: 90px; resize: vertical; }
 </form>
 </div>
 <div class="card text-center"><button class="btn btn-outline" onclick="syncDataFromCloud(true)">🔄 Force Sync ke Server</button></div>
-<!-- Tipe Factory Reset Baru -->
 <div class="card text-center" style="border: 1.5px solid var(--danger); background-color: #fef2f2;">
 <h3 style="font-size:1rem; color:var(--danger); margin-bottom:12px; font-weight:800;">Zona Berbahaya</h3>
 <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">Menghapus permanen seluruh riwayat dari Aplikasi & Database Server.</p>
@@ -206,7 +205,7 @@ textarea.form-control { min-height: 90px; resize: vertical; }
 
 <!-- FOOTER MODERN -->
 <footer class="footer-modern">
-<div style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; margin-bottom: 4px;" id="foot-version">v2.6.8 (Secure)</div>
+<div style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; margin-bottom: 4px;" id="foot-version">v2.6.9 (Stable)</div>
 <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 500;" id="foot-author">Powered by Ari GPM</div>
 </footer>
 
@@ -236,7 +235,7 @@ textarea.form-control { min-height: 90px; resize: vertical; }
 <div id="toast" class="toast"><span id="toast-icon">ℹ️</span> <span id="toast-msg">Notifikasi</span></div>
 
 <script>
-const APP_VERSION = "v2.6.8";
+const APP_VERSION = "v2.6.9";
 const APP_AUTHOR = "Ari GPM";
 const DEFAULT_PIN = "123456";
 let GAS_URL = localStorage.getItem('rt_gas_url') || "";
@@ -250,7 +249,7 @@ function getAdminPin() { let p = APP_DATA.PENGATURAN.find(x => x.kunci === 'admi
 
 window.onload = async () => {
 loadLocalData(); initDynamicYears();
-document.getElementById('foot-version').innerText = APP_VERSION + " (Secure)";
+document.getElementById('foot-version').innerText = APP_VERSION + " (Stable)";
 document.getElementById('foot-author').innerText = "Powered by " + APP_AUTHOR;
 
 let savedSec = localStorage.getItem('rt_active_section');
@@ -264,9 +263,9 @@ if (GAS_URL !== "") {
 if (SYNC_QUEUE.length > 0) { await processQueue(); } else { syncDataFromCloud(); }
 } else { showToast("Mode Lokal / Demo Aktif", "ℹ️"); initDemoData(); }
 
-// Registrasi Service Worker PWA (Update v2.6.8)
+// Registrasi Service Worker PWA (Update v2.6.9)
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js?v=2.6.8').catch(function(err) {
+  navigator.serviceWorker.register('sw.js').catch(function(err) {
     console.log('SW Gagal:', err);
   });
 }
@@ -327,8 +326,6 @@ if(navigator.onLine && GAS_URL !== "") { sendToCloud(payload); } else {
 SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE));
 }
 }
-
-// PERBAIKAN v2.6.8: Kirim array kosong ke server agar menimpa isi database tanpa auto-sync di awal
 function resetTableData(tableName, titleName) {
 vibrate([100, 100]);
 let inputPin = prompt(`🔐 Otorisasi Reset Data\nMasukkan PIN Admin untuk mereset ${titleName}:`);
@@ -341,16 +338,10 @@ saveLocalData(); refreshAllUI(); showToast(`${titleName} direset`, "⚠️");
 
 let payload = { action: 'save_bulk', table: tableName, data: [] };
 if(navigator.onLine && GAS_URL !== "") {
-    showLoader();
-    sendToCloud(payload, false); // false = jangan auto sync dulu, biar server tenang
+    showLoader(); sendToCloud(payload, false);
     setTimeout(() => { hideLoader(); showToast("Server berhasil ditimpa", "✅"); }, 1500);
-} else {
-    SYNC_QUEUE.push(payload);
-    localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE));
+} else { SYNC_QUEUE.push(payload); localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE)); }
 }
-}
-
-// PERBAIKAN v2.6.8: Hapus seluruh riwayat lokal dan kirim perintah save_bulk ke semua tabel
 function factoryReset() {
 vibrate([100, 100]);
 let inputPin = prompt(`🔐 OTORISASI ZONA BERBAHAYA\nMasukkan PIN Admin untuk KOSONGKAN SEMUA DATA:`);
@@ -360,24 +351,14 @@ if(!window.confirm(`PERINGATAN AKHIR!\nTindakan ini akan menghapus SEMUA SURAT, 
 
 showLoader();
 let tables = ['WARGA', 'NOTULEN', 'KEPUTUSAN', 'KEGIATAN', 'PETUGAS', 'ANGGARAN', 'KEHADIRAN', 'PELAKSANAAN', 'DOKUMENTASI', 'EVALUASI', 'SURAT'];
-
-// Kosongkan lokal
 tables.forEach(t => { APP_DATA[t] = []; });
 SYNC_QUEUE = []; localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE));
-saveLocalData(); 
-refreshAllUI();
+saveLocalData(); refreshAllUI();
 
 if(navigator.onLine && GAS_URL !== "") {
-    tables.forEach(t => {
-        sendToCloud({ action: 'save_bulk', table: t, data: [] }, false);
-    });
-    setTimeout(() => { 
-        hideLoader(); 
-        showToast("Semua Riwayat Dihapus Permanen!", "✅"); 
-    }, 2000);
-} else {
-    hideLoader(); showToast("Semua Riwayat Dihapus Lokal!", "✅");
-}
+    tables.forEach(t => { sendToCloud({ action: 'save_bulk', table: t, data: [] }, false); });
+    setTimeout(() => { hideLoader(); showToast("Semua Riwayat Dihapus Permanen!", "✅"); }, 2000);
+} else { hideLoader(); showToast("Semua Riwayat Dihapus Lokal!", "✅"); }
 }
 
 function editRecord(tableName, id) {
@@ -426,13 +407,15 @@ const formatRp = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', 
 function calcAnggaran() { let q = document.getElementById('ang_qty').value; let h = document.getElementById('ang_harga').value; document.getElementById('ang_total').value = (q && h)? parseInt(q)*parseInt(h) : ""; }
 function populateWargaDropdown(selectId) {
 let sel = document.getElementById(selectId); if(!sel) return;
-sel.innerHTML = '<option value="">-- Pilih Warga / Rumah --</option>';
+sel.innerHTML = '<option value="">-- Pilih Warga / Tempat --</option>';
 if(APP_DATA.WARGA) {
 [...APP_DATA.WARGA].sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(w => {
-sel.innerHTML += `<option value="${w.nama} (${w.no_rumah||'-'})" data-rumah="${w.no_rumah||""}" data-wa="${w.no_wa||""}">${w.nama} - Blok: ${w.no_rumah||'-'}</option>`; }); }
+let disp = w.no_rumah ? `${w.nama} (Blok ${w.no_rumah})` : w.nama;
+sel.innerHTML += `<option value="${disp}" data-rumah="${w.no_rumah||""}" data-wa="${w.no_wa||""}">${disp}</option>`; }); }
 }
 function autoFillWarga(selectElement, rumahId, waId) {
 let opt = selectElement.options[selectElement.selectedIndex];
+if(!opt.value) return;
 if(rumahId && document.getElementById(rumahId)) document.getElementById(rumahId).value = opt.getAttribute('data-rumah') || "";
 if(waId && document.getElementById(waId)) document.getElementById(waId).value = opt.getAttribute('data-wa') || "";
 }
@@ -446,7 +429,7 @@ window.scrollTo(0,0);
 if(resetIds) { if(sectionId === 'sec-dashboard') { currentKegiatanId = null; currentNotulenId = null; localStorage.removeItem('rt_current_kegiatan'); localStorage.removeItem('rt_current_notulen'); document.getElementById('search-results').style.display='none'; document.getElementById('searchGlobal').value=""; } }
 if(sectionId === 'sec-pengaturan') { loadPengaturanInput(); }
 }
-function openModal(id) { vibrate(20); document.getElementById(id).classList.add('active'); }
+function openModal(id) { vibrate(20); if(id==='modal-notulen') populateWargaDropdown('sel_tempat_notulen'); document.getElementById(id).classList.add('active'); }
 function openModalRel(id) { vibrate(20); document.querySelectorAll(`#${id} .rel_id_kegiatan`).forEach(el => el.value = currentKegiatanId); if(id === 'modal-kehadiran') populateWargaDropdown('sel_hadir_warga'); if(id === 'modal-petugas') populateWargaDropdown('sel_petugas_warga'); document.getElementById(id).classList.add('active'); }
 function openModalRelNotulen(id) { vibrate(20); document.querySelectorAll(`#${id} .rel_id_notulen`).forEach(el => el.value = currentNotulenId); document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); let form = document.querySelector(`#${id} form`); if(form) form.reset(); }
