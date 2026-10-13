@@ -1,9 +1,8 @@
 {
-  "id": "/SistemRT-Final/",
-  "name": "Sistem RT",
+  "id": "SistemRT-App-v3",
+  "name": "Sistem RT (Baru)",
   "short_name": "SistemRT",
-  "start_url": "/NOTULEN-RT/index.html",
-  "scope": "/NOTULEN-RT/",
+  "start_url": "./index.html?v=3.0.0",
   "display": "standalone",
   "background_color": "#f1f5f9",
   "theme_color": "#4f46e5",
