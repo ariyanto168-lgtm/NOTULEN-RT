@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Sistem RT - Smart Dashboard Full</title>
 
-<!-- Konfigurasi PWA & Logo v2.6.9 -->
+<!-- Konfigurasi PWA & Logo v2.7.0 -->
 <link rel="icon" type="image/jpeg" href="notulen.jpg">
 <link rel="apple-touch-icon" href="notulen.jpg">
-<link rel="manifest" href="manifest.json?v=2.6.9">
+<link rel="manifest" href="manifest.json?v=2.7.0">
 <meta name="theme-color" content="#4f46e5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -205,7 +205,7 @@ textarea.form-control { min-height: 90px; resize: vertical; }
 
 <!-- FOOTER MODERN -->
 <footer class="footer-modern">
-<div style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; margin-bottom: 4px;" id="foot-version">v2.6.9 (Stable)</div>
+<div style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; margin-bottom: 4px;" id="foot-version">v2.7.0 (Stable)</div>
 <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 500;" id="foot-author">Powered by Ari GPM</div>
 </footer>
 
@@ -235,11 +235,11 @@ textarea.form-control { min-height: 90px; resize: vertical; }
 <div id="toast" class="toast"><span id="toast-icon">ℹ️</span> <span id="toast-msg">Notifikasi</span></div>
 
 <script>
-const APP_VERSION = "v2.6.9";
+const APP_VERSION = "v2.7.0";
 const APP_AUTHOR = "Ari GPM";
 const DEFAULT_PIN = "123456";
 let GAS_URL = localStorage.getItem('rt_gas_url') || "";
-let APP_DATA = { WARGA: [], NOTULEN: [], KEPUTUSAN: [], KEGIATAN: [], PETUGAS: [], ANGGARAN: [], KEHADIRAN: [], PELAKSANAAN: [], DOKUMENTASI: [], EVALUASI: [], SURAT: [], PENGATURAN: [] };
+let APP_DATA = { WARGA: [], NOTULEN: [], KEPUTUSAN: [], KEGIATAN: [], PETUGAS: [], ANGGARAN: [], KEHADIRAN: [], PELAKSANAAN: [], DOKUMENTASI: [], EVALUASI: [], SURAT: [], LOG_UPDATE: [], PENGATURAN: [] };
 let SYNC_QUEUE = JSON.parse(localStorage.getItem('rt_sync_queue')) || [];
 let currentKegiatanId = localStorage.getItem('rt_current_kegiatan') || null;
 let currentNotulenId = localStorage.getItem('rt_current_notulen') || null;
@@ -263,7 +263,7 @@ if (GAS_URL !== "") {
 if (SYNC_QUEUE.length > 0) { await processQueue(); } else { syncDataFromCloud(); }
 } else { showToast("Mode Lokal / Demo Aktif", "ℹ️"); initDemoData(); }
 
-// Registrasi Service Worker PWA (Update v2.6.9)
+// Registrasi Service Worker PWA (Update v2.7.0)
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(function(err) {
     console.log('SW Gagal:', err);
@@ -277,7 +277,7 @@ let currentYear = new Date().getFullYear(); let options = '<option value="all">T
 for(let y = currentYear - 2; y <= currentYear + 5; y++) options += `<option value="${y}">${y}</option>`;
 yearSelect.innerHTML = options;
 }
-function loadLocalData() { let cache = localStorage.getItem('rt_app_data'); if (cache) { APP_DATA = JSON.parse(cache); if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; if(!APP_DATA.DOKUMENTASI) APP_DATA.DOKUMENTASI = []; if(!APP_DATA.EVALUASI) APP_DATA.EVALUASI = []; if(!APP_DATA.PENGATURAN) APP_DATA.PENGATURAN = []; } }
+function loadLocalData() { let cache = localStorage.getItem('rt_app_data'); if (cache) { APP_DATA = JSON.parse(cache); if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; if(!APP_DATA.DOKUMENTASI) APP_DATA.DOKUMENTASI = []; if(!APP_DATA.EVALUASI) APP_DATA.EVALUASI = []; if(!APP_DATA.LOG_UPDATE) APP_DATA.LOG_UPDATE = []; if(!APP_DATA.PENGATURAN) APP_DATA.PENGATURAN = []; } }
 function saveLocalData() { localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); }
 function formatDate(dateStr) {
 if(!dateStr) return '-';
@@ -295,7 +295,7 @@ if(force) showLoader();
 try {
 let res = await fetch(`${GAS_URL}?action=sync`); let result = await res.json();
 if (result.status === "success") {
-APP_DATA = result.data; if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; if(!APP_DATA.DOKUMENTASI) APP_DATA.DOKUMENTASI = []; if(!APP_DATA.EVALUASI) APP_DATA.EVALUASI = [];
+APP_DATA = result.data; if(!APP_DATA.SURAT) APP_DATA.SURAT = []; if(!APP_DATA.WARGA) APP_DATA.WARGA = []; if(!APP_DATA.DOKUMENTASI) APP_DATA.DOKUMENTASI = []; if(!APP_DATA.EVALUASI) APP_DATA.EVALUASI = []; if(!APP_DATA.LOG_UPDATE) APP_DATA.LOG_UPDATE = [];
 saveLocalData(); refreshAllUI(); loadPengaturanInput();
 if(force) showToast("Sinkronisasi Berhasil!", "✅");
 }
@@ -347,10 +347,10 @@ vibrate([100, 100]);
 let inputPin = prompt(`🔐 OTORISASI ZONA BERBAHAYA\nMasukkan PIN Admin untuk KOSONGKAN SEMUA DATA:`);
 if(inputPin === null) return;
 if(inputPin !== getAdminPin()) { showToast("PIN Salah!", "❌"); return; }
-if(!window.confirm(`PERINGATAN AKHIR!\nTindakan ini akan menghapus SEMUA SURAT, NOTULEN, KEGIATAN, DAN WARGA secara PERMANEN dari Server dan Aplikasi.\n\nApakah Anda benar-benar yakin?`)) return;
+if(!window.confirm(`PERINGATAN AKHIR!\nTindakan ini akan menghapus SEMUA SURAT, NOTULEN, KEGIATAN, WARGA, DAN LOG UPDATE secara PERMANEN dari Server dan Aplikasi.\n\nApakah Anda benar-benar yakin?`)) return;
 
 showLoader();
-let tables = ['WARGA', 'NOTULEN', 'KEPUTUSAN', 'KEGIATAN', 'PETUGAS', 'ANGGARAN', 'KEHADIRAN', 'PELAKSANAAN', 'DOKUMENTASI', 'EVALUASI', 'SURAT'];
+let tables = ['WARGA', 'NOTULEN', 'KEPUTUSAN', 'KEGIATAN', 'PETUGAS', 'ANGGARAN', 'KEHADIRAN', 'PELAKSANAAN', 'DOKUMENTASI', 'EVALUASI', 'SURAT', 'LOG_UPDATE'];
 tables.forEach(t => { APP_DATA[t] = []; });
 SYNC_QUEUE = []; localStorage.setItem('rt_sync_queue', JSON.stringify(SYNC_QUEUE));
 saveLocalData(); refreshAllUI();
