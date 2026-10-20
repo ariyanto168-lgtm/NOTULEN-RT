@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Kegiatan RT</title>
+  <title>Notulen & Perencanaan Kegiatan RT</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -26,7 +26,7 @@
     body {
       background-color: var(--bg-light);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      padding-bottom: 80px;
+      padding-bottom: 85px;
       user-select: none;
     }
     .navbar-brand {
@@ -64,15 +64,15 @@
       background: none;
       border: none;
       color: #64748b;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 2px;
-      width: 25%;
+      width: 20%;
     }
     .nav-item-btn i {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
     }
     .nav-item-btn.active {
       color: var(--primary-color);
@@ -82,14 +82,28 @@
       background: linear-gradient(135deg, #0ea5e9, #0284c7);
       color: white;
       border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 20px;
+      padding: 14px;
+      margin-bottom: 16px;
       display: none;
     }
     .badge-status {
       font-size: 0.75rem;
       padding: 5px 10px;
       border-radius: 20px;
+    }
+    /* Printable Style */
+    @media print {
+      .bottom-nav, .navbar, .btn, .no-print, .install-banner {
+        display: none !important;
+      }
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .card-custom {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
     }
   </style>
 </head>
@@ -113,14 +127,14 @@
     <div id="install-banner" class="install-banner shadow-sm">
       <div class="d-flex align-items-center justify-content-between">
         <div>
-          <h6 class="fw-bold mb-1"><i class="bi bi-download me-2"></i>Instal Aplikasi Notulen RT</h6>
+          <h6 class="fw-bold mb-0"><i class="bi bi-download me-2"></i>Instal Aplikasi Notulen RT</h6>
           <small class="opacity-90">Pasang di Layar Utama agar cepat dibuka & offline</small>
         </div>
         <button id="btn-install" class="btn btn-light text-primary fw-bold btn-sm rounded-pill px-3">Instal</button>
       </div>
     </div>
 
-    <!-- PENGATURAN URL APPS SCRIPT (Jika Belum Diset) -->
+    <!-- PENGATURAN URL APPS SCRIPT -->
     <div id="section-config" class="card card-custom p-3 mb-3 border-warning bg-warning-subtle" style="display:none;">
       <h6 class="fw-bold text-dark mb-2"><i class="bi bi-gear-fill me-2"></i>Konfigurasi Backend Apps Script</h6>
       <input type="text" id="input-script-url" class="form-control form-control-sm mb-2" placeholder="Tempel URL Web App Google Apps Script di sini...">
@@ -130,22 +144,28 @@
     <!-- SEKSI 1: DASHBOARD UTAMA -->
     <div id="sec-dashboard" class="page-section">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="fw-bold mb-0">Ringkasan Kegiatan</h5>
+        <h5 class="fw-bold mb-0">Ringkasan RT</h5>
         <span id="sync-status" class="badge bg-secondary">Offline Cache</span>
       </div>
 
       <!-- Card Stats Grid -->
-      <div class="row g-2 mb-4">
-        <div class="col-6">
-          <div class="card card-custom p-3 text-center bg-primary text-white">
-            <h2 id="stat-notulen" class="fw-bold mb-0">0</h2>
-            <small class="opacity-90">Total Notulen</small>
+      <div class="row g-2 mb-3">
+        <div class="col-4">
+          <div class="card card-custom p-2 text-center bg-primary text-white">
+            <h3 id="stat-notulen" class="fw-bold mb-0">0</h3>
+            <small class="opacity-90" style="font-size:0.7rem;">Notulen</small>
           </div>
         </div>
-        <div class="col-6">
-          <div class="card card-custom p-3 text-center bg-success text-white">
-            <h2 id="stat-kegiatan" class="fw-bold mb-0">0</h2>
-            <small class="opacity-90">Rencana Kegiatan</small>
+        <div class="col-4">
+          <div class="card card-custom p-2 text-center bg-success text-white">
+            <h3 id="stat-kegiatan" class="fw-bold mb-0">0</h3>
+            <small class="opacity-90" style="font-size:0.7rem;">Agenda</small>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card card-custom p-2 text-center bg-info text-white">
+            <h3 id="stat-warga" class="fw-bold mb-0">0</h3>
+            <small class="opacity-90" style="font-size:0.7rem;">Warga</small>
           </div>
         </div>
       </div>
@@ -157,19 +177,19 @@
           <button class="btn btn-light card-custom w-100 p-3 text-start border d-flex flex-column gap-1" onclick="switchTab('notulen'); openFormNotulen();">
             <i class="bi bi-file-earmark-plus-fill text-primary fs-3"></i>
             <span class="fw-bold text-dark mt-1">+ Buat Notulen</span>
-            <small class="text-muted">Catat hasil musyawarah</small>
+            <small class="text-muted">Hasil musyawarah</small>
           </button>
         </div>
         <div class="col-6">
-          <button class="btn btn-light card-custom w-100 p-3 text-start border d-flex flex-column gap-1" onclick="switchTab('kegiatan'); openFormKegiatan();">
-            <i class="bi bi-calendar-plus-fill text-success fs-3"></i>
-            <span class="fw-bold text-dark mt-1">+ Buat Agenda</span>
-            <small class="text-muted">Jadwal kerja bakti / RT</small>
+          <button class="btn btn-light card-custom w-100 p-3 text-start border d-flex flex-column gap-1" onclick="openModalPresensi()">
+            <i class="bi bi-person-check-fill text-warning fs-3"></i>
+            <span class="fw-bold text-dark mt-1">Presensi Rapat</span>
+            <small class="text-muted">Absen warga hadir</small>
           </button>
         </div>
       </div>
 
-      <h6 class="fw-bold text-muted mb-2">Notulen Terbaru</h6>
+      <h6 class="fw-bold text-muted mb-2">Notulen Musyawarah Terbaru</h6>
       <div id="dashboard-recent-notulen">
         <!-- Render otomatis via JS -->
       </div>
@@ -177,10 +197,12 @@
 
     <!-- SEKSI 2: DAFTAR NOTULEN -->
     <div id="sec-notulen" class="page-section" style="display:none;">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
         <h5 class="fw-bold mb-0">Notulen Rapat RT</h5>
         <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="openFormNotulen()"><i class="bi bi-plus-lg me-1"></i>Tambah</button>
       </div>
+
+      <input type="text" id="search-notulen" class="form-control form-control-sm mb-3 rounded-pill" placeholder="🔍 Cari agenda notulen..." onkeyup="renderNotulenList()">
 
       <div id="list-notulen-container">
         <!-- List Notulen Render JS -->
@@ -189,25 +211,53 @@
 
     <!-- SEKSI 3: KEGIATAN & AGENDA -->
     <div id="sec-kegiatan" class="page-section" style="display:none;">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
         <h5 class="fw-bold mb-0">Perencanaan Kegiatan</h5>
         <button class="btn btn-success btn-sm rounded-pill px-3" onclick="openFormKegiatan()"><i class="bi bi-plus-lg me-1"></i>Agenda Baru</button>
       </div>
+
+      <input type="text" id="search-kegiatan" class="form-control form-control-sm mb-3 rounded-pill" placeholder="🔍 Cari nama agenda..." onkeyup="renderKegiatanList()">
 
       <div id="list-kegiatan-container">
         <!-- List Kegiatan Render JS -->
       </div>
     </div>
 
-    <!-- SEKSI 4: DATA WARGA & PENGURUS -->
+    <!-- SEKSI 4: DATA WARGA -->
     <div id="sec-warga" class="page-section" style="display:none;">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
         <h5 class="fw-bold mb-0">Data Warga & Pengurus</h5>
         <button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="openFormWarga()"><i class="bi bi-plus-lg me-1"></i>Tambah Warga</button>
       </div>
 
+      <input type="text" id="search-warga" class="form-control form-control-sm mb-3 rounded-pill" placeholder="🔍 Cari nama atau blok rumah..." onkeyup="renderWargaList()">
+
       <div id="list-warga-container">
         <!-- List Warga Render JS -->
+      </div>
+    </div>
+
+    <!-- SEKSI 5: PENGATURAN & BACKUP -->
+    <div id="sec-pengaturan" class="page-section" style="display:none;">
+      <h5 class="fw-bold mb-3">Pengaturan & Data</h5>
+      
+      <div class="card card-custom p-3 mb-3">
+        <h6 class="fw-bold"><i class="bi bi-hdd-network me-2 text-primary"></i>Koneksi Spreadsheet</h6>
+        <p class="small text-muted mb-2">URL Web App Google Apps Script backend:</p>
+        <input type="text" id="setting-url-input" class="form-control form-control-sm mb-2" placeholder="https://script.google.com/macros/s/...">
+        <button class="btn btn-sm btn-primary rounded-pill w-100 fw-bold" onclick="updateSettingUrl()">Simpan URL Baru</button>
+      </div>
+
+      <div class="card card-custom p-3 mb-3">
+        <h6 class="fw-bold"><i class="bi bi-download me-2 text-success"></i>Backup & Restore Data</h6>
+        <p class="small text-muted mb-2">Simpan cadangan data ke HP atau pulihkan dari file backup JSON.</p>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-success flex-fill rounded-pill fw-bold" onclick="exportBackup()"><i class="bi bi-file-earmark-arrow-down me-1"></i>Download Backup</button>
+          <label class="btn btn-sm btn-outline-primary flex-fill rounded-pill fw-bold mb-0">
+            <i class="bi bi-file-earmark-arrow-up me-1"></i>Restore Data
+            <input type="file" id="import-file" accept=".json" onchange="importBackup(event)" style="display:none;">
+          </label>
+        </div>
       </div>
     </div>
 
@@ -225,11 +275,15 @@
     </button>
     <button class="nav-item-btn" onclick="switchTab('kegiatan')">
       <i class="bi bi-calendar-event"></i>
-      <span>Kegiatan</span>
+      <span>Agenda</span>
     </button>
     <button class="nav-item-btn" onclick="switchTab('warga')">
       <i class="bi bi-people-fill"></i>
       <span>Warga</span>
+    </button>
+    <button class="nav-item-btn" onclick="switchTab('pengaturan')">
+      <i class="bi bi-sliders"></i>
+      <span>Pengaturan</span>
     </button>
   </nav>
 
@@ -246,7 +300,7 @@
             <input type="hidden" id="notulen-id">
             <div class="mb-2">
               <label class="form-label small fw-bold">Agenda / Topik Rapat</label>
-              <input type="text" id="notulen-agenda" class="form-control" placeholder="Contoh: Rapat Persiapan Kerja Bakti" required>
+              <input type="text" id="notulen-agenda" class="form-control" placeholder="Contoh: Musyawarah Keamanan RT" required>
             </div>
             <div class="row g-2 mb-2">
               <div class="col-6">
@@ -273,12 +327,12 @@
               </div>
             </div>
             <div class="mb-2">
-              <label class="form-label small fw-bold">Pembahasan & Hasil Musyawarah</label>
-              <textarea id="notulen-pembahasan" class="form-control" rows="3" placeholder="Poin-poin penting musyawarah..."></textarea>
+              <label class="form-label small fw-bold">Pembahasan & Uraian</label>
+              <textarea id="notulen-pembahasan" class="form-control" rows="3" placeholder="Poin-poin pembahasan rapat..."></textarea>
             </div>
             <div class="mb-3">
-              <label class="form-label small fw-bold">Keputusan Final</label>
-              <textarea id="notulen-keputusan" class="form-control" rows="2" placeholder="Poin keputusan bersama..."></textarea>
+              <label class="form-label small fw-bold">Keputusan Final Musyawarah</label>
+              <textarea id="notulen-keputusan" class="form-control" rows="2" placeholder="Poin keputusan yang disepakati..."></textarea>
             </div>
             <button type="submit" class="btn btn-primary w-100 btn-rounded">Simpan Notulen</button>
           </form>
@@ -287,12 +341,12 @@
     </div>
   </div>
 
-  <!-- MODAL FORM KEGIATAN -->
+  <!-- MODAL FORM KEGIATAN & ANGGARAN -->
   <div class="modal fade" id="modalKegiatan" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content rounded-4 border-0">
         <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title fw-bold">Agenda Kegiatan RT</h5>
+          <h5 class="modal-title fw-bold">Agenda Kegiatan & Anggaran</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
@@ -320,9 +374,15 @@
               <label class="form-label small fw-bold">Lokasi</label>
               <input type="text" id="kegiatan-lokasi" class="form-control" placeholder="Lapangan RT / Fasum">
             </div>
-            <div class="mb-3">
-              <label class="form-label small fw-bold">Penanggung Jawab / Koordinator</label>
-              <input type="text" id="kegiatan-pj" class="form-control" placeholder="Nama Koordinator">
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-bold">Estimasi Anggaran (Rp)</label>
+                <input type="number" id="kegiatan-anggaran" class="form-control" placeholder="0">
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-bold">Realisasi (Rp)</label>
+                <input type="number" id="kegiatan-realisasi" class="form-control" placeholder="0">
+              </div>
             </div>
             <button type="submit" class="btn btn-success w-100 btn-rounded">Simpan Agenda</button>
           </form>
@@ -363,60 +423,98 @@
     </div>
   </div>
 
+  <!-- MODAL PRESENSI WARGA -->
+  <div class="modal fade" id="modalPresensi" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">Presensi Kehadiran Warga</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Pilih Musyawarah / Agenda</label>
+            <select id="presensi-agenda-select" class="form-select" onchange="loadPresensiChecklist()">
+              <!-- Options via JS -->
+            </select>
+          </div>
+          <h6 class="fw-bold small text-muted mb-2">Centang Warga yang Hadir:</h6>
+          <div id="presensi-checklist-container" class="border rounded-3 p-2" style="max-height: 250px; overflow-y: auto;">
+            <!-- Checkboxes via JS -->
+          </div>
+          <button class="btn btn-warning w-100 btn-rounded text-dark fw-bold mt-3" onclick="savePresensi()">Simpan Daftar Hadir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CETAK NOTULEN -->
+  <div class="modal fade" id="modalCetak" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Pratinjau Cetak Notulen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4" id="print-area">
+          <div class="text-center border-bottom pb-3 mb-3">
+            <h4 class="fw-bold mb-0">RUKUN TETANGGA (RT)</h4>
+            <p class="mb-0 text-muted">BERITA ACARA & NOTULEN HASIL MUSYAWARAH</p>
+          </div>
+          <div id="print-content">
+            <!-- Content via JS -->
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button class="btn btn-primary rounded-pill px-4" onclick="window.print()"><i class="bi bi-printer me-2"></i>Cetak / Simpan PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPT BOOTSTRAP & LOGIK LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // State Aplikasi
+    // State Utama
     let API_URL = localStorage.getItem('rt_api_url') || '';
     let APP_DATA = JSON.parse(localStorage.getItem('rt_app_data')) || {
       NOTULEN: [],
       KEGIATAN: [],
-      WARGA: []
+      WARGA: [],
+      KEHADIRAN: []
     };
     let deferredPrompt = null;
 
-    // Inisialisasi Aplikasi saat Load
     document.addEventListener('DOMContentLoaded', () => {
+      if (API_URL) document.getElementById('setting-url-input').value = API_URL;
       checkConfigUrl();
       registerServiceWorker();
       renderUI();
-      if(API_URL) syncData();
+      if (API_URL) syncData();
     });
 
-    // Registrasi PWA Service Worker & Install Prompt
     function registerServiceWorker() {
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-          .then(() => console.log('Service Worker Registered'))
-          .catch(err => console.error('SW Registration Failed:', err));
+        navigator.serviceWorker.register('./sw.js').catch(err => console.error('SW Error:', err));
       }
-
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         document.getElementById('install-banner').style.display = 'block';
       });
-
       document.getElementById('btn-install').addEventListener('click', () => {
         if (deferredPrompt) {
           deferredPrompt.prompt();
-          deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              document.getElementById('install-banner').style.display = 'none';
-            }
+          deferredPrompt.userChoice.then(() => {
+            document.getElementById('install-banner').style.display = 'none';
             deferredPrompt = null;
           });
         }
       });
     }
 
-    // Konfigurasi API
     function checkConfigUrl() {
-      if (!API_URL) {
-        document.getElementById('section-config').style.display = 'block';
-      } else {
-        document.getElementById('section-config').style.display = 'none';
-      }
+      document.getElementById('section-config').style.display = API_URL ? 'none' : 'block';
     }
 
     function saveConfigUrl() {
@@ -429,25 +527,33 @@
       }
     }
 
-    // Navigasi Tab
+    function updateSettingUrl() {
+      let val = document.getElementById('setting-url-input').value.trim();
+      if (val) {
+        API_URL = val;
+        localStorage.setItem('rt_api_url', API_URL);
+        alert('URL Apps Script diperbarui!');
+        syncData();
+      }
+    }
+
     function switchTab(tabName) {
       document.querySelectorAll('.page-section').forEach(sec => sec.style.display = 'none');
       document.querySelectorAll('.nav-item-btn').forEach(btn => btn.classList.remove('active'));
       
       document.getElementById('sec-' + tabName).style.display = 'block';
-      const activeIdx = ['dashboard', 'notulen', 'kegiatan', 'warga'].indexOf(tabName);
-      if (activeIdx !== -1) {
-        document.querySelectorAll('.nav-item-btn')[activeIdx].classList.add('active');
-      }
+      const tabs = ['dashboard', 'notulen', 'kegiatan', 'warga', 'pengaturan'];
+      const activeIdx = tabs.indexOf(tabName);
+      if (activeIdx !== -1) document.querySelectorAll('.nav-item-btn')[activeIdx].classList.add('active');
     }
 
-    // Render Antarmuka Lengkap
+    // Render Utama
     function renderUI() {
-      // Stats
       document.getElementById('stat-notulen').innerText = APP_DATA.NOTULEN ? APP_DATA.NOTULEN.length : 0;
       document.getElementById('stat-kegiatan').innerText = APP_DATA.KEGIATAN ? APP_DATA.KEGIATAN.length : 0;
+      document.getElementById('stat-warga').innerText = APP_DATA.WARGA ? APP_DATA.WARGA.length : 0;
 
-      // Dashboard Recent Notulen
+      // Dashboard Recent
       let recentContainer = document.getElementById('dashboard-recent-notulen');
       if (!APP_DATA.NOTULEN || APP_DATA.NOTULEN.length === 0) {
         recentContainer.innerHTML = `<div class="text-center text-muted py-3 small">Belum ada notulen rapat terdaftar.</div>`;
@@ -458,96 +564,143 @@
             <h6 class="fw-bold mb-1">${lastItem.agenda}</h6>
             <div class="small text-muted mb-2"><i class="bi bi-calendar me-1"></i>${lastItem.tgl_rapat || '-'} | <i class="bi bi-geo-alt me-1"></i>${lastItem.tempat || '-'}</div>
             <p class="small text-secondary mb-2">${lastItem.keputusan || lastItem.pembahasan || 'Tidak ada uraian.'}</p>
-            <button class="btn btn-sm btn-outline-primary rounded-pill w-100" onclick="shareWA('${lastItem.id}')"><i class="bi bi-whatsapp me-1"></i>Bagikan ke WA Group RT</button>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-outline-primary flex-fill rounded-pill" onclick="shareWA('${lastItem.id}')"><i class="bi bi-whatsapp me-1"></i>Share WA</button>
+              <button class="btn btn-sm btn-outline-secondary rounded-pill" onclick="openPrintModal('${lastItem.id}')"><i class="bi bi-printer"></i></button>
+            </div>
           </div>
         `;
       }
 
-      // List Notulen
-      let notulenList = document.getElementById('list-notulen-container');
-      if (!APP_DATA.NOTULEN || APP_DATA.NOTULEN.length === 0) {
-        notulenList.innerHTML = `<div class="card card-custom p-4 text-center text-muted">Belum ada data notulen.</div>`;
-      } else {
-        notulenList.innerHTML = [...APP_DATA.NOTULEN].reverse().map(item => `
-          <div class="card card-custom p-3 mb-2">
-            <div class="d-flex justify-content-between align-items-start mb-1">
-              <h6 class="fw-bold mb-0 text-dark">${item.agenda}</h6>
-              <small class="text-muted">${item.tgl_rapat || ''}</small>
-            </div>
-            <p class="small text-secondary mb-2">${item.keputusan || item.pembahasan || ''}</p>
-            <div class="d-flex gap-2">
-              <button class="btn btn-sm btn-light text-primary flex-fill fw-bold" onclick="shareWA('${item.id}')"><i class="bi bi-whatsapp me-1"></i>Share WA</button>
-              <button class="btn btn-sm btn-light text-danger" onclick="deleteItem('NOTULEN', '${item.id}')"><i class="bi bi-trash"></i></button>
-            </div>
-          </div>
-        `).join('');
+      renderNotulenList();
+      renderKegiatanList();
+      renderWargaList();
+    }
+
+    function renderNotulenList() {
+      let q = (document.getElementById('search-notulen')?.value || '').toLowerCase();
+      let container = document.getElementById('list-notulen-container');
+      let filtered = (APP_DATA.NOTULEN || []).filter(x => (x.agenda || '').toLowerCase().includes(q) || (x.pembahasan || '').toLowerCase().includes(q));
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="card card-custom p-4 text-center text-muted">Data notulen tidak ditemukan.</div>`;
+        return;
       }
 
-      // List Kegiatan
-      let kegiatanList = document.getElementById('list-kegiatan-container');
-      if (!APP_DATA.KEGIATAN || APP_DATA.KEGIATAN.length === 0) {
-        kegiatanList.innerHTML = `<div class="card card-custom p-4 text-center text-muted">Belum ada agenda kegiatan.</div>`;
-      } else {
-        kegiatanList.innerHTML = [...APP_DATA.KEGIATAN].reverse().map(item => `
-          <div class="card card-custom p-3 mb-2">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <h6 class="fw-bold mb-0">${item.nama_kegiatan}</h6>
-              <span class="badge bg-${item.status === 'Selesai' ? 'success' : 'primary'} badge-status">${item.status || 'Rencana'}</span>
-            </div>
-            <small class="text-muted d-block mb-2"><i class="bi bi-calendar3 me-1"></i>${item.tgl || '-'} | <i class="bi bi-geo-alt me-1"></i>${item.lokasi || '-'}</small>
-            <div class="d-flex justify-content-end gap-2">
-              <button class="btn btn-sm btn-light text-danger" onclick="deleteItem('KEGIATAN', '${item.id}')"><i class="bi bi-trash"></i></button>
-            </div>
+      container.innerHTML = [...filtered].reverse().map(item => `
+        <div class="card card-custom p-3 mb-2">
+          <div class="d-flex justify-content-between align-items-start mb-1">
+            <h6 class="fw-bold mb-0 text-dark">${item.agenda}</h6>
+            <small class="text-muted">${item.tgl_rapat || ''}</small>
           </div>
-        `).join('');
+          <p class="small text-secondary mb-2">${item.keputusan || item.pembahasan || ''}</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-light text-primary flex-fill fw-bold" onclick="shareWA('${item.id}')"><i class="bi bi-whatsapp me-1"></i>WA</button>
+            <button class="btn btn-sm btn-light text-dark" onclick="openPrintModal('${item.id}')"><i class="bi bi-printer"></i></button>
+            <button class="btn btn-sm btn-light text-danger" onclick="deleteItem('NOTULEN', '${item.id}')"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderKegiatanList() {
+      let q = (document.getElementById('search-kegiatan')?.value || '').toLowerCase();
+      let container = document.getElementById('list-kegiatan-container');
+      let filtered = (APP_DATA.KEGIATAN || []).filter(x => (x.nama_kegiatan || '').toLowerCase().includes(q));
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="card card-custom p-4 text-center text-muted">Data agenda tidak ditemukan.</div>`;
+        return;
       }
 
-      // List Warga
-      let wargaList = document.getElementById('list-warga-container');
+      container.innerHTML = [...filtered].reverse().map(item => `
+        <div class="card card-custom p-3 mb-2">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <h6 class="fw-bold mb-0">${item.nama_kegiatan}</h6>
+            <span class="badge bg-${item.status === 'Selesai' ? 'success' : 'primary'} badge-status">${item.status || 'Rencana'}</span>
+          </div>
+          <small class="text-muted d-block mb-1"><i class="bi bi-calendar3 me-1"></i>${item.tgl || '-'} | <i class="bi bi-geo-alt me-1"></i>${item.lokasi || '-'}</small>
+          ${item.anggaran ? `<small class="text-success fw-bold d-block mb-2">Anggaran: Rp ${Number(item.anggaran).toLocaleString('id-ID')}${item.realisasi ? `| Realisasi: Rp ${Number(item.realisasi).toLocaleString('id-ID')}` : ''}</small>` : ''}
+          <div class="d-flex justify-content-end gap-2">
+            <button class="btn btn-sm btn-light text-danger" onclick="deleteItem('KEGIATAN', '${item.id}')"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderWargaList() {
+      let q = (document.getElementById('search-warga')?.value || '').toLowerCase();
+      let container = document.getElementById('list-warga-container');
+      let filtered = (APP_DATA.WARGA || []).filter(x => (x.nama || '').toLowerCase().includes(q) || (x.no_rumah || '').toLowerCase().includes(q));
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="card card-custom p-4 text-center text-muted">Data warga tidak ditemukan.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => `
+        <div class="card card-custom p-3 mb-2 d-flex flex-row justify-content-between align-items-center">
+          <div>
+            <h6 class="fw-bold mb-0">${item.nama}</h6>
+            <small class="text-muted">Rumah: ${item.no_rumah || '-'} | WA: ${item.no_wa || '-'}</small>
+          </div>
+          <button class="btn btn-sm btn-light text-danger" onclick="deleteItem('WARGA', '${item.id}')"><i class="bi bi-trash"></i></button>
+        </div>
+      `).join('');
+    }
+
+    // Presensi Kehadiran
+    function openModalPresensi() {
+      let select = document.getElementById('presensi-agenda-select');
+      select.innerHTML = (APP_DATA.NOTULEN || []).map(n => `<option value="${n.id}">${n.agenda} (${n.tgl_rapat || ''})</option>`).join('');
+      if (APP_DATA.NOTULEN.length === 0) {
+        alert('Buat notulen rapat terlebih dahulu.');
+        return;
+      }
+      loadPresensiChecklist();
+      new bootstrap.Modal(document.getElementById('modalPresensi')).show();
+    }
+
+    function loadPresensiChecklist() {
+      let selectedNotulenId = document.getElementById('presensi-agenda-select').value;
+      let existingPresence = (APP_DATA.KEHADIRAN || []).filter(k => k.id_kegiatan === selectedNotulenId).map(k => k.nama);
+      
+      let container = document.getElementById('presensi-checklist-container');
       if (!APP_DATA.WARGA || APP_DATA.WARGA.length === 0) {
-        wargaList.innerHTML = `<div class="card card-custom p-4 text-center text-muted">Belum ada data warga.</div>`;
-      } else {
-        wargaList.innerHTML = APP_DATA.WARGA.map(item => `
-          <div class="card card-custom p-3 mb-2 d-flex flex-row justify-content-between align-items-center">
-            <div>
-              <h6 class="fw-bold mb-0">${item.nama}</h6>
-              <small class="text-muted">Rumah: ${item.no_rumah || '-'} | WA: ${item.no_wa || '-'}</small>
-            </div>
-            <button class="btn btn-sm btn-light text-danger" onclick="deleteItem('WARGA', '${item.id}')"><i class="bi bi-trash"></i></button>
-          </div>
-        `).join('');
+        container.innerHTML = `<div class="text-center text-muted small p-2">Belum ada data warga terdaftar.</div>`;
+        return;
       }
+
+      container.innerHTML = APP_DATA.WARGA.map(w => `
+        <div class="form-check py-1 border-bottom">
+          <input class="form-check-input" type="checkbox" value="${w.nama}" id="chk-${w.id}" ${existingPresence.includes(w.nama) ? 'checked' : ''}>
+          <label class="form-check-label small fw-bold" for="chk-${w.id}">
+            ${w.nama} <span class="text-muted fw-normal">(${w.no_rumah || 'Blok -'})</span>
+          </label>
+        </div>
+      `).join('');
     }
 
-    // Sinkronisasi dengan Google Apps Script Backend
-    async function syncData() {
-      if (!API_URL) return;
-      let syncBtn = document.getElementById('btn-sync');
-      let syncBadge = document.getElementById('sync-status');
-      syncBtn.classList.add('spin');
-      syncBadge.className = 'badge bg-warning text-dark';
-      syncBadge.innerText = 'Menyingkronkan...';
+    function savePresensi() {
+      let selectedNotulenId = document.getElementById('presensi-agenda-select').value;
+      APP_DATA.KEHADIRAN = (APP_DATA.KEHADIRAN || []).filter(k => k.id_kegiatan !== selectedNotulenId);
 
-      try {
-        let res = await fetch(API_URL + '?action=sync');
-        let json = await res.json();
-        if (json.status === 'success') {
-          APP_DATA = json.data;
-          localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
-          renderUI();
-          syncBadge.className = 'badge bg-success';
-          syncBadge.innerText = 'Tersinkronisasi';
-        }
-      } catch (err) {
-        console.warn('Sync gagal, menggunakan cache lokal:', err);
-        syncBadge.className = 'badge bg-secondary';
-        syncBadge.innerText = 'Modus Offline';
-      } finally {
-        syncBtn.classList.remove('spin');
-      }
+      document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').forEach(chk => {
+        APP_DATA.KEHADIRAN.push({
+          id: 'HADIR-' + new Date().getTime() + Math.floor(Math.random()*100),
+          id_kegiatan: selectedNotulenId,
+          nama: chk.value,
+          status_hadir: 'Hadir',
+          waktu: new Date().toLocaleTimeString('id-ID')
+        });
+      });
+
+      localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
+      bootstrap.Modal.getInstance(document.getElementById('modalPresensi')).hide();
+      alert('Presensi berhasil disimpan!');
     }
 
-    // Modal Triggers
+    // Modal Form Triggers
     function openFormNotulen() {
       document.getElementById('form-notulen').reset();
       document.getElementById('notulen-id').value = '';
@@ -568,10 +721,44 @@
       new bootstrap.Modal(document.getElementById('modalWarga')).show();
     }
 
+    function openPrintModal(idNotulen) {
+      let item = APP_DATA.NOTULEN.find(x => x.id === idNotulen);
+      if (!item) return;
+
+      let kehadiran = (APP_DATA.KEHADIRAN || []).filter(k => k.id_kegiatan === idNotulen).map(k => k.nama);
+
+      document.getElementById('print-content').innerHTML = `
+        <table class="table table-sm table-borderless mb-3 small">
+          <tr><td width="130" class="fw-bold">Agenda Musyawarah</td><td>: ${item.agenda}</td></tr>
+          <tr><td class="fw-bold">Hari / Tanggal</td><td>: ${item.tgl_rapat || '-'} ${item.waktu ? ' | ' + item.waktu : ''}</td></tr>
+          <tr><td class="fw-bold">Tempat</td><td>: ${item.tempat || '-'}</td></tr>
+          <tr><td class="fw-bold">Pimpinan Rapat</td><td>: ${item.pimpinan || '-'}</td></tr>
+          <tr><td class="fw-bold">Notulis</td><td>: ${item.notulis || '-'}</td></tr>
+        </table>
+        <div class="mb-3">
+          <h6 class="fw-bold border-bottom pb-1">I. PEMBAHASAN & URAIAN</h6>
+          <p class="small text-secondary" style="white-space: pre-line;">${item.pembahasan || '-'}</p>
+        </div>
+        <div class="mb-3">
+          <h6 class="fw-bold border-bottom pb-1">II. KEPUTUSAN MUSYAWARAH</h6>
+          <p class="small text-secondary" style="white-space: pre-line;">${item.keputusan || '-'}</p>
+        </div>
+        <div class="mb-4">
+          <h6 class="fw-bold border-bottom pb-1">III. DAFTAR HADIR WARGA (${kehadiran.length} Orang)</h6>
+          <p class="small text-secondary">${kehadiran.length > 0 ? kehadiran.join(', ') : 'Belum ada data presensi.'}</p>
+        </div>
+        <div class="row text-center mt-5 small">
+          <div class="col-6">Pimpinan Rapat,<br><br><br><b>(${item.pimpinan || 'Ketua RT'})</b></div>
+          <div class="col-6">Notulis,<br><br><br><b>(${item.notulis || 'Sekretaris'})</b></div>
+        </div>
+      `;
+      new bootstrap.Modal(document.getElementById('modalCetak')).show();
+    }
+
     // Submit Forms
-    document.getElementById('form-notulen').addEventListener('submit', async function(e) {
+    document.getElementById('form-notulen').addEventListener('submit', function(e) {
       e.preventDefault();
-      let data = {
+      saveLocalAndSync('NOTULEN', {
         id: document.getElementById('notulen-id').value,
         agenda: document.getElementById('notulen-agenda').value,
         tgl_rapat: document.getElementById('notulen-tgl').value,
@@ -581,44 +768,38 @@
         notulis: document.getElementById('notulen-notulis').value,
         pembahasan: document.getElementById('notulen-pembahasan').value,
         keputusan: document.getElementById('notulen-keputusan').value
-      };
-
-      saveLocalAndSync('NOTULEN', data);
+      });
       bootstrap.Modal.getInstance(document.getElementById('modalNotulen')).hide();
     });
 
-    document.getElementById('form-kegiatan').addEventListener('submit', async function(e) {
+    document.getElementById('form-kegiatan').addEventListener('submit', function(e) {
       e.preventDefault();
-      let data = {
+      saveLocalAndSync('KEGIATAN', {
         id: document.getElementById('kegiatan-id').value,
         nama_kegiatan: document.getElementById('kegiatan-nama').value,
         tgl: document.getElementById('kegiatan-tgl').value,
         status: document.getElementById('kegiatan-status').value,
         lokasi: document.getElementById('kegiatan-lokasi').value,
-        penanggung_jawab: document.getElementById('kegiatan-pj').value
-      };
-
-      saveLocalAndSync('KEGIATAN', data);
+        anggaran: document.getElementById('kegiatan-anggaran').value,
+        realisasi: document.getElementById('kegiatan-realisasi').value
+      });
       bootstrap.Modal.getInstance(document.getElementById('modalKegiatan')).hide();
     });
 
-    document.getElementById('form-warga').addEventListener('submit', async function(e) {
+    document.getElementById('form-warga').addEventListener('submit', function(e) {
       e.preventDefault();
-      let data = {
+      saveLocalAndSync('WARGA', {
         id: document.getElementById('warga-id').value,
         nama: document.getElementById('warga-nama').value,
         no_rumah: document.getElementById('warga-rumah').value,
         no_wa: document.getElementById('warga-wa').value
-      };
-
-      saveLocalAndSync('WARGA', data);
+      });
       bootstrap.Modal.getInstance(document.getElementById('modalWarga')).hide();
     });
 
-    // Simpan Lokal & Kirim ke Server
+    // Save & Delete Operations
     async function saveLocalAndSync(table, data) {
       if (!APP_DATA[table]) APP_DATA[table] = [];
-      
       if (!data.id) {
         data.id = table.substring(0,3) + '-' + new Date().getTime();
         APP_DATA[table].push(data);
@@ -638,7 +819,7 @@
           });
           syncData();
         } catch (e) {
-          console.warn('Gagal posting ke server, data tetap aman di lokal.');
+          console.warn('Network offline, data tersimpan di lokal.');
         }
       }
     }
@@ -661,7 +842,29 @@
       }
     }
 
-    // Fitur Format & Share WhatsApp
+    async function syncData() {
+      if (!API_URL) return;
+      let syncBadge = document.getElementById('sync-status');
+      syncBadge.className = 'badge bg-warning text-dark';
+      syncBadge.innerText = 'Menyingkronkan...';
+
+      try {
+        let res = await fetch(API_URL + '?action=sync');
+        let json = await res.json();
+        if (json.status === 'success') {
+          APP_DATA = json.data;
+          localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
+          renderUI();
+          syncBadge.className = 'badge bg-success';
+          syncBadge.innerText = 'Tersinkronisasi';
+        }
+      } catch (err) {
+        syncBadge.className = 'badge bg-secondary';
+        syncBadge.innerText = 'Modus Offline';
+      }
+    }
+
+    // Share WA
     function shareWA(idNotulen) {
       let item = APP_DATA.NOTULEN.find(x => x.id === idNotulen);
       if (!item) return;
@@ -677,6 +880,38 @@
                 `_Dibuat otomatis via Aplikasi Notulen RT_`;
 
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
+    }
+
+    // Backup & Restore
+    function exportBackup() {
+      let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(APP_DATA));
+      let dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", `backup_notulen_rt_${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
+    }
+
+    function importBackup(e) {
+      let file = e.target.files[0];
+      if (!file) return;
+
+      let reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          let importedData = JSON.parse(event.target.result);
+          if (confirm('Apakah Anda yakin ingin menimpa data saat ini dengan file backup?')) {
+            APP_DATA = importedData;
+            localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
+            renderUI();
+            alert('Data berhasil dipulihkan!');
+          }
+        } catch (err) {
+          alert('Format file JSON tidak valid.');
+        }
+      };
+      reader.readAsText(file);
     }
   </script>
 </body>
