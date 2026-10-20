@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.3.0</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.4.0</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -79,14 +79,15 @@
       letter-spacing: -0.5px;
     }
     
+    /* LOGO HEADER DIPERBESAR LEBIH DOMINAN (54px) */
     .app-logo-nav {
-      width: 44px;
-      height: 44px;
+      width: 54px;
+      height: 54px;
       object-fit: contain;
-      border-radius: 12px;
+      border-radius: 14px;
       background: #ffffff;
       padding: 3px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     }
 
     .card-custom {
@@ -205,13 +206,18 @@
   <!-- Datalist Autocomplete Warga -->
   <datalist id="dl-warga-list"></datalist>
 
-  <!-- Top Navbar Modern -->
+  <!-- Top Navbar Modern dengan Logo Besar & Text Desa Alamat Dynamic -->
   <nav class="navbar navbar-expand navbar-dark bg-primary-custom sticky-top shadow-sm py-2">
     <div class="container">
       <span class="navbar-brand mb-0 h1 d-flex align-items-center gap-2">
         <img src="icon-192.png" alt="Logo" class="app-logo-nav" onerror="this.style.display='none'">
-        <span>NOTULEN RT</span>
-        <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.65rem !important;">v3.3.0</span>
+        <div>
+          <div class="d-flex align-items-center gap-1">
+            <span>NOTULEN RT</span>
+            <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.4.0</span>
+          </div>
+          <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
+        </div>
       </span>
       <div class="d-flex align-items-center gap-2">
         <button id="btn-sync" class="btn btn-sm btn-light rounded-circle shadow-sm" onclick="syncData()" title="Sinkronkan Data">
@@ -344,9 +350,25 @@
       </div>
     </div>
 
-    <!-- SEKSI 5: PENGATURAN TERPROTEKSI -->
+    <!-- SEKSI 5: PENGATURAN TERPROTEKSI (DENGAN EDIT HEADER NAMA RT & DESA ALAMAT) -->
     <div id="sec-pengaturan" class="page-section" style="display:none;">
       <h5 class="fw-bold mb-3">Pengaturan & Data</h5>
+
+      <!-- CARD EDIT HEADER IDENTITAS DESA ALAMAT -->
+      <div class="card card-custom p-3 mb-3 border-primary-subtle">
+        <h6 class="fw-bold mb-2 text-primary-custom"><i class="bi bi-building me-2"></i>Identitas Header & Kop Surat</h6>
+        <p class="small text-muted mb-2">Atur nama RT/RW, Desa, dan Alamat yang tampil pada header aplikasi dan laporan Master Share WA:</p>
+        
+        <div class="mb-2">
+          <label class="form-label small fw-bold mb-1">Nama RT / RW</label>
+          <input type="text" id="setting-nama-rt" class="form-control form-control-sm" placeholder="Contoh: RT 01 / RW 05">
+        </div>
+        <div class="mb-2">
+          <label class="form-label small fw-bold mb-1">Desa / Kelurahan & Alamat</label>
+          <input type="text" id="setting-desa-alamat" class="form-control form-control-sm" placeholder="Contoh: Desa Sukamaju, Kec. Indah">
+        </div>
+        <button class="btn btn-sm btn-primary-custom text-white rounded-pill fw-bold w-100 mt-1 py-2 shadow-sm" onclick="saveHeaderSettings()"><i class="bi bi-check-circle me-1"></i>Simpan Identitas Header</button>
+      </div>
 
       <div class="card card-custom p-3 mb-3">
         <h6 class="fw-bold mb-2"><i class="bi bi-palette-fill me-2 text-primary-custom"></i>Pilihan Tema Warna</h6>
@@ -406,7 +428,7 @@
     <!-- FOOTER BRANDING -->
     <div class="footer-branding no-print">
       <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.3.0</span></div>
+      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.4.0</span></div>
     </div>
 
   </div>
@@ -655,7 +677,7 @@
             </div>
           </div>
 
-          <!-- Input Cari Warga untuk 100+ KK -->
+          <!-- Input Cari Warga -->
           <input type="text" id="presensi-search-warga" class="form-control form-control-sm mb-2 rounded-pill" placeholder="🔍 Cari nama atau blok rumah..." onkeyup="filterPresensiWarga()">
 
           <!-- Container Checklist Grid 2 Kolom Ringkas -->
@@ -707,18 +729,24 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Constants Versi Aplikasi
-    const APP_VERSION = "v3.3.0";
+    const APP_VERSION = "v3.4.0";
     const SYSTEM_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbx0q60aK8mOn0-tOLIZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
 
-    // State Utama
+    // State Utama & Data Header Subtext
     let API_URL = localStorage.getItem('rt_api_url') || SYSTEM_DEFAULT_API_URL;
     let APP_DATA = JSON.parse(localStorage.getItem('rt_app_data')) || {
+      SETTINGS: { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju, Kec. Indah" },
       NOTULEN: [],
       KEGIATAN: [],
       WARGA: [],
       KEHADIRAN: [],
       ANGGARAN: []
     };
+
+    if (!APP_DATA.SETTINGS) {
+      APP_DATA.SETTINGS = { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju, Kec. Indah" };
+    }
+
     let currentRabKegiatanId = null;
     let deferredPrompt = null;
     let confirmCallbackFn = null;
@@ -726,6 +754,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('setting-url-input').value = API_URL;
       applyTheme(localStorage.getItem('rt_theme') || 'default');
+
+      loadHeaderSettingsToUI();
 
       let savedTab = localStorage.getItem('rt_active_tab') || 'dashboard';
       switchTab(savedTab, false);
@@ -741,6 +771,27 @@
         if (confirmCallbackFn) confirmCallbackFn();
       });
     });
+
+    // EDIT HEADER IDENTITAS DESA ALAMAT
+    function loadHeaderSettingsToUI() {
+      let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01";
+      let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju";
+      
+      document.getElementById('nav-header-subtext').innerText = `${rt} • ${desa}`;
+      document.getElementById('setting-nama-rt').value = rt;
+      document.getElementById('setting-desa-alamat').value = desa;
+    }
+
+    function saveHeaderSettings() {
+      let rtVal = document.getElementById('setting-nama-rt').value.trim() || "RT 01 / RW 01";
+      let desaVal = document.getElementById('setting-desa-alamat').value.trim() || "Desa Sukamaju";
+
+      APP_DATA.SETTINGS = { nama_rt: rtVal, desa_alamat: desaVal };
+      localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
+      
+      loadHeaderSettingsToUI();
+      alert('Identitas header berhasil diperbarui!');
+    }
 
     function customConfirm(messageText, onConfirm) {
       document.getElementById('modalConfirmMessage').innerText = messageText;
@@ -870,6 +921,7 @@
 
     function renderUI() {
       updateDatalistWarga();
+      loadHeaderSettingsToUI();
       document.getElementById('stat-notulen').innerText = APP_DATA.NOTULEN ? APP_DATA.NOTULEN.length : 0;
       document.getElementById('stat-kegiatan').innerText = APP_DATA.KEGIATAN ? APP_DATA.KEGIATAN.length : 0;
       document.getElementById('stat-warga').innerText = APP_DATA.WARGA ? APP_DATA.WARGA.length : 0;
@@ -988,7 +1040,7 @@
       `).join('');
     }
 
-    // PRESENSI DENGAN GRID 2 KOLOM & PENCARIAN
+    // PRESENSI DENGAN GRID 2 KOLOM
     function openModalPresensi() {
       let select = document.getElementById('presensi-agenda-select');
       select.innerHTML = (APP_DATA.NOTULEN || []).map(n => `<option value="${n.id}">${n.agenda} (${formatTanggal(n.tgl_rapat)})</option>`).join('');
@@ -1078,29 +1130,30 @@
       bootstrap.Modal.getInstance(document.getElementById('modalPresensi')).hide();
     }
 
-    // MASTER SHARE WA (RANGKUMAN SELURUH HASIL MUSYAWARAH, ABSEN, & RAB)
+    // MASTER SHARE WA SUPER LENGKAP (NOTULEN + ABSENSI + AGENDA PERENCANAAN + RINCIAN ITEM RAB)
     function shareWA(idNotulen) {
       let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen));
       if (!item) return;
 
+      let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01";
+      let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju";
+
       let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama);
       let totalHadir = kehadiranList.length;
 
-      let rabItems = (APP_DATA.ANGGARAN || []).filter(a => String(a.id_kegiatan) === String(idNotulen));
-      let totalRab = rabItems.reduce((acc, curr) => acc + ((Number(curr.jumlah)||0) * (Number(curr.harga_satuan)||0)), 0);
-
-      let txt = `📢 *LAPORAN HILIR/MUSYAWARAH RT*\n` +
+      let txt = `📢 *LAPORAN HASIL MUSYAWARAH RT*\n` +
+                `🏛️ *${rt} - ${desa}*\n` +
                 `━━━━━━━━━━━━━━━━━━━━━\n` +
-                `📌 *Agenda:* ${item.agenda}\n` +
-                `📅 *Tanggal:* ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '(' + item.waktu + ' WIB)' : ''}\n` +
+                `📌 *Agenda Musyawarah:* ${item.agenda}\n` +
+                `📅 *Hari / Tanggal:* ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '(' + item.waktu + ' WIB)' : ''}\n` +
                 `📍 *Tempat:* ${item.tempat || '-'}\n` +
                 `👤 *Pimpinan Rapat:* ${item.pimpinan || '-'}\n` +
                 `✍️ *Notulis:* ${item.notulis || '-'}\n` +
                 `━━━━━━━━━━━━━━━━━━━━━\n\n` +
-                `👥 *DAFTAR KEHADIRAN WARGA (${totalHadir} KK Hadir):*\n`;
+                `👥 *DAFTAR HADIR WARGA (${totalHadir} KK):*\n`;
 
       if (totalHadir > 0) {
-        txt += `_Hadir:_ ${kehadiranList.join(', ')}\n\n`;
+        txt += `${kehadiranList.map((n, i) => `  ${i+1}. ${n}`).join('\n')}\n\n`;
       } else {
         txt += `_Belum ada presensi terdaftar._\n\n`;
       }
@@ -1108,14 +1161,37 @@
       txt += `💡 *PEMBAHASAN & URAIAN MUSYAWARAH:*\n${item.pembahasan || '-'}\n\n` +
              `✅ *KEPUTUSAN FINAL:* \n${item.keputusan || '-'}\n\n`;
 
-      if (rabItems.length > 0) {
-        txt += `💰 *RINCIAN ANGGARAN BIAYA (RAB):*\n`;
-        rabItems.forEach((r, idx) => {
-          let qty = Number(r.jumlah)||0;
-          let harga = Number(r.harga_satuan)||0;
-          txt += `  ${idx+1}. ${r.nama_kebutuhan} (${qty} ${r.satuan||''}) = Rp ${(qty*harga).toLocaleString('id-ID')}\n`;
+      // TAMBAHAN: RINCIAN AGENDA PERENCANAAN & RINCIAN ITEM RAB LENGKAP
+      let agendaList = APP_DATA.KEGIATAN || [];
+      txt += `━━━━━━━━━━━━━━━━━━━━━\n` +
+             `🗓️ *AGENDA PERENCANAAN & RINCIAN RAB:*\n`;
+
+      if (agendaList.length === 0) {
+        txt += `_Belum ada agenda perencanaan terdaftar._\n\n`;
+      } else {
+        agendaList.forEach((ag, idx) => {
+          let rabItems = (APP_DATA.ANGGARAN || []).filter(a => String(a.id_kegiatan) === String(ag.id));
+          let totalRabKegiatan = rabItems.reduce((acc, curr) => acc + ((Number(curr.jumlah)||0) * (Number(curr.harga_satuan)||0)), 0);
+
+          txt += `\n*${idx + 1}. ${ag.nama_kegiatan}* [${ag.status || 'Rencana'}]\n` +
+                 `   • Tanggal: ${formatTanggal(ag.tgl)}\n` +
+                 `   • Lokasi: ${ag.lokasi || '-'}\n` +
+                 `   • PJ: ${ag.penanggung_jawab || '-'}\n`;
+
+          if (rabItems.length > 0) {
+            txt += `   *Rincian Kebutuhan RAB:*\n`;
+            rabItems.forEach((r, rIdx) => {
+              let qty = Number(r.jumlah) || 0;
+              let harga = Number(r.harga_satuan) || 0;
+              let sub = qty * harga;
+              txt += `     ${rIdx + 1}) ${r.nama_kebutuhan}: ${qty} ${r.satuan || ''} x Rp ${harga.toLocaleString('id-ID')} = *Rp ${sub.toLocaleString('id-ID')}*\n`;
+            });
+            txt += `   👉 *Total RAB Agenda:* Rp ${totalRabKegiatan.toLocaleString('id-ID')}\n`;
+          } else {
+            txt += `   _Belum ada rincian anggaran biayanya._\n`;
+          }
         });
-        txt += `  *Total Estimasi RAB:* Rp ${totalRab.toLocaleString('id-ID')}\n\n`;
+        txt += `\n`;
       }
 
       txt += `━━━━━━━━━━━━━━━━━━━━━\n` +
@@ -1170,8 +1246,12 @@
       let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan));
       if (!keg) return;
 
+      let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01";
+      let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju";
+
       let items = (APP_DATA.ANGGARAN || []).filter(a => String(a.id_kegiatan) === String(idKegiatan));
       let txt = `📋 *RENCANA ANGGARAN BIAYA (RAB)*\n` +
+                `🏛️ *${rt} - ${desa}*\n` +
                 `━━━━━━━━━━━━━━━━━━━━━\n` +
                 `📌 *Kegiatan:* ${keg.nama_kegiatan}\n` +
                 `📅 *Tanggal:* ${formatTanggal(keg.tgl)}\n` +
@@ -1293,6 +1373,8 @@
       let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen));
       if (!item) return;
 
+      let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01";
+      let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju";
       let kehadiran = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama);
 
       document.getElementById('print-content').innerHTML = `
@@ -1300,8 +1382,8 @@
           <div class="d-flex align-items-center gap-3">
             <img src="icon-192.png" alt="Logo RT" style="width: 50px; height: 50px; object-fit: contain;" onerror="this.style.display='none'">
             <div>
-              <h4 class="fw-bold mb-0 text-dark">RUKUN TETANGGA (RT)</h4>
-              <p class="mb-0 text-muted small fw-semibold">BERITA ACARA & NOTULEN HASIL MUSYAWARAH</p>
+              <h4 class="fw-bold mb-0 text-dark">RUKUN TETANGGA (${rt})</h4>
+              <p class="mb-0 text-muted small fw-semibold">${desa.toUpperCase()}</p>
             </div>
           </div>
           <div class="text-end">
@@ -1447,7 +1529,9 @@
         let res = await fetch(API_URL + '?action=sync');
         let json = await res.json();
         if (json.status === 'success') {
+          let currentSettings = APP_DATA.SETTINGS;
           APP_DATA = json.data;
+          if (!APP_DATA.SETTINGS) APP_DATA.SETTINGS = currentSettings;
           localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
           renderUI();
           syncBadge.className = 'badge bg-success';
