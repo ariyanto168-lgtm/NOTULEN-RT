@@ -1,22 +1,23 @@
 {
-  "id": "SistemRT-App-v302",
-  "name": "Sistem RT",
-  "short_name": "SistemRT",
-  "start_url": "./index.html?v=3.0.2",
+  "name": "Notulen & Perencanaan Kegiatan RT",
+  "short_name": "Notulen RT",
+  "description": "Aplikasi Pencatatan Notulen Musyawarah dan Perencanaan Kegiatan RT",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f1f5f9",
-  "theme_color": "#4f46e5",
+  "background_color": "#0ea5e9",
+  "theme_color": "#0ea5e9",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "notulen.jpg",
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "notulen.jpg",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
