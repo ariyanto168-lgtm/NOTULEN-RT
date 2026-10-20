@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.2.1</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.2.2</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -63,19 +63,34 @@
     .text-primary-custom {
       color: var(--primary-color) !important;
     }
+    
+    /* TOMBOL DENGAN KONTRAS KETAT & TERLIHAT JELAS */
+    .btn-primary-custom {
+      background-color: var(--primary-color) !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+    .btn-primary-custom:hover, .btn-primary-custom:focus, .btn-primary-custom:active {
+      background-color: var(--primary-dark) !important;
+      color: #ffffff !important;
+    }
+
     .navbar-brand {
       font-weight: 700;
       letter-spacing: -0.5px;
     }
+    
+    /* LOGO HEADER DIPERBESAR */
     .app-logo-nav {
-      width: 34px;
-      height: 34px;
+      width: 44px;
+      height: 44px;
       object-fit: contain;
-      border-radius: 10px;
+      border-radius: 12px;
       background: #ffffff;
       padding: 3px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
+
     .card-custom {
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -192,13 +207,13 @@
   <!-- Datalist Autocomplete Warga -->
   <datalist id="dl-warga-list"></datalist>
 
-  <!-- Top Navbar Modern -->
-  <nav class="navbar navbar-expand navbar-dark bg-primary-custom sticky-top shadow-sm">
+  <!-- Top Navbar Modern dengan Logo Lebih Besar -->
+  <nav class="navbar navbar-expand navbar-dark bg-primary-custom sticky-top shadow-sm py-2">
     <div class="container">
       <span class="navbar-brand mb-0 h1 d-flex align-items-center gap-2">
         <img src="icon-192.png" alt="Logo" class="app-logo-nav" onerror="this.style.display='none'">
         <span>NOTULEN RT</span>
-        <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.65rem !important;">v3.2.1</span>
+        <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.65rem !important;">v3.2.2</span>
       </span>
       <div class="d-flex align-items-center gap-2">
         <button id="btn-sync" class="btn btn-sm btn-light rounded-circle shadow-sm" onclick="syncData()" title="Sinkronkan Data">
@@ -393,7 +408,7 @@
     <!-- FOOTER BRANDING -->
     <div class="footer-branding no-print">
       <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.2.1</span></div>
+      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.2.2</span></div>
     </div>
 
   </div>
@@ -520,7 +535,7 @@
     </div>
   </div>
 
-  <!-- MODAL RAB KEGIATAN -->
+  <!-- MODAL RAB KEGIATAN (TEKS TOMBOL TAMBAH DIPERJELAS) -->
   <div class="modal fade" id="modalRab" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content rounded-4 border-0">
@@ -553,7 +568,8 @@
                 <input type="number" id="rab-harga" class="form-control form-control-sm" placeholder="Harga Satuan" required>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary-custom text-white btn-sm rounded-pill fw-bold">+ Tambah Ke Anggaran</button>
+            <!-- Tombol Tambah Ke Anggaran dibuat Jelas & Kontras -->
+            <button type="submit" class="btn btn-primary-custom text-white btn-sm rounded-pill fw-bold w-100 py-2 shadow-sm">+ Tambah Ke Anggaran</button>
           </form>
 
           <!-- Tabel Rincian RAB -->
@@ -661,11 +677,27 @@
     </div>
   </div>
 
+  <!-- MODAL KONFIRMASI CUSTOM (PENGGANTI POPUP JAVA BROWSER) -->
+  <div class="modal fade" id="modalConfirm" tabindex="-1" style="z-index: 1060;">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content rounded-4 border-0 text-center p-3 shadow">
+        <div class="modal-body p-2">
+          <i class="bi bi-exclamation-circle text-warning fs-1 mb-2 d-block"></i>
+          <h6 class="fw-bold mb-2 text-dark" id="modalConfirmMessage">Apakah Anda yakin?</h6>
+          <div class="d-flex gap-2 justify-content-center mt-3">
+            <button type="button" class="btn btn-sm btn-light rounded-pill px-3 fw-bold border" data-bs-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-sm btn-danger rounded-pill px-3 fw-bold" id="btnConfirmOk">Ya, Lanjutkan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPT BOOTSTRAP & LOGIK LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Constants Versi Aplikasi
-    const APP_VERSION = "v3.2.1";
+    const APP_VERSION = "v3.2.2";
     const SYSTEM_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbx0q60aK8mOn0-tOLIZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
 
     // State Utama
@@ -679,6 +711,7 @@
     };
     let currentRabKegiatanId = null;
     let deferredPrompt = null;
+    let confirmCallbackFn = null;
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('setting-url-input').value = API_URL;
@@ -690,7 +723,23 @@
       registerServiceWorker();
       renderUI();
       if (API_URL) syncData();
+
+      // Listener Modal Konfirmasi Custom
+      document.getElementById('btnConfirmOk').addEventListener('click', () => {
+        let modalEl = document.getElementById('modalConfirm');
+        let modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+        if (confirmCallbackFn) confirmCallbackFn();
+      });
     });
+
+    // SISTEM KONFIRMASI MODERN (ANTI POPUP BROWSER)
+    function customConfirm(messageText, onConfirm) {
+      document.getElementById('modalConfirmMessage').innerText = messageText;
+      confirmCallbackFn = onConfirm;
+      let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalConfirm'));
+      modal.show();
+    }
 
     function applyTheme(themeName) {
       document.body.removeAttribute('data-theme');
@@ -701,11 +750,10 @@
     }
 
     function logoutApp() {
-      if (confirm('Apakah Anda yakin ingin keluar dari sesi aplikasi?')) {
+      customConfirm('Apakah Anda yakin ingin keluar dari sesi aplikasi?', () => {
         localStorage.removeItem('rt_active_tab');
-        alert('Anda telah keluar dari aplikasi.');
         switchTab('dashboard');
-      }
+      });
     }
 
     function formatTanggal(dStr) {
@@ -739,19 +787,16 @@
 
     function toggleEditUrl() {
       let input = document.getElementById('setting-url-input');
-      let btnSave = document.getElementById('btn-save-url');
-      let icon = document.getElementById('icon-toggle-edit');
-      let badge = document.getElementById('url-lock-badge');
-
       if (input.hasAttribute('readonly')) {
-        if (confirm('Buka kunci untuk mengubah URL Spreadsheet backend?')) {
+        customConfirm('Buka kunci untuk mengubah URL Spreadsheet backend?', () => {
           input.removeAttribute('readonly');
           input.classList.remove('bg-light', 'text-muted');
-          btnSave.removeAttribute('disabled');
-          icon.className = 'bi bi-unlock-fill text-warning';
+          document.getElementById('btn-save-url').removeAttribute('disabled');
+          document.getElementById('icon-toggle-edit').className = 'bi bi-unlock-fill text-warning';
+          let badge = document.getElementById('url-lock-badge');
           badge.className = 'badge bg-warning-subtle text-warning border border-warning-subtle';
           badge.innerHTML = '<i class="bi bi-unlock-fill me-1"></i>Terbuka (Edit)';
-        }
+        });
       } else {
         lockUrlInput();
       }
@@ -777,20 +822,18 @@
         API_URL = val;
         localStorage.setItem('rt_api_url', API_URL);
         lockUrlInput();
-        alert('URL Apps Script berhasil diperbarui!');
         syncData();
       }
     }
 
     function resetDefaultUrl() {
-      if (confirm('Kembalikan koneksi ke URL Sistem Bawaan?')) {
+      customConfirm('Kembalikan koneksi ke URL Sistem Bawaan?', () => {
         localStorage.removeItem('rt_api_url');
         API_URL = SYSTEM_DEFAULT_API_URL;
         document.getElementById('setting-url-input').value = API_URL;
         lockUrlInput();
-        alert('URL telah dikembalikan ke bawaan sistem!');
         syncData();
-      }
+      });
     }
 
     function switchTab(tabName, saveState = true) {
@@ -937,7 +980,6 @@
       `).join('');
     }
 
-    // RAB ANGGARAN MANAGER (PEMBAIKAN TAMPILAN TABEL & SHARE WA)
     function openModalRab(idKegiatan) {
       currentRabKegiatanId = idKegiatan;
       let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan));
@@ -979,7 +1021,6 @@
       document.getElementById('rab-grand-total').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
     }
 
-    // FORMAT WHATSAPP TERPERBAIKI (BERSTRUKTUR RAPI & MUDAH DIBACA)
     function shareRabWA(idKegiatan) {
       let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan));
       if (!keg) return;
@@ -1038,7 +1079,6 @@
 
     function deleteRabItem(idItem) {
       deleteItem('ANGGARAN', idItem);
-      renderRabList();
     }
 
     // PRESENSI
@@ -1090,7 +1130,6 @@
 
       localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
       bootstrap.Modal.getInstance(document.getElementById('modalPresensi')).hide();
-      alert('Presensi berhasil disimpan!');
     }
 
     function openFormNotulen() {
@@ -1253,7 +1292,7 @@
       bootstrap.Modal.getInstance(document.getElementById('modalWarga')).hide();
     });
 
-    // PENGELOLAAN SIMPAN LOKAL & SYNC
+    // PENGELOLAAN SIMPAN LOKAL & SYNC DENGAN KONFIRMASI MODERN
     async function saveLocalAndSync(table, data) {
       if (!APP_DATA[table]) APP_DATA[table] = [];
       
@@ -1285,22 +1324,24 @@
       }
     }
 
-    async function deleteItem(table, id) {
-      if (!confirm('Yakin ingin menghapus data ini?')) return;
-      if (APP_DATA[table]) {
-        APP_DATA[table] = APP_DATA[table].filter(x => String(x.id) !== String(id));
-        localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
-        renderUI();
-      }
+    function deleteItem(table, id) {
+      customConfirm('Yakin ingin menghapus data ini?', async () => {
+        if (APP_DATA[table]) {
+          APP_DATA[table] = APP_DATA[table].filter(x => String(x.id) !== String(id));
+          localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
+          renderUI();
+          if (table === 'ANGGARAN') renderRabList();
+        }
 
-      if (API_URL) {
-        try {
-          await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'delete', table: table, data: { id: id } })
-          });
-        } catch (e) {}
-      }
+        if (API_URL) {
+          try {
+            await fetch(API_URL, {
+              method: 'POST',
+              body: JSON.stringify({ action: 'delete', table: table, data: { id: id } })
+            });
+          } catch (e) {}
+        }
+      });
     }
 
     async function syncData() {
@@ -1360,12 +1401,11 @@
       reader.onload = function(event) {
         try {
           let importedData = JSON.parse(event.target.result);
-          if (confirm('Apakah Anda yakin ingin menimpa data saat ini dengan file backup?')) {
+          customConfirm('Apakah Anda yakin ingin menimpa data saat ini dengan file backup?', () => {
             APP_DATA = importedData;
             localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
             renderUI();
-            alert('Data berhasil dipulihkan!');
-          }
+          });
         } catch (err) {
           alert('Format file JSON tidak valid.');
         }
