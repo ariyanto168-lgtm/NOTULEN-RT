@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.2.0</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.2.1</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -198,7 +198,7 @@
       <span class="navbar-brand mb-0 h1 d-flex align-items-center gap-2">
         <img src="icon-192.png" alt="Logo" class="app-logo-nav" onerror="this.style.display='none'">
         <span>NOTULEN RT</span>
-        <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.65rem !important;">v3.2.0</span>
+        <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.65rem !important;">v3.2.1</span>
       </span>
       <div class="d-flex align-items-center gap-2">
         <button id="btn-sync" class="btn btn-sm btn-light rounded-circle shadow-sm" onclick="syncData()" title="Sinkronkan Data">
@@ -256,7 +256,7 @@
         </div>
       </div>
 
-      <!-- Menu Aksi Cepat dengan Ikon Modern -->
+      <!-- Menu Aksi Cepat -->
       <h6 class="fw-bold text-muted mb-2">Aksi Cepat Petugas</h6>
       <div class="row g-2 mb-4">
         <div class="col-6">
@@ -331,11 +331,10 @@
       </div>
     </div>
 
-    <!-- SEKSI 5: PENGATURAN TERPROTEKSI & TEMA WARNA -->
+    <!-- SEKSI 5: PENGATURAN TERPROTEKSI -->
     <div id="sec-pengaturan" class="page-section" style="display:none;">
       <h5 class="fw-bold mb-3">Pengaturan & Data</h5>
 
-      <!-- PILIHAN TEMA WARNA -->
       <div class="card card-custom p-3 mb-3">
         <h6 class="fw-bold mb-2"><i class="bi bi-palette-fill me-2 text-primary-custom"></i>Pilihan Tema Warna</h6>
         <p class="small text-muted mb-2">Sesuaikan warna tampilan aplikasi sesuai selera Anda:</p>
@@ -349,7 +348,6 @@
         </div>
       </div>
       
-      <!-- KONEKSI SPREADSHEET TERPROTEKSI -->
       <div class="card card-custom p-3 mb-3">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h6 class="fw-bold mb-0"><i class="bi bi-hdd-network me-2 text-primary-custom"></i>Koneksi Spreadsheet</h6>
@@ -368,7 +366,6 @@
         </div>
       </div>
 
-      <!-- BACKUP & RESTORE DATA -->
       <div class="card card-custom p-3 mb-3">
         <h6 class="fw-bold"><i class="bi bi-download me-2 text-success"></i>Backup & Restore Data</h6>
         <p class="small text-muted mb-2">Simpan cadangan data ke HP atau pulihkan dari file backup JSON.</p>
@@ -381,7 +378,6 @@
         </div>
       </div>
 
-      <!-- KELUAR / LOG OUT -->
       <div class="card card-custom p-3 mb-3 border-danger-subtle bg-danger-subtle">
         <div class="d-flex justify-content-between align-items-center">
           <div>
@@ -397,7 +393,7 @@
     <!-- FOOTER BRANDING -->
     <div class="footer-branding no-print">
       <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.2.0</span></div>
+      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.2.1</span></div>
     </div>
 
   </div>
@@ -524,7 +520,7 @@
     </div>
   </div>
 
-  <!-- MODAL RAB KEGIATAN (WITH SHARE WA) -->
+  <!-- MODAL RAB KEGIATAN -->
   <div class="modal fade" id="modalRab" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content rounded-4 border-0">
@@ -566,9 +562,9 @@
               <thead class="table-light small">
                 <tr>
                   <th>Kebutuhan</th>
-                  <th class="text-center">Vol</th>
-                  <th class="text-end">Harga</th>
-                  <th class="text-end">Total</th>
+                  <th class="text-center">Vol / Satuan</th>
+                  <th class="text-end">Harga Satuan</th>
+                  <th class="text-end">Subtotal</th>
                   <th class="text-center">Aksi</th>
                 </tr>
               </thead>
@@ -669,7 +665,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Constants Versi Aplikasi
-    const APP_VERSION = "v3.2.0";
+    const APP_VERSION = "v3.2.1";
     const SYSTEM_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbx0q60aK8mOn0-tOLIZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
 
     // State Utama
@@ -686,11 +682,8 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('setting-url-input').value = API_URL;
-      
-      // Terapkan Tema Tersimpan
       applyTheme(localStorage.getItem('rt_theme') || 'default');
 
-      // Terapkan Tab Aktif Terakhir (Anti-Refres Loncat)
       let savedTab = localStorage.getItem('rt_active_tab') || 'dashboard';
       switchTab(savedTab, false);
 
@@ -699,7 +692,6 @@
       if (API_URL) syncData();
     });
 
-    // SISTEM PEMILIHAN TEMA WARNA
     function applyTheme(themeName) {
       document.body.removeAttribute('data-theme');
       if (themeName !== 'default') {
@@ -708,7 +700,6 @@
       localStorage.setItem('rt_theme', themeName);
     }
 
-    // LOG OUT APLIKASI
     function logoutApp() {
       if (confirm('Apakah Anda yakin ingin keluar dari sesi aplikasi?')) {
         localStorage.removeItem('rt_active_tab');
@@ -717,7 +708,6 @@
       }
     }
 
-    // Helper Format Tanggal Bersih
     function formatTanggal(dStr) {
       if (!dStr) return '-';
       let s = dStr.toString();
@@ -803,7 +793,6 @@
       }
     }
 
-    // SWITCH TAB DENGAN PENYIMPANAN STATE (ANTI LONCAT REFRES)
     function switchTab(tabName, saveState = true) {
       document.querySelectorAll('.page-section').forEach(sec => sec.style.display = 'none');
       document.querySelectorAll('.nav-item-btn').forEach(btn => btn.classList.remove('active'));
@@ -948,7 +937,7 @@
       `).join('');
     }
 
-    // RAB ANGGARAN MANAGER DENGAN SHARE WA
+    // RAB ANGGARAN MANAGER (PEMBAIKAN TAMPILAN TABEL & SHARE WA)
     function openModalRab(idKegiatan) {
       currentRabKegiatanId = idKegiatan;
       let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan));
@@ -967,13 +956,18 @@
         container.innerHTML = `<tr><td colspan="5" class="text-center text-muted small py-3">Belum ada rincian RAB. Tambahkan di atas.</td></tr>`;
       } else {
         container.innerHTML = items.map(item => {
-          let tot = (Number(item.jumlah)||0) * (Number(item.harga_satuan)||0);
+          let qty = Number(item.jumlah) || 0;
+          let harga = Number(item.harga_satuan) || 0;
+          let tot = qty * harga;
           grandTotal += tot;
+          
+          let satuanTxt = item.satuan ? `<span class="badge bg-light text-dark border ms-1">${item.satuan}</span>` : '';
+
           return `
             <tr>
               <td class="small fw-semibold">${item.nama_kebutuhan}</td>
-              <td class="small text-center">${item.jumlah} ${item.satuan||''}</td>
-              <td class="small text-end">Rp ${(Number(item.harga_satuan)||0).toLocaleString('id-ID')}</td>
+              <td class="small text-center">${qty} ${satuanTxt}</td>
+              <td class="small text-end">Rp ${harga.toLocaleString('id-ID')}</td>
               <td class="small text-end fw-bold text-success">Rp ${tot.toLocaleString('id-ID')}</td>
               <td class="text-center">
                 <button class="btn btn-sm btn-link text-danger p-0" onclick="deleteRabItem('${item.id}')"><i class="bi bi-trash"></i></button>
@@ -985,31 +979,42 @@
       document.getElementById('rab-grand-total').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
     }
 
-    // FORMAT SHARE WA KHUSUS RAB
+    // FORMAT WHATSAPP TERPERBAIKI (BERSTRUKTUR RAPI & MUDAH DIBACA)
     function shareRabWA(idKegiatan) {
       let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan));
       if (!keg) return;
 
       let items = (APP_DATA.ANGGARAN || []).filter(a => String(a.id_kegiatan) === String(idKegiatan));
-      let txt = `*💰 RENCANA ANGGARAN BIAYA (RAB)*\n` +
-                `*Kegiatan:* ${keg.nama_kegiatan}\n` +
-                `*Tanggal:* ${formatTanggal(keg.tgl)}\n` +
-                `*Lokasi:* ${keg.lokasi || '-'}\n` +
-                `-----------------------------------\n`;
+      let txt = `📋 *RENCANA ANGGARAN BIAYA (RAB)*\n` +
+                `━━━━━━━━━━━━━━━━━━━━━\n` +
+                `📌 *Kegiatan:* ${keg.nama_kegiatan}\n` +
+                `📅 *Tanggal:* ${formatTanggal(keg.tgl)}\n` +
+                `📍 *Lokasi:* ${keg.lokasi || '-'}\n` +
+                `━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                `*RINCIAN KEBUTUHAN:*\n`;
 
       let grandTotal = 0;
       if (items.length === 0) {
         txt += `_Belum ada rincian kebutuhan anggaran._\n`;
       } else {
         items.forEach((item, idx) => {
-          let tot = (Number(item.jumlah)||0) * (Number(item.harga_satuan)||0);
+          let qty = Number(item.jumlah) || 0;
+          let harga = Number(item.harga_satuan) || 0;
+          let tot = qty * harga;
           grandTotal += tot;
-          txt += `${idx+1}. *${item.nama_kebutuhan}*\n   ${item.jumlah} ${item.satuan||''} x Rp ${(Number(item.harga_satuan)||0).toLocaleString('id-ID')} = *Rp ${tot.toLocaleString('id-ID')}*\n`;
+
+          let satuanTxt = item.satuan ? ` ${item.satuan}` : '';
+
+          txt += `🔹 *${idx + 1}. ${item.nama_kebutuhan}*\n` +
+                 `   • Jumlah: ${qty}${satuanTxt}\n` +
+                 `   • Harga Satuan: Rp ${harga.toLocaleString('id-ID')}\n` +
+                 `   • Subtotal: *Rp ${tot.toLocaleString('id-ID')}*\n\n`;
         });
       }
 
-      txt += `-----------------------------------\n` +
-             `*TOTAL RAB:* *Rp ${grandTotal.toLocaleString('id-ID')}*\n\n` +
+      txt += `━━━━━━━━━━━━━━━━━━━━━\n` +
+             `💰 *TOTAL RAB: Rp ${grandTotal.toLocaleString('id-ID')}*\n` +
+             `━━━━━━━━━━━━━━━━━━━━━\n\n` +
              `_Dibuat via Aplikasi Notulen RT (${APP_VERSION}) | Powered By Ari GPM_`;
 
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
