@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v2.8.0</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.0.0</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -32,6 +32,14 @@
     .navbar-brand {
       font-weight: 700;
       letter-spacing: -0.5px;
+    }
+    .app-logo-nav {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 2px;
     }
     .card-custom {
       border: none;
@@ -97,7 +105,7 @@
       font-size: 0.75rem;
       color: #64748b;
     }
-    /* Style Khusus Mode Cetak / PDF */
+    /* Mode Cetak & PDF */
     @media print {
       .bottom-nav, .navbar, .btn, .no-print, .install-banner, .footer-branding, .modal-header button {
         display: none !important;
@@ -139,9 +147,9 @@
   <nav class="navbar navbar-expand navbar-dark bg-primary sticky-top shadow-sm">
     <div class="container">
       <span class="navbar-brand mb-0 h1 d-flex align-items-center gap-2">
-        <i class="bi bi-journal-check"></i>
+        <img src="icon-192.png" alt="Logo" class="app-logo-nav shadow-sm" onerror="this.style.display='none'">
         <span>NOTULEN RT</span>
-        <span class="badge bg-white text-primary fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.65rem !important;">v2.8.0</span>
+        <span class="badge bg-white text-primary fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.65rem !important;">v3.0.0</span>
       </span>
       <div class="d-flex align-items-center gap-2">
         <button id="btn-sync" class="btn btn-sm btn-light rounded-circle" onclick="syncData()" title="Sinkronkan Data">
@@ -156,19 +164,15 @@
     <!-- Banner Instal PWA -->
     <div id="install-banner" class="install-banner shadow-sm">
       <div class="d-flex align-items-center justify-content-between">
-        <div>
-          <h6 class="fw-bold mb-0"><i class="bi bi-download me-2"></i>Instal Aplikasi Notulen RT</h6>
-          <small class="opacity-90">Pasang di Layar Utama agar cepat dibuka & offline</small>
+        <div class="d-flex align-items-center gap-2">
+          <img src="icon-192.png" alt="Logo" style="width:40px; height:40px; border-radius:10px; background:#fff; padding:2px;" onerror="this.style.display='none'">
+          <div>
+            <h6 class="fw-bold mb-0">Instal Aplikasi Notulen RT</h6>
+            <small class="opacity-90">Pasang di Layar Utama agar cepat dibuka & offline</small>
+          </div>
         </div>
-        <button id="btn-install" class="btn btn-light text-primary fw-bold btn-sm rounded-pill px-3">Instal</button>
+        <button id="btn-install" class="btn btn-light text-primary fw-bold btn-sm rounded-pill px-3 ms-2">Instal</button>
       </div>
-    </div>
-
-    <!-- PENGATURAN URL APPS SCRIPT -->
-    <div id="section-config" class="card card-custom p-3 mb-3 border-warning bg-warning-subtle" style="display:none;">
-      <h6 class="fw-bold text-dark mb-2"><i class="bi bi-gear-fill me-2"></i>Konfigurasi Backend Apps Script</h6>
-      <input type="text" id="input-script-url" class="form-control form-control-sm mb-2" placeholder="Tempel URL Web App Google Apps Script di sini...">
-      <button class="btn btn-warning btn-sm fw-bold w-100" onclick="saveConfigUrl()">Simpan URL Web App</button>
     </div>
 
     <!-- SEKSI 1: DASHBOARD UTAMA -->
@@ -267,15 +271,27 @@
       </div>
     </div>
 
-    <!-- SEKSI 5: PENGATURAN & BACKUP -->
+    <!-- SEKSI 5: PENGATURAN TERPROTEKSI -->
     <div id="sec-pengaturan" class="page-section" style="display:none;">
       <h5 class="fw-bold mb-3">Pengaturan & Data</h5>
       
+      <!-- KONEKSI SPREADSHEET DENGAN SISTEM KUNCI AMAN -->
       <div class="card card-custom p-3 mb-3">
-        <h6 class="fw-bold"><i class="bi bi-hdd-network me-2 text-primary"></i>Koneksi Spreadsheet</h6>
-        <p class="small text-muted mb-2">URL Web App Google Apps Script backend:</p>
-        <input type="text" id="setting-url-input" class="form-control form-control-sm mb-2" placeholder="https://script.google.com/macros/s/...">
-        <button class="btn btn-sm btn-primary rounded-pill w-100 fw-bold" onclick="updateSettingUrl()">Simpan URL Baru</button>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="fw-bold mb-0"><i class="bi bi-hdd-network me-2 text-primary"></i>Koneksi Spreadsheet</h6>
+          <span id="url-lock-badge" class="badge bg-success-subtle text-success border border-success-subtle"><i class="bi bi-lock-fill me-1"></i>Terkunci Aman</span>
+        </div>
+        <p class="small text-muted mb-2">URL Web App Google Apps Script terpasang otomatis dan dikunci agar aman dari terhapus.</p>
+        
+        <div class="input-group input-group-sm mb-2">
+          <input type="text" id="setting-url-input" class="form-control bg-light text-muted" readonly placeholder="https://script.google.com/macros/s/...">
+          <button class="btn btn-outline-secondary" type="button" id="btn-toggle-edit" onclick="toggleEditUrl()" title="Ubah URL"><i class="bi bi-pencil" id="icon-toggle-edit"></i></button>
+        </div>
+
+        <div class="d-flex gap-2 mt-2">
+          <button id="btn-save-url" class="btn btn-sm btn-primary rounded-pill flex-fill fw-bold" onclick="updateSettingUrl()" disabled>Simpan Perubahan</button>
+          <button class="btn btn-sm btn-outline-danger rounded-pill fw-bold" onclick="resetDefaultUrl()"><i class="bi bi-arrow-counterclockwise me-1"></i>Reset Default</button>
+        </div>
       </div>
 
       <div class="card card-custom p-3 mb-3">
@@ -294,7 +310,7 @@
     <!-- FOOTER BRANDING -->
     <div class="footer-branding no-print">
       <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-      <div class="text-primary fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v2.8.0</span></div>
+      <div class="text-primary fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.0.0</span></div>
     </div>
 
   </div>
@@ -510,10 +526,13 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Constants Versi Aplikasi
-    const APP_VERSION = "v2.8.0";
+    const APP_VERSION = "v3.0.0";
+
+    // URL DEFAULT DI-HARDCODE AGAR TIDAK BISA HILANG SAMA SEKALI
+    const SYSTEM_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbx0q60aK8mOn0-tOLIZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
 
     // State Utama
-    let API_URL = localStorage.getItem('rt_api_url') || '';
+    let API_URL = localStorage.getItem('rt_api_url') || SYSTEM_DEFAULT_API_URL;
     let APP_DATA = JSON.parse(localStorage.getItem('rt_app_data')) || {
       NOTULEN: [],
       KEGIATAN: [],
@@ -523,8 +542,7 @@
     let deferredPrompt = null;
 
     document.addEventListener('DOMContentLoaded', () => {
-      if (API_URL) document.getElementById('setting-url-input').value = API_URL;
-      checkConfigUrl();
+      document.getElementById('setting-url-input').value = API_URL;
       registerServiceWorker();
       renderUI();
       if (API_URL) syncData();
@@ -550,18 +568,39 @@
       });
     }
 
-    function checkConfigUrl() {
-      document.getElementById('section-config').style.display = API_URL ? 'none' : 'block';
+    // LOGIKA PROTEKSI KUNCI & EDIT URL
+    function toggleEditUrl() {
+      let input = document.getElementById('setting-url-input');
+      let btnSave = document.getElementById('btn-save-url');
+      let icon = document.getElementById('icon-toggle-edit');
+      let badge = document.getElementById('url-lock-badge');
+
+      if (input.hasAttribute('readonly')) {
+        if (confirm('Buka kunci untuk mengubah URL Spreadsheet backend?')) {
+          input.removeAttribute('readonly');
+          input.classList.remove('bg-light', 'text-muted');
+          btnSave.removeAttribute('disabled');
+          icon.className = 'bi bi-unlock-fill text-warning';
+          badge.className = 'badge bg-warning-subtle text-warning border border-warning-subtle';
+          badge.innerHTML = '<i class="bi bi-unlock-fill me-1"></i>Terbuka (Edit)';
+        }
+      } else {
+        lockUrlInput();
+      }
     }
 
-    function saveConfigUrl() {
-      let val = document.getElementById('input-script-url').value.trim();
-      if (val) {
-        API_URL = val;
-        localStorage.setItem('rt_api_url', API_URL);
-        checkConfigUrl();
-        syncData();
-      }
+    function lockUrlInput() {
+      let input = document.getElementById('setting-url-input');
+      let btnSave = document.getElementById('btn-save-url');
+      let icon = document.getElementById('icon-toggle-edit');
+      let badge = document.getElementById('url-lock-badge');
+
+      input.setAttribute('readonly', true);
+      input.classList.add('bg-light', 'text-muted');
+      btnSave.setAttribute('disabled', true);
+      icon.className = 'bi bi-pencil';
+      badge.className = 'badge bg-success-subtle text-success border border-success-subtle';
+      badge.innerHTML = '<i class="bi bi-lock-fill me-1"></i>Terkunci Aman';
     }
 
     function updateSettingUrl() {
@@ -569,7 +608,21 @@
       if (val) {
         API_URL = val;
         localStorage.setItem('rt_api_url', API_URL);
-        alert('URL Apps Script diperbarui!');
+        lockUrlInput();
+        alert('URL Apps Script berhasil diperbarui!');
+        syncData();
+      } else {
+        alert('URL tidak boleh kosong!');
+      }
+    }
+
+    function resetDefaultUrl() {
+      if (confirm('Kembalikan koneksi ke URL Sistem Bawaan?')) {
+        localStorage.removeItem('rt_api_url');
+        API_URL = SYSTEM_DEFAULT_API_URL;
+        document.getElementById('setting-url-input').value = API_URL;
+        lockUrlInput();
+        alert('URL telah dikembalikan ke bawaan sistem!');
         syncData();
       }
     }
@@ -584,21 +637,18 @@
       if (activeIdx !== -1) document.querySelectorAll('.nav-item-btn')[activeIdx].classList.add('active');
     }
 
-    // Populate Autocomplete Warga
     function updateDatalistWarga() {
       let dl = document.getElementById('dl-warga-list');
       if (!dl) return;
       dl.innerHTML = (APP_DATA.WARGA || []).map(w => `<option value="${w.nama}">${w.nama} (${w.no_rumah || 'Blok -'})</option>`).join('');
     }
 
-    // Render Utama
     function renderUI() {
       updateDatalistWarga();
       document.getElementById('stat-notulen').innerText = APP_DATA.NOTULEN ? APP_DATA.NOTULEN.length : 0;
       document.getElementById('stat-kegiatan').innerText = APP_DATA.KEGIATAN ? APP_DATA.KEGIATAN.length : 0;
       document.getElementById('stat-warga').innerText = APP_DATA.WARGA ? APP_DATA.WARGA.length : 0;
 
-      // Dashboard Recent Notulen
       let recentContainer = document.getElementById('dashboard-recent-notulen');
       if (!APP_DATA.NOTULEN || APP_DATA.NOTULEN.length === 0) {
         recentContainer.innerHTML = `<div class="text-center text-muted py-3 small">Belum ada notulen rapat terdaftar.</div>`;
@@ -641,7 +691,6 @@
           <p class="small text-secondary mb-2">${item.keputusan || item.pembahasan || ''}</p>
           <div class="d-flex gap-2">
             <button class="btn btn-sm btn-light text-primary flex-fill fw-bold" onclick="shareWA('${item.id}')"><i class="bi bi-whatsapp me-1"></i>WA</button>
-
             <button class="btn btn-sm btn-light text-secondary" onclick="editNotulen('${item.id}')"><i class="bi bi-pencil-square"></i></button>
             <button class="btn btn-sm btn-light text-dark" onclick="openPrintModal('${item.id}')"><i class="bi bi-printer"></i></button>
             <button class="btn btn-sm btn-light text-danger" onclick="deleteItem('NOTULEN', '${item.id}')"><i class="bi bi-trash"></i></button>
@@ -701,7 +750,6 @@
       `).join('');
     }
 
-    // Presensi Kehadiran
     function openModalPresensi() {
       let select = document.getElementById('presensi-agenda-select');
       select.innerHTML = (APP_DATA.NOTULEN || []).map(n => `<option value="${n.id}">${n.agenda} (${n.tgl_rapat || ''})</option>`).join('');
@@ -755,7 +803,6 @@
       alert('Presensi berhasil disimpan!');
     }
 
-    // Modal Form Openers & Editors
     function openFormNotulen() {
       document.getElementById('form-notulen').reset();
       document.getElementById('notulen-id').value = '';
@@ -821,7 +868,6 @@
       new bootstrap.Modal(document.getElementById('modalWarga')).show();
     }
 
-    // Modal Pratinjau Cetak
     function openPrintModal(idNotulen) {
       let item = APP_DATA.NOTULEN.find(x => x.id === idNotulen);
       if (!item) return;
@@ -829,10 +875,13 @@
       let kehadiran = (APP_DATA.KEHADIRAN || []).filter(k => k.id_kegiatan === idNotulen).map(k => k.nama);
 
       document.getElementById('print-content').innerHTML = `
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-          <div>
-            <h4 class="fw-bold mb-0">RUKUN TETANGGA (RT)</h4>
-            <p class="mb-0 text-muted small">BERITA ACARA & NOTULEN HASIL MUSYAWARAH</p>
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+          <div class="d-flex align-items-center gap-3">
+            <img src="icon-192.png" alt="Logo RT" style="width: 50px; height: 50px; object-fit: contain;" onerror="this.style.display='none'">
+            <div>
+              <h4 class="fw-bold mb-0 text-dark">RUKUN TETANGGA (RT)</h4>
+              <p class="mb-0 text-muted small fw-semibold">BERITA ACARA & NOTULEN HASIL MUSYAWARAH</p>
+            </div>
           </div>
           <div class="text-end">
             <span class="badge bg-light text-dark border px-2 py-1">Versi Cetak: ${APP_VERSION}</span>
@@ -875,7 +924,6 @@
       new bootstrap.Modal(document.getElementById('modalCetak')).show();
     }
 
-    // Submit Form Event Handlers
     document.getElementById('form-notulen').addEventListener('submit', function(e) {
       e.preventDefault();
       saveLocalAndSync('NOTULEN', {
@@ -918,7 +966,6 @@
       bootstrap.Modal.getInstance(document.getElementById('modalWarga')).hide();
     });
 
-    // Save & Delete Operations
     async function saveLocalAndSync(table, data) {
       if (!APP_DATA[table]) APP_DATA[table] = [];
       if (!data.id) {
@@ -986,7 +1033,6 @@
       }
     }
 
-    // Share WA
     function shareWA(idNotulen) {
       let item = APP_DATA.NOTULEN.find(x => x.id === idNotulen);
       if (!item) return;
@@ -1004,7 +1050,6 @@
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
     }
 
-    // Backup & Restore
     function exportBackup() {
       let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(APP_DATA));
       let dlAnchor = document.createElement('a');
