@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.4.1</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.5.0</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -213,7 +213,7 @@
         <div>
           <div class="d-flex align-items-center gap-1">
             <span>NOTULEN RT</span>
-            <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.4.1</span>
+            <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.5.0</span>
           </div>
           <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
         </div>
@@ -249,7 +249,6 @@
     <div id="sec-dashboard" class="page-section">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold mb-0">Ringkasan RT</h5>
-        <!-- Status tersinkronisasi disembunyikan sesuai permintaan -->
         <span id="sync-status" class="badge bg-secondary d-none" style="display:none !important;">Offline Cache</span>
       </div>
 
@@ -350,9 +349,29 @@
       </div>
     </div>
 
-    <!-- SEKSI 5: PENGATURAN TERPROTEKSI -->
+    <!-- SEKSI 5: PENGATURAN TERPROTEKSI (TERMASUK EDIT HEADER & GANTI PIN) -->
     <div id="sec-pengaturan" class="page-section" style="display:none;">
       <h5 class="fw-bold mb-3">Pengaturan & Data</h5>
+
+      <!-- CARD GANTI PIN AKSE -->
+      <div class="card card-custom p-3 mb-3 border-warning-subtle">
+        <h6 class="fw-bold mb-2 text-warning"><i class="bi bi-shield-lock me-2"></i>Keamanan & Ganti PIN</h6>
+        <p class="small text-muted mb-2">Ubah PIN akses masuk aplikasi (Default: <code class="text-dark">kamu nanyak</code>):</p>
+        
+        <div class="mb-2">
+          <label class="form-label small fw-bold mb-1">PIN Saat Ini</label>
+          <input type="password" id="setting-pin-lama" class="form-control form-control-sm" placeholder="Masukkan PIN lama">
+        </div>
+        <div class="mb-2">
+          <label class="form-label small fw-bold mb-1">PIN Baru</label>
+          <input type="password" id="setting-pin-baru" class="form-control form-control-sm" placeholder="Masukkan PIN baru">
+        </div>
+        <div class="mb-2">
+          <label class="form-label small fw-bold mb-1">Konfirmasi PIN Baru</label>
+          <input type="password" id="setting-pin-konfirmasi" class="form-control form-control-sm" placeholder="Ulangi PIN baru">
+        </div>
+        <button class="btn btn-sm btn-warning text-dark rounded-pill fw-bold w-100 mt-1 py-2 shadow-sm" onclick="changePin()"><i class="bi bi-key me-1"></i>Simpan PIN Baru</button>
+      </div>
 
       <!-- CARD EDIT HEADER IDENTITAS DESA ALAMAT -->
       <div class="card card-custom p-3 mb-3 border-primary-subtle">
@@ -428,7 +447,7 @@
     <!-- FOOTER BRANDING -->
     <div class="footer-branding no-print">
       <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.4.1</span></div>
+      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.5.0</span></div>
     </div>
 
   </div>
@@ -456,6 +475,24 @@
       <span>Pengaturan</span>
     </button>
   </nav>
+
+  <!-- MODAL LOGIN PIN (TIDAK BISA DITUTUP TANPA PIN BENAR) -->
+  <div class="modal fade" id="modalPinLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" style="z-index: 1070;">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content rounded-4 border-0 text-center p-3 shadow-lg">
+        <div class="modal-body p-2">
+          <img src="icon-192.png" alt="Logo" style="width: 54px; height: 54px; object-fit: contain;" class="mb-2" onerror="this.style.display='none'">
+          <h5 class="fw-bold mb-1 text-dark">Akses Terkunci</h5>
+          <p class="small text-muted mb-3">Masukkan PIN Keamanan untuk membuka aplikasi Notulen RT.</p>
+          <div class="mb-3">
+            <input type="password" id="input-pin-login" class="form-control text-center rounded-pill" placeholder="Masukkan PIN Akses">
+            <div id="pin-login-error" class="text-danger small mt-1 fw-bold" style="display:none; font-size: 0.75rem;">PIN yang Anda masukkan salah!</div>
+          </div>
+          <button type="button" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm" onclick="verifyPin()">Masuk Aplikasi</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL FORM NOTULEN -->
   <div class="modal fade" id="modalNotulen" tabindex="-1">
@@ -729,13 +766,13 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Constants Versi Aplikasi
-    const APP_VERSION = "v3.4.1";
+    const APP_VERSION = "v3.5.0";
     const SYSTEM_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbx0q60aK8mOn0-tOLIZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
 
-    // State Utama & Data Header Subtext
+    // State Utama & Data Header Subtext & PIN Default
     let API_URL = localStorage.getItem('rt_api_url') || SYSTEM_DEFAULT_API_URL;
     let APP_DATA = JSON.parse(localStorage.getItem('rt_app_data')) || {
-      SETTINGS: { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju, Kec. Indah" },
+      SETTINGS: { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju, Kec. Indah", pin: "kamu nanyak" },
       NOTULEN: [],
       KEGIATAN: [],
       WARGA: [],
@@ -744,7 +781,10 @@
     };
 
     if (!APP_DATA.SETTINGS) {
-      APP_DATA.SETTINGS = { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju, Kec. Indah" };
+      APP_DATA.SETTINGS = { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju, Kec. Indah", pin: "kamu nanyak" };
+    }
+    if (!APP_DATA.SETTINGS.pin) {
+      APP_DATA.SETTINGS.pin = "kamu nanyak";
     }
 
     let currentRabKegiatanId = null;
@@ -770,7 +810,66 @@
         if (modal) modal.hide();
         if (confirmCallbackFn) confirmCallbackFn();
       });
+
+      // Cek Sesi Akses PIN
+      checkPinAuth();
     });
+
+    // SISTEM AKSES LOGIN PIN
+    function checkPinAuth() {
+      let isAuth = sessionStorage.getItem('rt_app_authenticated');
+      if (!isAuth) {
+        let modalPin = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalPinLogin'));
+        modalPin.show();
+      }
+    }
+
+    function verifyPin() {
+      let inputPin = document.getElementById('input-pin-login').value;
+      let currentPin = APP_DATA.SETTINGS.pin || "kamu nanyak";
+      let errEl = document.getElementById('pin-login-error');
+
+      if (inputPin === currentPin) {
+        sessionStorage.setItem('rt_app_authenticated', 'true');
+        errEl.style.display = 'none';
+        document.getElementById('input-pin-login').value = '';
+        let modalPin = bootstrap.Modal.getInstance(document.getElementById('modalPinLogin'));
+        if (modalPin) modalPin.hide();
+      } else {
+        errEl.style.display = 'block';
+      }
+    }
+
+    function changePin() {
+      let pinLama = document.getElementById('setting-pin-lama').value;
+      let pinBaru = document.getElementById('setting-pin-baru').value;
+      let pinKonfirmasi = document.getElementById('setting-pin-konfirmasi').value;
+      let currentPin = APP_DATA.SETTINGS.pin || "kamu nanyak";
+
+      if (pinLama !== currentPin) {
+        alert('PIN saat ini yang Anda masukkan salah!');
+        return;
+      }
+
+      if (!pinBaru) {
+        alert('PIN baru tidak boleh kosong!');
+        return;
+      }
+
+      if (pinBaru !== pinKonfirmasi) {
+        alert('Konfirmasi PIN baru tidak cocok!');
+        return;
+      }
+
+      APP_DATA.SETTINGS.pin = pinBaru;
+      localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
+
+      document.getElementById('setting-pin-lama').value = '';
+      document.getElementById('setting-pin-baru').value = '';
+      document.getElementById('setting-pin-konfirmasi').value = '';
+
+      alert('PIN keamanan berhasil diperbarui!');
+    }
 
     // EDIT HEADER IDENTITAS DESA ALAMAT
     function loadHeaderSettingsToUI() {
@@ -786,7 +885,8 @@
       let rtVal = document.getElementById('setting-nama-rt').value.trim() || "RT 01 / RW 01";
       let desaVal = document.getElementById('setting-desa-alamat').value.trim() || "Desa Sukamaju";
 
-      APP_DATA.SETTINGS = { nama_rt: rtVal, desa_alamat: desaVal };
+      APP_DATA.SETTINGS.nama_rt = rtVal;
+      APP_DATA.SETTINGS.desa_alamat = desaVal;
       localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
       
       loadHeaderSettingsToUI();
@@ -810,8 +910,10 @@
 
     function logoutApp() {
       customConfirm('Apakah Anda yakin ingin keluar dari sesi aplikasi?', () => {
+        sessionStorage.removeItem('rt_app_authenticated');
         localStorage.removeItem('rt_active_tab');
         switchTab('dashboard');
+        checkPinAuth();
       });
     }
 
