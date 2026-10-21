@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.5.2</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.5.4</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -213,7 +213,7 @@
         <div>
           <div class="d-flex align-items-center gap-1">
             <span>NOTULEN RT</span>
-            <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.5.2</span>
+            <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.5.4</span>
           </div>
           <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
         </div>
@@ -353,36 +353,35 @@
     <div id="sec-pengaturan" class="page-section" style="display:none;">
       <h5 class="fw-bold mb-3">Pengaturan & Data</h5>
 
-      <!-- CARD GANTI PIN & EMAIL PEMULIHAN -->
+      <!-- CARD 1: UBAH KEAMANAN PIN [Sesuai Gambar 3] -->
       <div class="card card-custom p-3 mb-3 border-warning-subtle">
-        <h6 class="fw-bold mb-2 text-warning"><i class="bi bi-shield-lock me-2"></i>Keamanan & Email Pemulihan OTP</h6>
-        <p class="small text-muted mb-2">Atur PIN dan Email Pemulihan untuk menerima OTP jika lupa PIN (Default PIN: <code class="text-dark">kamu nanyak</code>):</p>
+        <h6 class="fw-bold mb-2 text-warning"><i class="bi bi-shield-lock me-2"></i>Ubah Keamanan PIN</h6>
         
         <div class="mb-2">
-          <label class="form-label small fw-bold mb-1">Email Pemulihan OTP</label>
-          <input type="email" id="setting-email-admin" class="form-control form-control-sm" placeholder="Contoh: pengurus.rt@gmail.com">
+          <label class="form-label small fw-bold mb-1 text-muted">PIN LAMA</label>
+          <input type="password" id="setting-pin-lama" class="form-control form-control-sm rounded-pill" placeholder="••••">
         </div>
-        <hr class="my-2">
-        <div class="mb-2">
-          <label class="form-label small fw-bold mb-1">PIN Saat Ini</label>
-          <input type="text" id="setting-pin-lama" class="form-control form-control-sm" placeholder="Masukkan PIN lama">
+        <div class="mb-3">
+          <label class="form-label small fw-bold mb-1 text-muted">PIN BARU (MIN. 4 DIGIT)</label>
+          <input type="password" id="setting-pin-baru" class="form-control form-control-sm rounded-pill" placeholder="••••">
         </div>
-        <div class="mb-2">
-          <label class="form-label small fw-bold mb-1">PIN Baru</label>
-          <input type="text" id="setting-pin-baru" class="form-control form-control-sm" placeholder="Masukkan PIN baru">
+        <button class="btn btn-sm btn-primary-custom text-white rounded-pill fw-bold w-100 py-2 shadow-sm" onclick="changePinSecure()">Simpan PIN Baru</button>
+      </div>
+
+      <!-- CARD 2: EMAIL PEMULIHAN [Sesuai Gambar 3] -->
+      <div class="card card-custom p-3 mb-3 border-success-subtle bg-success-subtle bg-opacity-10">
+        <h6 class="fw-bold mb-2 text-success"><i class="bi bi-envelope-check me-2"></i>Email Pemulihan</h6>
+        <p class="small text-muted mb-2">Tanamkan email asli Anda di sini. Email lain tidak akan bisa mereset PIN Anda.</p>
+        
+        <div class="mb-3">
+          <input type="email" id="setting-email-admin" class="form-control form-control-sm rounded-pill" placeholder="contoh@gmail.com">
         </div>
-        <div class="mb-2">
-          <label class="form-label small fw-bold mb-1">Konfirmasi PIN Baru</label>
-          <input type="text" id="setting-pin-konfirmasi" class="form-control form-control-sm" placeholder="Ulangi PIN baru">
-        </div>
-        <button class="btn btn-sm btn-warning text-dark rounded-pill fw-bold w-100 mt-1 py-2 shadow-sm" onclick="changePin()"><i class="bi bi-key me-1"></i>Simpan Pengaturan PIN & Email</button>
+        <button class="btn btn-sm btn-success rounded-pill fw-bold w-100 py-2 shadow-sm" onclick="saveEmailPemulihan()">Simpan Email Pemulihan</button>
       </div>
 
       <!-- CARD EDIT HEADER IDENTITAS DESA ALAMAT -->
       <div class="card card-custom p-3 mb-3 border-primary-subtle">
         <h6 class="fw-bold mb-2 text-primary-custom"><i class="bi bi-building me-2"></i>Identitas Header & Kop Surat</h6>
-        <p class="small text-muted mb-2">Atur nama RT/RW, Desa, dan Alamat yang tampil pada header aplikasi dan laporan Master Share WA:</p>
-        
         <div class="mb-2">
           <label class="form-label small fw-bold mb-1">Nama RT / RW</label>
           <input type="text" id="setting-nama-rt" class="form-control form-control-sm" placeholder="Contoh: RT 01 / RW 05">
@@ -396,8 +395,6 @@
 
       <div class="card card-custom p-3 mb-3">
         <h6 class="fw-bold mb-2"><i class="bi bi-palette-fill me-2 text-primary-custom"></i>Pilihan Tema Warna</h6>
-        <p class="small text-muted mb-2">Sesuaikan warna tampilan aplikasi sesuai selera Anda:</p>
-        
         <div class="d-flex flex-wrap gap-2 mb-2">
           <button class="btn btn-sm btn-outline-primary rounded-pill fw-semibold" onclick="applyTheme('default')">🔵 Biru Ocean</button>
           <button class="btn btn-sm btn-outline-success rounded-pill fw-semibold" onclick="applyTheme('emerald')">🟢 Hijau Emerald</button>
@@ -412,13 +409,10 @@
           <h6 class="fw-bold mb-0"><i class="bi bi-hdd-network me-2 text-primary-custom"></i>Koneksi Spreadsheet</h6>
           <span id="url-lock-badge" class="badge bg-success-subtle text-success border border-success-subtle"><i class="bi bi-lock-fill me-1"></i>Terkunci Aman</span>
         </div>
-        <p class="small text-muted mb-2">URL Web App Google Apps Script terpasang otomatis dan dikunci agar aman dari terhapus.</p>
-        
         <div class="input-group input-group-sm mb-2">
           <input type="text" id="setting-url-input" class="form-control bg-light text-muted" readonly placeholder="https://script.google.com/macros/s/...">
           <button class="btn btn-outline-secondary" type="button" id="btn-toggle-edit" onclick="toggleEditUrl()" title="Ubah URL"><i class="bi bi-pencil" id="icon-toggle-edit"></i></button>
         </div>
-
         <div class="d-flex gap-2 mt-2">
           <button id="btn-save-url" class="btn btn-sm btn-primary-custom text-white rounded-pill flex-fill fw-bold" onclick="updateSettingUrl()" disabled>Simpan Perubahan</button>
           <button class="btn btn-sm btn-outline-danger rounded-pill fw-bold" onclick="resetDefaultUrl()"><i class="bi bi-arrow-counterclockwise me-1"></i>Reset Default</button>
@@ -427,7 +421,6 @@
 
       <div class="card card-custom p-3 mb-3">
         <h6 class="fw-bold"><i class="bi bi-download me-2 text-success"></i>Backup & Restore Data</h6>
-        <p class="small text-muted mb-2">Simpan cadangan data ke HP atau pulihkan dari file backup JSON.</p>
         <div class="d-flex gap-2">
           <button class="btn btn-sm btn-outline-success flex-fill rounded-pill fw-bold" onclick="exportBackup()"><i class="bi bi-file-earmark-arrow-down me-1"></i>Download Backup</button>
           <label class="btn btn-sm btn-outline-primary flex-fill rounded-pill fw-bold mb-0">
@@ -452,12 +445,12 @@
     <!-- FOOTER BRANDING -->
     <div class="footer-branding no-print">
       <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.5.2</span></div>
+      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.5.4</span></div>
     </div>
 
   </div>
 
-  <!-- BOTTOM NAVIGATION BAR -->
+  <!-- BOTTOM NAVIGATION BAR LENGKAP -->
   <nav class="bottom-nav">
     <button class="nav-item-btn active" onclick="switchTab('dashboard')">
       <i class="bi bi-grid-1x2-fill"></i>
@@ -473,4 +466,15 @@
     </button>
     <button class="nav-item-btn" onclick="switchTab('warga')">
       <i class="bi bi-people-fill"></i>
-  
+      <span>Warga</span>
+    </button>
+    <button class="nav-item-btn" onclick="switchTab('pengaturan')">
+      <i class="bi bi-sliders"></i>
+      <span>Pengaturan</span>
+    </button>
+  </nav>
+
+  <!-- MODAL LOGIN PIN [Sesuai Gambar 1] -->
+  <div class="modal fade" id="modalPinLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" style="z-index: 1070;">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="moda
