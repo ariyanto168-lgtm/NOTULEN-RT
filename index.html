@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.8.2</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.8.3</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -82,7 +82,7 @@
 
     #qrcode-box img { margin: 0 auto; border: 10px solid #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
     
-    /* Perbaikan Kotak Kamera Scanner agar Tidak Blank Hitam */
+    /* Style Kamera - Dibuat Fleksibel Agar Tidak Macet */
     #scanner-reader-container {
       width: 100%;
       max-width: 380px;
@@ -100,7 +100,7 @@
     }
     #scanner-reader video {
       width: 100% !important;
-      height: 280px !important;
+      height: auto !important;
       object-fit: cover !important;
     }
 
@@ -127,7 +127,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.8.2</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.8.3</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -271,7 +271,7 @@
 
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.8.2</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.8.3</span></div>
       </div>
     </div>
 
@@ -335,7 +335,7 @@
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
           Powered By Ari GPM • 
-          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.8.2</span>
+          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.8.3</span>
         </div>
       </div>
     </div>
@@ -443,7 +443,7 @@
   <!-- SCRIPT LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.8.2";
+    const APP_VERSION = "v3.8.3";
     
     // URL GS TERBARU
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
@@ -499,7 +499,8 @@
     /* LOGIKA SCANNER WARGA (AUTO UPDATE & PEMISAHAN KARTU TERSENDIRI)            */
     /* ========================================================================= */
     let html5QrcodeScanner = null;
-    let scannerAppData = null;
+    // PENTING: Inisialisasi awal dengan objek aman untuk mencegah Silent Crash 
+    let scannerAppData = { NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], REGU: [] };
     let scannerApiUrl = ""; 
     
     async function initScannerWarga() {
@@ -553,59 +554,61 @@
         if(inWarga) inWarga.placeholder = "Gagal terkoneksi internet."; 
         if(inAgenda) inAgenda.placeholder = "Gagal memuat agenda.";
         document.getElementById('scanner-status').style.display = 'block';
-        document.getElementById('scanner-status').innerHTML = `<span class='text-danger small fw-bold'>❌ Error: Tidak dapat memuat data dari server.</span>`;
+        document.getElementById('scanner-status').innerHTML = `<span class='text-danger small fw-bold'>❌ Error: Tidak dapat memuat data dari server secara maksimal.</span>`;
       }
     }
 
     async function startScanner() {
-      let inWargaVal = document.getElementById('scanner-warga-input').value.trim();
-      let agendaVal = document.getElementById('scanner-agenda-input').value.trim();
-      let idAgenda = document.getElementById('scanner-agenda-id-val').value;
-
-      let namaWarga = inWargaVal.split('(')[0].trim();
-      if (!namaWarga) return showAlert('Perhatian', 'Silakan ketik atau pilih nama & no rumah Anda terlebih dahulu!', 'warning');
-      
-      if (!idAgenda) {
-        let nList = scannerAppData.NOTULEN || [];
-        let found = nList.find(n => agendaVal.toUpperCase().includes((n.agenda||'').toUpperCase()));
-        if (found) idAgenda = found.id;
-      }
-
-      if (!idAgenda) return showAlert('Perhatian', 'Silakan pilih agenda rapat tujuan absen yang valid dari daftar!', 'warning');
-      
-      document.getElementById('scanner-status').style.display = 'none';
-      document.getElementById('warga-task-view').style.display = 'none';
-      
-      let readerContainer = document.getElementById('scanner-reader-container');
-      readerContainer.style.display = 'block';
-      document.getElementById('btn-start-scan').style.display = 'none';
-      
-      if(!html5QrcodeScanner) { html5QrcodeScanner = new Html5Qrcode("scanner-reader"); }
-      
+      // DIBUNGKUS DALAM TRY-CATCH GLOBAL AGAR JIKA ERROR, TOMBOL TIDAK "MACET"
       try {
-        await html5QrcodeScanner.start(
-          { facingMode: "environment" },
-          { 
-            fps: 30,
-            qrbox: { width: 240, height: 240 },
-            aspectRatio: 1.0,
-            disableFlip: false 
-          },
-          (decodedText) => { stopScannerNative(); processScanResult(decodedText, namaWarga, idAgenda); },
-          (errorMessage) => { /* abaikan error frame */ }
-        );
-      } catch(err) {
+        let inWargaVal = document.getElementById('scanner-warga-input').value.trim();
+        let agendaVal = document.getElementById('scanner-agenda-input').value.trim();
+        let idAgenda = document.getElementById('scanner-agenda-id-val').value;
+
+        let namaWarga = inWargaVal.split('(')[0].trim();
+        if (!namaWarga) return showAlert('Perhatian', 'Silakan ketik atau pilih Nama & No Rumah Anda terlebih dahulu!', 'warning');
+        
+        if (!idAgenda) {
+          let nList = (scannerAppData && scannerAppData.NOTULEN) ? scannerAppData.NOTULEN : [];
+          let found = nList.find(n => agendaVal.toUpperCase().includes((n.agenda||'').toUpperCase()));
+          if (found) idAgenda = found.id;
+        }
+
+        if (!idAgenda) return showAlert('Perhatian', 'Silakan pilih agenda rapat tujuan absen yang valid dari daftar!', 'warning');
+        
+        document.getElementById('scanner-status').style.display = 'none';
+        document.getElementById('warga-task-view').style.display = 'none';
+        
+        let readerContainer = document.getElementById('scanner-reader-container');
+        readerContainer.style.display = 'block';
+        document.getElementById('btn-start-scan').style.display = 'none';
+        
+        if(!html5QrcodeScanner) { html5QrcodeScanner = new Html5Qrcode("scanner-reader"); }
+        
         try {
           await html5QrcodeScanner.start(
-            { facingMode: "user" },
-            { fps: 30, qrbox: { width: 240, height: 240 } },
+            { facingMode: "environment" },
+            { fps: 15, qrbox: { width: 250, height: 250 } }, // Dibuat lebih ringan (tanpa aspect ratio strict)
             (decodedText) => { stopScannerNative(); processScanResult(decodedText, namaWarga, idAgenda); },
-            (errorMessage) => {}
+            (errorMessage) => { /* abaikan error frame yang normal terjadi */ }
           );
-        } catch(e2) {
-          showAlert('Kamera Error', 'Gagal mengakses kamera. Berikan izin kamera pada browser Anda.', 'error');
-          stopScanner();
+        } catch(err) {
+          try {
+            await html5QrcodeScanner.start(
+              { facingMode: "user" },
+              { fps: 15, qrbox: { width: 250, height: 250 } },
+              (decodedText) => { stopScannerNative(); processScanResult(decodedText, namaWarga, idAgenda); },
+              (errorMessage) => { /* ignore */ }
+            );
+          } catch(e2) {
+            showAlert('Kamera Error', 'Kamera tidak dapat diakses. Pastikan browser memiliki izin (Permission) untuk menggunakan kamera.', 'error');
+            stopScanner();
+          }
         }
+      } catch(globalErr) {
+        console.error("Scanner System Error:", globalErr);
+        showAlert('Error Sistem', 'Terjadi kesalahan saat memproses data. Silakan coba klik kembali.', 'error');
+        stopScanner();
       }
     }
 
@@ -639,7 +642,9 @@
         if(checkJson.status === 'success') {
           scannerAppData = checkJson.data;
         }
-        let existingHadir = (scannerAppData.KEHADIRAN || []).find(h => String(h.id_kegiatan) === String(idAgenda) && String(h.nama).toLowerCase() === String(namaWarga).toLowerCase());
+        
+        let safeKehadiran = (scannerAppData && scannerAppData.KEHADIRAN) ? scannerAppData.KEHADIRAN : [];
+        let existingHadir = safeKehadiran.find(h => String(h.id_kegiatan) === String(idAgenda) && String(h.nama).toLowerCase() === String(namaWarga).toLowerCase());
         
         if (existingHadir) {
           statusBox.className = "alert alert-warning border-warning mx-auto text-center py-3";
@@ -665,8 +670,10 @@
     }
 
     function renderWargaTaskDetail(idNotulen, namaWarga) {
-      let notulen = (scannerAppData.NOTULEN || []).find(n => String(n.id) === String(idNotulen));
-      let reguList = scannerAppData.REGU || [];
+      let notulenList = (scannerAppData && scannerAppData.NOTULEN) ? scannerAppData.NOTULEN : [];
+      let reguList = (scannerAppData && scannerAppData.REGU) ? scannerAppData.REGU : [];
+      
+      let notulen = notulenList.find(n => String(n.id) === String(idNotulen));
       let myRegu = reguList.find(r => (r.anggota || []).includes(namaWarga));
 
       let taskBox = document.getElementById('warga-task-view');
