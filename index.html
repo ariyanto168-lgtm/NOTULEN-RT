@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.5.8</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.6.0</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -213,7 +213,7 @@
         <div>
           <div class="d-flex align-items-center gap-1">
             <span>NOTULEN RT</span>
-            <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.5.8</span>
+            <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.6.0</span>
           </div>
           <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
         </div>
@@ -440,7 +440,7 @@
     <!-- FOOTER BRANDING -->
     <div class="footer-branding no-print">
       <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.5.8</span></div>
+      <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.6.0</span></div>
     </div>
 
   </div>
@@ -469,7 +469,6 @@
     </button>
   </nav>
 
-  <!-- MODAL LOGIN PIN & OTP OMITTED FOR BREVITY, RESTORED FROM PREVIOUS MASTER -->
   <!-- MODAL LOGIN PIN -->
   <div class="modal fade" id="modalPinLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" style="z-index: 1070;">
     <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -630,7 +629,7 @@
     </div>
   </div>
 
-  <!-- MODAL PEMBAGIAN REGU / KELOMPOK KERJA (NEW FEATURE) -->
+  <!-- MODAL PEMBAGIAN REGU / KELOMPOK KERJA -->
   <div class="modal fade" id="modalRegu" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content rounded-4 border-0">
@@ -643,7 +642,8 @@
         </div>
         <div class="modal-body">
           <form id="form-regu-item" class="card card-custom p-3 bg-info bg-opacity-10 border-info-subtle mb-3">
-            <h6 class="fw-bold small mb-2 text-info">+ Buat Target Kelompok Baru</h6>
+            <h6 class="fw-bold small mb-2 text-info">+ Form Target Kelompok</h6>
+            <input type="hidden" id="regu-id">
             <div class="mb-2">
               <input type="text" id="regu-nama-input" class="form-control form-control-sm border-info-subtle" placeholder="Nama Tugas / Kelompok (Cth: Regu Konsumsi, Regu Cat)" required>
             </div>
@@ -661,7 +661,7 @@
             <div class="mb-2">
               <input type="text" id="regu-pj-input" class="form-control form-control-sm border-info-subtle" list="dl-warga-list" placeholder="Pilih / Ketik Koordinator Regu" required>
             </div>
-            <button type="submit" class="btn btn-info text-white btn-sm rounded-pill fw-bold w-100 py-2 shadow-sm">+ Simpan Regu</button>
+            <button type="submit" id="btn-submit-regu" class="btn btn-info text-white btn-sm rounded-pill fw-bold w-100 py-2 shadow-sm">+ Simpan Regu</button>
           </form>
 
           <h6 class="fw-bold small text-muted mb-2">Daftar Regu / Kelompok Kerja:</h6>
@@ -706,7 +706,8 @@
         </div>
         <div class="modal-body">
           <form id="form-rab-item" class="card card-custom p-3 bg-light mb-3">
-            <h6 class="fw-bold small mb-2 text-success">+ Tambah Rincian Kebutuhan</h6>
+            <h6 class="fw-bold small mb-2 text-success">+ Form Rincian Kebutuhan</h6>
+            <input type="hidden" id="rab-id">
             <div class="mb-2">
               <input type="text" id="rab-nama-kebutuhan" class="form-control form-control-sm" placeholder="Nama Kebutuhan (misal: Konsumsi, Cat, Semen)" required>
             </div>
@@ -721,7 +722,7 @@
                 <input type="number" id="rab-harga" class="form-control form-control-sm" placeholder="Harga Satuan" required>
               </div>
             </div>
-            <button type="submit" class="btn btn-success text-white btn-sm rounded-pill fw-bold w-100 py-2 shadow-sm">+ Tambah Ke Anggaran</button>
+            <button type="submit" id="btn-submit-rab" class="btn btn-success text-white btn-sm rounded-pill fw-bold w-100 py-2 shadow-sm">+ Tambah Ke Anggaran</button>
           </form>
 
           <div class="table-responsive">
@@ -732,7 +733,7 @@
                   <th class="text-center">Vol / Sat</th>
                   <th class="text-end">Harga</th>
                   <th class="text-end">Subtotal</th>
-                  <th class="text-center"><i class="bi bi-trash"></i></th>
+                  <th class="text-center"><i class="bi bi-gear"></i></th>
                 </tr>
               </thead>
               <tbody id="rab-items-container"></tbody>
@@ -750,7 +751,6 @@
     </div>
   </div>
 
-  <!-- MODAL FORM WARGA, PRESENSI, CETAK, CONFIRM OMITTED FOR BREVITY BUT RESTORED -->
   <!-- MODAL FORM WARGA -->
   <div class="modal fade" id="modalWarga" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -848,7 +848,7 @@
   <!-- SCRIPT BOOTSTRAP & LOGIK LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.5.8";
+    const APP_VERSION = "v3.6.0";
     const SYSTEM_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbx0q60aK8mOn0-tOLIZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
 
     let API_URL = localStorage.getItem('rt_api_url') || SYSTEM_DEFAULT_API_URL;
@@ -894,7 +894,7 @@
       checkPinAuth();
     });
 
-    /* -- OMITTED PIN & OTP FUNCTIONS FOR BREVITY BUT FULLY INTACT -- */
+    /* -- PIN & OTP FUNCTIONS -- */
     function checkPinAuth() {
       if (!sessionStorage.getItem('rt_app_authenticated')) bootstrap.Modal.getOrCreateInstance(document.getElementById('modalPinLogin')).show();
     }
@@ -1065,9 +1065,13 @@
       currentReguKegiatanId = idKegiatan;
       let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan));
       document.getElementById('regu-kegiatan-title').innerText = keg ? keg.nama_kegiatan : '';
+      
+      // Reset Form untuk Entry Baru
       document.getElementById('form-regu-item').reset();
-      // default date set to agenda date
+      document.getElementById('regu-id').value = '';
+      document.getElementById('btn-submit-regu').innerText = '+ Simpan Regu';
       if(keg && keg.tgl) document.getElementById('regu-tgl-input').value = keg.tgl.split('T')[0];
+      
       renderReguList();
       new bootstrap.Modal(document.getElementById('modalRegu')).show();
     }
@@ -1086,7 +1090,10 @@
           <div class="card-body p-3">
             <div class="d-flex justify-content-between align-items-start mb-2 border-bottom border-info-subtle pb-2">
               <h6 class="fw-bold mb-0 text-info"><i class="bi bi-boxes me-2"></i>${item.nama_regu}</h6>
-              <button class="btn btn-sm btn-link text-danger p-0" onclick="deleteItem('REGU', '${item.id}')"><i class="bi bi-trash"></i></button>
+              <div>
+                <button class="btn btn-sm btn-link text-secondary p-0 me-2" onclick="editReguItem('${item.id}')"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-link text-danger p-0" onclick="deleteItem('REGU', '${item.id}')"><i class="bi bi-trash"></i></button>
+              </div>
             </div>
             <div class="row g-2 small text-muted mb-2">
               <div class="col-6"><i class="bi bi-calendar me-1"></i>${formatTanggal(item.tgl)}</div>
@@ -1102,20 +1109,49 @@
       `).join('');
     }
 
+    function editReguItem(idRegu) {
+      let item = APP_DATA.REGU.find(r => String(r.id) === String(idRegu));
+      if(!item) return;
+      document.getElementById('regu-id').value = item.id;
+      document.getElementById('regu-nama-input').value = item.nama_regu || '';
+      document.getElementById('regu-tgl-input').value = item.tgl ? item.tgl.split('T')[0] : '';
+      document.getElementById('regu-jam-input').value = item.jam || '';
+      document.getElementById('regu-lokasi-input').value = item.lokasi || '';
+      document.getElementById('regu-pj-input').value = item.koordinator || '';
+      document.getElementById('btn-submit-regu').innerText = 'Update Regu';
+    }
+
     document.getElementById('form-regu-item').addEventListener('submit', function(e) {
       e.preventDefault();
+      
+      let rId = document.getElementById('regu-id').value;
+      let existingAnggota = [];
+      
+      if (rId) {
+         let exItem = APP_DATA.REGU.find(r => String(r.id) === String(rId));
+         if (exItem) existingAnggota = exItem.anggota || [];
+      }
+
       let newItem = {
-        id: 'REG-' + new Date().getTime(),
+        id: rId,
         id_kegiatan: currentReguKegiatanId,
         nama_regu: document.getElementById('regu-nama-input').value,
         tgl: document.getElementById('regu-tgl-input').value,
         jam: document.getElementById('regu-jam-input').value,
         lokasi: document.getElementById('regu-lokasi-input').value,
         koordinator: document.getElementById('regu-pj-input').value,
-        anggota: []
+        anggota: existingAnggota
       };
+      
       saveLocalAndSync('REGU', newItem);
+      
       document.getElementById('form-regu-item').reset();
+      document.getElementById('regu-id').value = '';
+      document.getElementById('btn-submit-regu').innerText = '+ Simpan Regu';
+      
+      let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(currentReguKegiatanId));
+      if(keg && keg.tgl) document.getElementById('regu-tgl-input').value = keg.tgl.split('T')[0];
+      
       renderReguList();
     });
 
@@ -1183,88 +1219,16 @@
       renderReguList();
     }
 
-    // --- SHARE WA MASTER AGENDA (COMBINES RAB & REGU) --- //
-    function shareAgendaWA(idKegiatan) {
-      let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan));
-      if (!keg) return;
-
-      let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01";
-      let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju";
-
-      let txt = `📋 *PERENCANAAN AGENDA & REGU KERJA*\n` +
-                `🏛️ *${rt} - ${desa}*\n` +
-                `━━━━━━━━━━━━━━━━━━━━━\n` +
-                `📌 *Agenda Utama:* ${keg.nama_kegiatan}\n` +
-                `📅 *Tanggal:* ${formatTanggal(keg.tgl)}\n` +
-                `📍 *Lokasi:* ${keg.lokasi || '-'}\n` +
-                `👤 *PJ Utama:* ${keg.penanggung_jawab || '-'}\n` +
-                `━━━━━━━━━━━━━━━━━━━━━\n\n`;
-
-      // BAGIAN REGU KERJA
-      let reguItems = (APP_DATA.REGU || []).filter(r => String(r.id_kegiatan) === String(idKegiatan));
-      if (reguItems.length > 0) {
-        txt += `👥 *PEMBAGIAN KELOMPOK KERJA:*\n\n`;
-        reguItems.forEach((r, idx) => {
-           txt += `*${idx+1}. ${r.nama_regu}*\n` +
-                  `   • Waktu: ${formatTanggal(r.tgl)} (Jam ${r.jam})\n` +
-                  `   • Target Lokasi: ${r.lokasi}\n` +
-                  `   • Koordinator Regu: ${r.koordinator}\n` +
-                  `   • Anggota Warga (${(r.anggota||[]).length} Orang):\n`;
-           if (r.anggota && r.anggota.length > 0) {
-              r.anggota.forEach((a, i) => {
-                 txt += `      ${i+1}) ${a}\n`;
-              });
-           } else {
-              txt += `      _(Belum ada anggota)_\n`;
-           }
-           txt += `\n`;
-        });
-        txt += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
-      }
-
-      // BAGIAN RAB
-      let rabItems = (APP_DATA.ANGGARAN || []).filter(a => String(a.id_kegiatan) === String(idKegiatan));
-      let grandTotal = 0;
-      if (rabItems.length > 0) {
-        txt += `💰 *RENCANA ANGGARAN BIAYA (RAB):*\n\n`;
-        rabItems.forEach((item, idx) => {
-          let qty = Number(item.jumlah) || 0;
-          let harga = Number(item.harga_satuan) || 0;
-          let tot = qty * harga;
-          grandTotal += tot;
-          let satuanTxt = item.satuan ? ` ${item.satuan}` : '';
-          txt += `🔹 *${item.nama_kebutuhan}*\n` +
-                 `   ${qty}${satuanTxt} x Rp ${harga.toLocaleString('id-ID')} = *Rp ${tot.toLocaleString('id-ID')}*\n`;
-        });
-        txt += `\n💸 *TOTAL RAB: Rp ${grandTotal.toLocaleString('id-ID')}*\n`;
-        txt += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
-      }
-
-      txt += `_Dibuat via Aplikasi Notulen RT (${APP_VERSION}) | Powered By Ari GPM_`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
-    }
-
-    // --- OTHER CORE LOGIC --- //
-    document.getElementById('form-rab-item').addEventListener('submit', function(e) {
-      e.preventDefault();
-      let newItem = {
-        id_kegiatan: currentRabKegiatanId,
-        nama_kebutuhan: document.getElementById('rab-nama-kebutuhan').value,
-        jumlah: document.getElementById('rab-jumlah').value,
-        satuan: document.getElementById('rab-satuan').value,
-        harga_satuan: document.getElementById('rab-harga').value,
-        total: (Number(document.getElementById('rab-jumlah').value)||0) * (Number(document.getElementById('rab-harga').value)||0)
-      };
-      saveLocalAndSync('ANGGARAN', newItem);
-      document.getElementById('form-rab-item').reset();
-      renderRabList();
-    });
-
+    // --- LOGIKA EDIT & LIST RAB --- //
     function openModalRab(idKegiatan) {
       currentRabKegiatanId = idKegiatan;
       let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan));
       document.getElementById('rab-kegiatan-title').innerText = keg ? keg.nama_kegiatan : '';
+      
       document.getElementById('form-rab-item').reset();
+      document.getElementById('rab-id').value = '';
+      document.getElementById('btn-submit-rab').innerText = '+ Tambah Ke Anggaran';
+      
       renderRabList();
       new bootstrap.Modal(document.getElementById('modalRab')).show();
     }
@@ -1284,13 +1248,108 @@
               <td class="small text-center">${qty} ${satuanTxt}</td>
               <td class="small text-end">Rp ${harga.toLocaleString('id-ID')}</td>
               <td class="small text-end fw-bold text-success">Rp ${tot.toLocaleString('id-ID')}</td>
-              <td class="text-center"><button class="btn btn-sm btn-link text-danger p-0" onclick="deleteItem('ANGGARAN', '${item.id}')"><i class="bi bi-trash"></i></button></td>
+              <td class="text-center text-nowrap">
+                <button class="btn btn-sm btn-link text-secondary p-0 me-2" onclick="editRabItem('${item.id}')"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-link text-danger p-0" onclick="deleteItem('ANGGARAN', '${item.id}')"><i class="bi bi-trash"></i></button>
+              </td>
             </tr>`;
         }).join('');
       }
       document.getElementById('rab-grand-total').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
     }
 
+    function editRabItem(idItem) {
+      let item = APP_DATA.ANGGARAN.find(a => String(a.id) === String(idItem));
+      if(!item) return;
+      document.getElementById('rab-id').value = item.id;
+      document.getElementById('rab-nama-kebutuhan').value = item.nama_kebutuhan || '';
+      document.getElementById('rab-jumlah').value = item.jumlah || '';
+      document.getElementById('rab-satuan').value = item.satuan || '';
+      document.getElementById('rab-harga').value = item.harga_satuan || '';
+      document.getElementById('btn-submit-rab').innerText = 'Update Anggaran';
+    }
+
+    document.getElementById('form-rab-item').addEventListener('submit', function(e) {
+      e.preventDefault();
+      let newItem = {
+        id: document.getElementById('rab-id').value,
+        id_kegiatan: currentRabKegiatanId,
+        nama_kebutuhan: document.getElementById('rab-nama-kebutuhan').value,
+        jumlah: document.getElementById('rab-jumlah').value,
+        satuan: document.getElementById('rab-satuan').value,
+        harga_satuan: document.getElementById('rab-harga').value,
+        total: (Number(document.getElementById('rab-jumlah').value)||0) * (Number(document.getElementById('rab-harga').value)||0)
+      };
+      
+      saveLocalAndSync('ANGGARAN', newItem);
+      
+      document.getElementById('form-rab-item').reset();
+      document.getElementById('rab-id').value = '';
+      document.getElementById('btn-submit-rab').innerText = '+ Tambah Ke Anggaran';
+      
+      renderRabList();
+    });
+
+    // --- SHARE WA MASTER AGENDA (COMBINES RAB & REGU) --- //
+    // SEKARANG SUDAH DIBUAT SUPER LENGKAP DENGAN KETERANGAN JIKA KOSONG
+    function shareAgendaWA(idKegiatan) {
+      let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan));
+      if (!keg) return;
+
+      let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01";
+      let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju";
+
+      let txt = `📋 *PERENCANAAN AGENDA & REGU KERJA*\n` +
+                `🏛️ *${rt} - ${desa}*\n` +
+                `━━━━━━━━━━━━━━━━━━━━━\n` +
+                `📌 *Agenda Utama:* ${keg.nama_kegiatan}\n` +
+                `📅 *Tanggal:* ${formatTanggal(keg.tgl)}\n` +
+                `📍 *Lokasi:* ${keg.lokasi || '-'}\n` +
+                `👤 *PJ Utama:* ${keg.penanggung_jawab || '-'}\n` +
+                `━━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+      // BAGIAN KELOMPOK KERJA
+      let reguItems = (APP_DATA.REGU || []).filter(r => String(r.id_kegiatan) === String(idKegiatan));
+      txt += `👥 *PEMBAGIAN KELOMPOK KERJA:*\n\n`;
+      if (reguItems.length > 0) {
+        reguItems.forEach((r, idx) => {
+           txt += `*${idx+1}. ${r.nama_regu}*\n` +
+                  `   • Waktu: ${formatTanggal(r.tgl)} (Jam ${r.jam})\n` +
+                  `   • Target Lokasi: ${r.lokasi}\n` +
+                  `   • Koordinator Regu: ${r.koordinator}\n` +
+                  `   • Anggota Warga (${(r.anggota||[]).length} Orang):\n`;
+           if (r.anggota && r.anggota.length > 0) {
+              r.anggota.forEach((a, i) => { txt += `      ${i+1}) ${a}\n`; });
+           } else { txt += `      _(Belum ada anggota)_\n`; }
+           txt += `\n`;
+        });
+      } else {
+        txt += `_Belum ada pembagian kelompok kerja._\n\n`;
+      }
+      txt += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+      // BAGIAN RAB
+      let rabItems = (APP_DATA.ANGGARAN || []).filter(a => String(a.id_kegiatan) === String(idKegiatan));
+      let grandTotal = 0;
+      txt += `💰 *RENCANA ANGGARAN BIAYA (RAB):*\n\n`;
+      if (rabItems.length > 0) {
+        rabItems.forEach((item, idx) => {
+          let qty = Number(item.jumlah) || 0; let harga = Number(item.harga_satuan) || 0; let tot = qty * harga; grandTotal += tot;
+          let satuanTxt = item.satuan ? ` ${item.satuan}` : '';
+          txt += `🔹 *${idx+1}. ${item.nama_kebutuhan}*\n   ${qty}${satuanTxt} x Rp ${harga.toLocaleString('id-ID')} = *Rp ${tot.toLocaleString('id-ID')}*\n`;
+        });
+        txt += `\n💸 *TOTAL RAB: Rp ${grandTotal.toLocaleString('id-ID')}*\n\n`;
+      } else {
+        txt += `_Belum ada rincian RAB._\n\n`;
+      }
+
+      txt += `━━━━━━━━━━━━━━━━━━━━━\n`;
+      txt += `_Dibuat via Aplikasi Notulen RT (${APP_VERSION}) | Powered By Ari GPM_`;
+
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
+    }
+
+    // --- SISANYA TETAP SAMA (PRESENSI, NOTULEN, KEGIATAN, WARGA) --- //
     function openModalPresensi() {
       let select = document.getElementById('presensi-agenda-select');
       select.innerHTML = (APP_DATA.NOTULEN || []).map(n => `<option value="${n.id}">${n.agenda} (${formatTanggal(n.tgl_rapat)})</option>`).join('');
