@@ -1,4 +1,4 @@
-const CACHE_NAME = 'notulen-rt-v3.7.6';
+const CACHE_NAME = 'notulen-rt-v3.8.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
