@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.8.1</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.8.2</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -127,7 +127,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.8.1</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.8.2</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -271,7 +271,7 @@
 
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.8.1</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.8.2</span></div>
       </div>
     </div>
 
@@ -335,7 +335,7 @@
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
           Powered By Ari GPM • 
-          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.8.1</span>
+          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.8.2</span>
         </div>
       </div>
     </div>
@@ -443,7 +443,7 @@
   <!-- SCRIPT LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.8.1";
+    const APP_VERSION = "v3.8.2";
     
     // URL GS TERBARU
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
@@ -519,13 +519,11 @@
           let ds = scannerAppData.SETTINGS?.desa_alamat || "";
           document.getElementById('scanner-rt-header').innerText = `${rt} - ${ds}`;
           
-          // WARGA DATALIST (NAMA & NO RUMAH)
           let w = scannerAppData.WARGA || [];
           if (dlWarga) {
             dlWarga.innerHTML = w.map(x => `<option value="${x.nama} (${x.no_rumah || '-'})" data-realname="${x.nama}"></option>`).join('');
           }
 
-          // AGENDA RAPAT TERBARU DI ATAS
           let nList = [...(scannerAppData.NOTULEN || [])].reverse();
           if (dlAgenda) {
             dlAgenda.innerHTML = nList.map(n => {
@@ -535,16 +533,18 @@
             }).join('');
           }
 
-          inAgenda.addEventListener('input', function() {
-            let val = this.value;
-            let matched = nList.find(n => `${(n.agenda||'').toUpperCase()} | ${formatTanggal(n.tgl_rapat)}` === val);
-            if (matched) {
-              hidAgendaId.value = matched.id;
-            } else {
-              let found = nList.find(n => val.includes((n.agenda||'').toUpperCase()));
-              if (found) hidAgendaId.value = found.id;
-            }
-          });
+          if(inAgenda) {
+            inAgenda.addEventListener('input', function() {
+              let val = this.value;
+              let matched = nList.find(n => `${(n.agenda||'').toUpperCase()} | ${formatTanggal(n.tgl_rapat)}` === val);
+              if (matched) {
+                hidAgendaId.value = matched.id;
+              } else {
+                let found = nList.find(n => val.includes((n.agenda||'').toUpperCase()));
+                if (found) hidAgendaId.value = found.id;
+              }
+            });
+          }
 
         } else {
           throw new Error("Format JSON salah");
@@ -576,7 +576,6 @@
       document.getElementById('scanner-status').style.display = 'none';
       document.getElementById('warga-task-view').style.display = 'none';
       
-      // MUNCULKAN KOTAK KAMERA
       let readerContainer = document.getElementById('scanner-reader-container');
       readerContainer.style.display = 'block';
       document.getElementById('btn-start-scan').style.display = 'none';
@@ -596,7 +595,6 @@
           (errorMessage) => { /* abaikan error frame */ }
         );
       } catch(err) {
-        // Fallback izin kamera atau kamera depan jika environment gagal
         try {
           await html5QrcodeScanner.start(
             { facingMode: "user" },
@@ -611,8 +609,17 @@
       }
     }
 
-    function stopScannerNative() { if(html5QrcodeScanner && html5QrcodeScanner.isScanning) html5QrcodeScanner.stop().catch(e=>console.log(e)); }
-    function stopScanner() { stopScannerNative(); document.getElementById('scanner-reader-container').style.display = 'none'; document.getElementById('btn-start-scan').style.display = 'block'; }
+    function stopScannerNative() { 
+      try {
+        if(html5QrcodeScanner) html5QrcodeScanner.stop().catch(e=>console.log(e)); 
+      } catch(e){}
+    }
+    
+    function stopScanner() { 
+      stopScannerNative(); 
+      document.getElementById('scanner-reader-container').style.display = 'none'; 
+      document.getElementById('btn-start-scan').style.display = 'block'; 
+    }
 
     async function processScanResult(qrText, namaWarga, idAgenda) {
       let parts = qrText.split('|');
@@ -1018,7 +1025,7 @@
     function filterPresensiWarga() { let q = (document.getElementById('presensi-search-warga').value || '').toLowerCase(); document.querySelectorAll('.presensi-item').forEach(item => { item.style.display = (item.getAttribute('data-search') || '').includes(q) ? 'block' : 'none'; }); }
     function updatePresensiCount() { document.getElementById('presensi-count').innerText = document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').length; }
     function selectAllPresensi(st) { document.querySelectorAll('#presensi-checklist-container .presensi-item').forEach(item => { if (item.style.display !== 'none') { let chk = item.querySelector('input[type="checkbox"]'); if (chk) chk.checked = st; } }); updatePresensiCount(); }
-    async function savePresensi() { let selId = document.getElementById('presensi-agenda-select').value; APP_DATA.KEHADIRAN = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) !== String(selId)); document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked'].forEach(chk => { saveLocalAndSync('KEHADIRAN', { id_kegiatan: selId, nama: chk.value, status_hadir: 'Hadir Manual', waktu: new Date().toLocaleTimeString('id-ID') }); }); localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); bootstrap.Modal.getInstance(document.getElementById('modalPresensi'))?.hide(); showToast('Daftar Hadir Disimpan!'); }
+    async function savePresensi() { let selId = document.getElementById('presensi-agenda-select').value; APP_DATA.KEHADIRAN = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) !== String(selId)); document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').forEach(chk => { saveLocalAndSync('KEHADIRAN', { id_kegiatan: selId, nama: chk.value, status_hadir: 'Hadir Manual', waktu: new Date().toLocaleTimeString('id-ID') }); }); localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); bootstrap.Modal.getInstance(document.getElementById('modalPresensi'))?.hide(); showToast('Daftar Hadir Disimpan!'); }
     function shareWA(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if (!item) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama); let txt = `📢 *HASIL MUSYAWARAH RT*\n🏛️ *${rt} - ${desa}*\n━━━━━━━━━━━━━━━━━━━━━\n📌 *Agenda:* ${item.agenda}\n📅 *Tgl:* ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '(' + item.waktu + ')' : ''}\n📍 *Tempat:* ${item.tempat || '-'}\n👤 *Pimpinan:* ${item.pimpinan || '-'}\n✍️ *Notulis:* ${item.notulis || '-'}\n━━━━━━━━━━━━━━━━━━━━━\n\n👥 *DAFTAR HADIR (${kehadiranList.length} KK):*\n`; if (kehadiranList.length > 0) txt += `${kehadiranList.map((n, i) => `  ${i+1}. ${n}`).join('\n')}\n\n`; else txt += `_Belum ada presensi_\n\n`; txt += `💡 *PEMBAHASAN:*\n${item.pembahasan || '-'}\n\n✅ *KEPUTUSAN FINAL:* \n${item.keputusan || '-'}\n\n_Dibuat via Aplikasi Notulen RT (${APP_VERSION}) | Powered By Ari GPM_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
 
     /* NOTULEN FORM */
