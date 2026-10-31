@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.7.2</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.7.5</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -106,7 +106,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.7.2</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.7.5</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -246,11 +246,9 @@
           </div>
           <div class="input-group input-group-sm mb-2">
             <input type="text" id="setting-url-input" class="form-control bg-light text-muted" readonly placeholder="https://script.google.com/macros/s/...">
-            <button class="btn btn-outline-secondary" type="button" id="btn-toggle-edit" onclick="toggleEditUrl()" title="Ubah URL"><i class="bi bi-pencil" id="icon-toggle-edit"></i></button>
           </div>
           <div class="d-flex gap-2 mt-2">
-            <button id="btn-save-url" class="btn btn-sm btn-primary-custom text-white rounded-pill flex-fill fw-bold" onclick="updateSettingUrl()" disabled>Simpan</button>
-            <button class="btn btn-sm btn-outline-danger rounded-pill fw-bold" onclick="resetDefaultUrl()">Reset Default</button>
+             <small class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i>URL terkoneksi otomatis ke sistem utama.</small>
           </div>
         </div>
 
@@ -264,7 +262,7 @@
 
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.7.2</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.7.5</span></div>
       </div>
     </div>
 
@@ -313,7 +311,7 @@
         <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
           Powered By Ari GPM • 
           <!-- Saklar Rahasia Ke Admin: Hapus param ?mode=scanner -->
-          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.7.2</span>
+          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.7.5</span>
         </div>
       </div>
 
@@ -395,10 +393,14 @@
   <!-- SCRIPT LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.7.2";
-    const SYSTEM_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbx0q60aK8mOn0-tOLIZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
+    const APP_VERSION = "v3.7.5";
+    
+    // ======== URL GS TERBARU YANG DITANAM PERMANEN ========
+    const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
+    
+    // Hapus URL API lama yang tersimpan di HP agar tidak mengganggu sistem yang baru
+    localStorage.removeItem('rt_api_url');
 
-    let API_URL = localStorage.getItem('rt_api_url') || SYSTEM_DEFAULT_API_URL;
     let APP_DATA = JSON.parse(localStorage.getItem('rt_app_data')) || {
       SETTINGS: { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju, Kec. Indah", pin: "kamu nanyak", email_admin: "" },
       NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], ANGGARAN: [], REGU: []
@@ -455,14 +457,13 @@
     /* ========================================================================= */
     let html5QrcodeScanner = null;
     let scannerAppData = null;
-    let scannerApiUrl = ""; // Variabel penyimpan API dinamis
+    let scannerApiUrl = ""; 
     
     async function initScannerWarga() {
       let sel = document.getElementById('scanner-warga-select');
       try {
-        // 1. Tangkap URL API dari link WA, jika tidak ada gunakan API lokal admin
-        const urlParams = new URLSearchParams(window.location.search);
-        scannerApiUrl = urlParams.get('api') ? decodeURIComponent(urlParams.get('api')) : API_URL;
+        // TEMBAK LANGSUNG MENGGUNAKAN API_URL YANG DITANAM
+        scannerApiUrl = API_URL;
 
         let res = await fetch(scannerApiUrl + '?action=sync');
         let json = await res.json();
@@ -522,7 +523,7 @@
       try {
         if (tipe === 'RAPAT') {
           let payload = { id_kegiatan: idTarget, nama: namaWarga, status_hadir: 'Hadir via QR Scanner', waktu: new Date().toLocaleTimeString('id-ID') };
-          // 2. Gunakan scannerApiUrl dinamis saat mengirim data POST
+          // Gunakan scannerApiUrl dinamis saat mengirim data POST
           await fetch(scannerApiUrl, { method: 'POST', body: JSON.stringify({ action: 'save', table: 'KEHADIRAN', data: payload }) });
         } else if (tipe === 'REGU') {
           let regu = (scannerAppData.REGU || []).find(r => String(r.id) === String(idTarget));
@@ -562,8 +563,8 @@
     }
 
     function shareScannerLinkWA() {
-      // 3. Tempelkan parameter API ke dalam link agar HP Warga tahu Spreadsheet mana yang dituju
-      let publicUrl = window.location.href.split('?')[0] + '?mode=scanner&api=' + encodeURIComponent(API_URL);
+      // LINK MENJADI BERSIH TANPA PARAMETER API KARENA SUDAH DI-HARDCODE
+      let publicUrl = window.location.href.split('?')[0] + '?mode=scanner';
       let txt = `📢 *LINK ABSEN MANDIRI WARGA*\n\nSilakan klik link di bawah ini untuk mengisi presensi kehadiran:\n\n🌐 ${publicUrl}\n\n_1. Klik Link di atas_\n_2. Pilih Nama Anda_\n_3. Buka Kamera & Scan QR dari HP Petugas_\n\n_Aplikasi Notulen RT ${APP_VERSION}_`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
     }
@@ -590,7 +591,7 @@
     function toggleEditUrl() { let i = document.getElementById('setting-url-input'); if(i.hasAttribute('readonly')) { customConfirm('Buka kunci URL untuk diedit?', () => { i.removeAttribute('readonly'); i.classList.remove('bg-light','text-muted'); document.getElementById('btn-save-url').removeAttribute('disabled'); document.getElementById('icon-toggle-edit').className='bi bi-unlock-fill text-warning'; let b = document.getElementById('url-lock-badge'); b.className='badge bg-warning-subtle text-warning border border-warning-subtle'; b.innerHTML='<i class="bi bi-unlock-fill me-1"></i>Terbuka'; }); } else lockUrlInput(); }
     function lockUrlInput() { let i = document.getElementById('setting-url-input'); i.setAttribute('readonly', true); i.classList.add('bg-light','text-muted'); document.getElementById('btn-save-url').setAttribute('disabled', true); document.getElementById('icon-toggle-edit').className='bi bi-pencil'; let b = document.getElementById('url-lock-badge'); b.className='badge bg-success-subtle text-success border border-success-subtle'; b.innerHTML='<i class="bi bi-lock-fill me-1"></i>Terkunci'; }
     function updateSettingUrl() { let v = document.getElementById('setting-url-input').value.trim(); if(v) { API_URL = v; localStorage.setItem('rt_api_url', API_URL); lockUrlInput(); syncData(); showToast('URL Berhasil Diupdate'); } }
-    function resetDefaultUrl() { customConfirm('Reset ke URL Default Sistem?', () => { localStorage.removeItem('rt_api_url'); API_URL = SYSTEM_DEFAULT_API_URL; document.getElementById('setting-url-input').value = API_URL; lockUrlInput(); syncData(); showToast('URL Default Dikembalikan'); }); }
+    function resetDefaultUrl() { customConfirm('Reset ke URL Default Sistem?', () => { localStorage.removeItem('rt_api_url'); API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec"; document.getElementById('setting-url-input').value = API_URL; lockUrlInput(); syncData(); showToast('URL Default Dikembalikan'); }); }
 
     function switchTab(tabName, saveState = true) {
       document.querySelectorAll('.page-section').forEach(sec => sec.style.display = 'none');
