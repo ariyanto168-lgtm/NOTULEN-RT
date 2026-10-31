@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.7.1</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.7.2</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -106,7 +106,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.7.1</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.7.2</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -264,7 +264,7 @@
 
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.7.1</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.7.2</span></div>
       </div>
     </div>
 
@@ -306,6 +306,17 @@
 
       <!-- Area Pesan / Status -->
       <div id="scanner-status" class="alert alert-dark border-secondary mx-auto text-center py-3" style="max-width: 400px; display:none; border-radius: 14px;"></div>
+      
+      <!-- Footer Publik & SAKLAR ADMIN -->
+      <div class="mt-5 pb-3">
+        <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
+        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
+          Powered By Ari GPM • 
+          <!-- Saklar Rahasia Ke Admin: Hapus param ?mode=scanner -->
+          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.7.2</span>
+        </div>
+      </div>
+
     </div>
   </div>
   <!-- ================= END WADAH SCANNER ================= -->
@@ -384,7 +395,7 @@
   <!-- SCRIPT LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.7.1";
+    const APP_VERSION = "v3.7.2";
     const SYSTEM_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbx0q60aK8mOn0-tOLIZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
 
     let API_URL = localStorage.getItem('rt_api_url') || SYSTEM_DEFAULT_API_URL;
@@ -538,7 +549,6 @@
       generateMasterQR('RAPAT', sel.value, `Absen Rapat:\n${opt}`);
     }
 
-    /* FITUR BARU: BUKA WA OTOMATIS BUKAN COPAS */
     function shareScannerLinkWA() {
       let publicUrl = window.location.href.split('?')[0] + '?mode=scanner';
       let txt = `📢 *LINK ABSEN MANDIRI WARGA*\n\nSilakan klik link di bawah ini untuk mengisi presensi kehadiran:\n\n🌐 ${publicUrl}\n\n_1. Klik Link di atas_\n_2. Pilih Nama Anda_\n_3. Buka Kamera & Scan QR dari HP Petugas_`;
