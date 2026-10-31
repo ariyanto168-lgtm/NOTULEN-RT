@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.9.0</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.9.1</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -113,7 +113,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.0</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.1</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -266,7 +266,7 @@
 
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.0</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.1</span></div>
       </div>
     </div>
 
@@ -323,7 +323,7 @@
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
           Powered By Ari GPM • 
-          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.9.0</span>
+          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.9.1</span>
         </div>
       </div>
     </div>
@@ -388,7 +388,7 @@
   <div class="modal fade" id="modalKegiatan" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold" id="modalKegiatanTitle">Buat Agenda Kegiatan</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="form-kegiatan"><input type="hidden" id="kegiatan-id"><div class="mb-2"><label class="form-label small fw-bold">Nama Kegiatan</label><input type="text" id="kegiatan-nama" class="form-control" required></div><div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Tanggal</label><input type="date" id="kegiatan-tgl" class="form-control" required></div><div class="col-6"><label class="form-label small fw-bold">Status</label><select id="kegiatan-status" class="form-select"><option value="Rencana">Rencana</option><option value="Berjalan">Berjalan</option><option value="Selesai">Selesai</option></select></div></div><div class="mb-2"><label class="form-label small fw-bold">Lokasi</label><input type="text" id="kegiatan-lokasi" class="form-control" list="dl-warga-list"></div><div class="mb-3"><label class="form-label small fw-bold">PJ Utama</label><input type="text" id="kegiatan-pj" class="form-control" list="dl-warga-list"></div><button type="submit" class="btn btn-success w-100 btn-rounded">Simpan Agenda</button></form></div></div></div></div>
   <div class="modal fade" id="modalWarga" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold" id="modalWargaTitle">Data Warga</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="form-warga"><input type="hidden" id="warga-id"><div class="mb-2"><label class="form-label small fw-bold">Nama Lengkap</label><input type="text" id="warga-nama" class="form-control" required></div><div class="row g-2 mb-3"><div class="col-6"><label class="form-label small fw-bold">No. Rumah</label><input type="text" id="warga-rumah" class="form-control"></div><div class="col-6"><label class="form-label small fw-bold">No. WA</label><input type="tel" id="warga-wa" class="form-control"></div></div><button type="submit" class="btn btn-primary-custom text-white w-100 btn-rounded">Simpan Warga</button></form></div></div></div></div>
 
-  <!-- MODAL PEMBAGIAN REGU & ANGGOTA (MULTI REGU) -->
+  <!-- MODAL PEMBAGIAN BANYAK REGU -->
   <div class="modal fade" id="modalRegu" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0 pb-0 d-flex justify-content-between align-items-center"><div><h5 class="modal-title fw-bold text-info"><i class="bi bi-diagram-3-fill me-2"></i>Pembagian Banyak Regu</h5><small class="text-muted fw-semibold" id="regu-kegiatan-title"></small></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="form-regu-item" class="card card-custom p-3 bg-info bg-opacity-10 border-info-subtle mb-3"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold small mb-0 text-info">+ Form Tambah Regu Baru</h6><button type="button" class="btn btn-xs btn-outline-secondary rounded-pill py-0 px-2" style="font-size: 0.7rem;" onclick="resetFormReguBaru()">Reset Form</button></div><input type="hidden" id="regu-id"><div class="mb-2"><input type="text" id="regu-nama-input" class="form-control form-control-sm border-info-subtle" placeholder="Nama Tugas / Kelompok (Contoh: Regu A - Angkut Sampah)" required></div><div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold mb-0 text-muted" style="font-size:0.7rem;">Tanggal</label><input type="date" id="regu-tgl-input" class="form-control form-control-sm border-info-subtle" required></div><div class="col-6"><label class="form-label small fw-bold mb-0 text-muted" style="font-size:0.7rem;">Jam / Waktu</label><input type="time" id="regu-jam-input" class="form-control form-control-sm border-info-subtle" required></div></div><div class="mb-2"><input type="text" id="regu-lokasi-input" class="form-control form-control-sm border-info-subtle" placeholder="Lokasi Target" required></div><div class="mb-2"><input type="text" id="regu-pj-input" class="form-control form-control-sm border-info-subtle" list="dl-warga-list" placeholder="Koordinator Regu" required></div><button type="submit" id="btn-submit-regu" class="btn btn-info text-white btn-sm rounded-pill fw-bold w-100 py-2 shadow-sm">+ Simpan & Tambah Regu Lainnya</button></form><h6 class="fw-bold small text-muted mb-2">Daftar Regu / Kelompok Kerja Tersimpan (Bisa Banyak):</h6><div id="regu-items-container"></div></div></div></div></div>
   <div class="modal fade" id="modalAnggotaRegu" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold">Pilih Anggota Warga</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body pt-2"><div class="mb-2 fw-bold text-info border-bottom pb-1" id="anggota-regu-title"></div><input type="text" id="anggota-search-warga" class="form-control form-control-sm mb-2 rounded-pill" placeholder="🔍 Cari nama..." onkeyup="filterAnggotaRegu()"><div class="d-flex justify-content-between align-items-center mb-2 px-1"><small class="fw-bold text-muted">Terpilih: <span id="anggota-count" class="text-info">0</span></small><button class="btn btn-xs btn-outline-secondary rounded-pill py-0 px-2" onclick="selectAllAnggota(false)">Reset Pilihan</button></div><div id="anggota-checklist-container" class="border rounded-3 p-2 bg-light" style="max-height: 280px; overflow-y: auto;"></div><button class="btn btn-info w-100 btn-rounded text-white fw-bold mt-3" onclick="saveAnggotaRegu()">Simpan Data Anggota</button></div></div></div></div>
   
@@ -431,7 +431,7 @@
   <!-- SCRIPT LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.9.0";
+    const APP_VERSION = "v3.9.1";
     
     // URL GS TERBARU
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
@@ -505,7 +505,7 @@
           scannerAppData = json.data;
           let rt = scannerAppData.SETTINGS?.nama_rt || "Rukun Tetangga";
           let ds = scannerAppData.SETTINGS?.desa_alamat || "";
-          document.getElementById('scanner-rt-header').innerText = `${rt} - ${ds}`;
+          document.getElementById('scanner-rt-header').innerText = `${rt} -${ds}`;
           
           let w = scannerAppData.WARGA || [];
           if (dlWarga) {
@@ -527,7 +527,7 @@
           if(inAgenda) {
             inAgenda.addEventListener('input', function() {
               let val = this.value;
-              let matched = combinedAgenda.find(item => `${(item.title||'').toUpperCase()} | ${formatTanggal(item.date)}` === val);
+              let matched = combinedAgenda.find(item => `${(item.title||'').toUpperCase()} |${formatTanggal(item.date)}` === val);
               if (matched) {
                 hidAgendaId.value = matched.id;
               } else {
@@ -673,7 +673,7 @@
       let html = `<h6 class='fw-bold text-info border-bottom border-secondary pb-2 mb-2'><i class='bi bi-clipboard2-check-fill me-1'></i> Rekap Kehadiran & Tugas Rapat/Kerja</h6>`;
       if(agendaItem) {
         html += `<p class='small mb-1'><b>Agenda / Kegiatan:</b> ${agendaItem.agenda || agendaItem.nama_kegiatan}</p>`;
-        html += `<p class='small mb-1'><b>Tanggal:</b> ${formatTanggal(agendaItem.tgl_rapat || agendaItem.tgl)} | <b>Lokasi:</b> ${agendaItem.tempat || agendaItem.lokasi || '-'}</p>`;
+        html += `<p class='small mb-1'><b>Tanggal:</b> ${formatTanggal(agendaItem.tgl_rapat || agendaItem.tgl)} | <b>Lokasi:</b>${agendaItem.tempat || agendaItem.lokasi || '-'}</p>`;
         if(agendaItem.keputusan) {
           html += `<div class='bg-dark p-2 rounded-3 mb-2 border border-secondary'><small class='text-success fw-bold d-block'>💡 Keputusan Rapat:</small><p class='small mb-0 text-white'>${agendaItem.keputusan}</p></div>`;
         }
@@ -683,7 +683,7 @@
       if(myRegu) {
         html += `<p class='small mb-1 text-white'><b>Kelompok/Regu:</b> ${myRegu.nama_regu}</p>`;
         html += `<p class='small mb-1 text-white'><b>Koordinator:</b> ${myRegu.koordinator}</p>`;
-        html += `<p class='small mb-0 text-white'><b>Jam Kumpul:</b> ${myRegu.jam} | <b>Lokasi Target:</b> ${myRegu.lokasi}</p>`;
+        html += `<p class='small mb-0 text-white'><b>Jam Kumpul:</b> ${myRegu.jam} | <b>Lokasi Target:</b>${myRegu.lokasi}</p>`;
       } else {
         html += `<p class='small mb-0 text-muted'>Anda tidak masuk dalam rincian regu khusus, silakan ikuti arahan pengurus RT.</p>`;
       }
@@ -706,7 +706,7 @@
 
     function shareScannerLinkWA() {
       let publicUrl = window.location.href.split('?')[0] + '?mode=scanner';
-      let txt = `📢 *LINK ABSEN MANDIRI WARGA*\n\nSilakan klik link di bawah ini untuk melakukan presensi kehadiran rapat via QR Posko:\n\n🌐 ${publicUrl}\n\n_1. Klik Link di atas_\n_2. Ketik Nama/No Rumah & Pilih Agenda Rapat_\n_3. Buka Kamera & Scan Master QR Permanen di Posko RT_\n\n_Aplikasi Notulen RT ${APP_VERSION}_`;
+      let txt = `📢 *LINK ABSEN MANDIRI WARGA*\n\nSilakan klik link di bawah ini untuk melakukan presensi kehadiran rapat via QR Posko:\n\n🌐 ${publicUrl}\n\n_1. Klik Link di atas_\n_2. Ketik Nama/No Rumah & Pilih Agenda Rapat_\n_3. Buka Kamera & Scan Master QR Permanen di Posko RT_\n\n_Aplikasi Notulen RT${APP_VERSION}_`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
     }
 
@@ -812,8 +812,7 @@
               <div class="progress mt-2 border border-warning" style="height: 10px; background-color: #fef08a;">
                 <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" style="width: ${persentase}%"></div>
               </div>
-              <small class="text-muted mt-2 d-block"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>
-              ${daftarNamaHtml}
+              <small class="text-muted mt-2 d-block"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>${daftarNamaHtml}
             </div>
           `;
         }
@@ -844,8 +843,7 @@
               <div class="progress mt-2 border border-success" style="height: 10px; background-color: #d1fae5;">
                 <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: ${persentase}%"></div>
               </div>
-              <small class="text-muted mt-2 d-block"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>
-              ${daftarNamaHtml}
+              <small class="text-muted mt-2 d-block"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>${daftarNamaHtml}
             </div>
           `;
         }
@@ -910,8 +908,7 @@
             <div class="d-flex justify-content-between align-items-center mb-1">
               <h6 class="fw-bold mb-0">${item.nama_kegiatan}</h6><span class="badge bg-${item.status === 'Selesai' ? 'success' : 'primary'} badge-status">${item.status || 'Rencana'}</span>
             </div>
-            <small class="text-muted d-block mb-1"><i class="bi bi-calendar3 me-1"></i>${formatTanggal(item.tgl)} | <i class="bi bi-geo-alt me-1"></i>${item.lokasi || '-'}</small>
-            ${item.penanggung_jawab ? `<small class="text-secondary d-block mb-2"><i class="bi bi-person-fill-check me-1"></i>PJ Utama: ${item.penanggung_jawab}</small>` : ''}
+            <small class="text-muted d-block mb-1"><i class="bi bi-calendar3 me-1"></i>${formatTanggal(item.tgl)} | <i class="bi bi-geo-alt me-1"></i>${item.lokasi || '-'}</small>${item.penanggung_jawab ? `<small class="text-secondary d-block mb-2"><i class="bi bi-person-fill-check me-1"></i>PJ Utama: ${item.penanggung_jawab}</small>` : ''}
             
             <div class="d-flex justify-content-between align-items-center bg-light rounded-3 p-2 mb-2">
               <small class="fw-bold text-success mb-0">RAB: Rp ${totalRab.toLocaleString('id-ID')}</small>
@@ -937,7 +934,7 @@
       if (filtered.length === 0) return container.innerHTML = `<div class="card card-custom p-4 text-center text-muted">Data warga tidak ditemukan.</div>`;
       container.innerHTML = filtered.map(item => `
         <div class="card card-custom p-3 mb-2 d-flex flex-row justify-content-between align-items-center">
-          <div><h6 class="fw-bold mb-0">${item.nama}</h6><small class="text-muted">Rumah: ${item.no_rumah || '-'} | WA: ${item.no_wa || '-'}</small></div>
+          <div><h6 class="fw-bold mb-0">${item.nama}</h6><small class="text-muted">Rumah: ${item.no_rumah || '-'} | WA:${item.no_wa || '-'}</small></div>
           <div class="d-flex gap-1"><button class="btn btn-sm btn-light text-secondary" onclick="editWarga('${item.id}')"><i class="bi bi-pencil-square"></i></button><button class="btn btn-sm btn-light text-danger" onclick="deleteItem('WARGA', '${item.id}')"><i class="bi bi-trash"></i></button></div>
         </div>
       `).join('');
@@ -956,7 +953,7 @@
 
     function resetFormReguBaru() {
       document.getElementById('form-regu-item').reset(); 
-      document.getElementById('regu-id').value = ''; // PENTING: Kosongkan ID agar selalu membuat Regu baru berikutnya
+      document.getElementById('regu-id').value = ''; // Memastikan ID kosong agar selalu tersimpan sebagai regu baru (bukan menimpa regu lama)
       document.getElementById('btn-submit-regu').innerText = '+ Simpan & Tambah Regu Lainnya'; 
       
       let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(currentReguKegiatanId)); 
@@ -1019,7 +1016,7 @@
       } 
       
       let newItem = { 
-        id: rId, // Jika kosong, saveLocalAndSync otomatis buat ID baru (Regu Baru)
+        id: rId, 
         id_kegiatan: currentReguKegiatanId, 
         nama_regu: document.getElementById('regu-nama-input').value, 
         tgl: document.getElementById('regu-tgl-input').value, 
@@ -1030,11 +1027,9 @@
       }; 
       
       saveLocalAndSync('REGU', newItem); 
-      
-      // Kosongkan form otomatis agar siap input Regu berikutnya
       resetFormReguBaru();
       renderReguList(); 
-      showToast('Regu berhasil disimpan! Silakan isi regu berikutnya.'); 
+      showToast('Regu berhasil disimpan & ditambahkan!'); 
     });
 
     function openModalAnggotaRegu(idRegu) { currentAnggotaReguId = idRegu; let regu = APP_DATA.REGU.find(r => r.id === idRegu); document.getElementById('anggota-regu-title').innerText = `Target: ${regu.nama_regu}`; document.getElementById('anggota-search-warga').value = ''; let container = document.getElementById('anggota-checklist-container'); if (!APP_DATA.WARGA || APP_DATA.WARGA.length === 0) { container.innerHTML = `<div class="text-center text-muted small py-2">Data warga kosong.</div>`; document.getElementById('anggota-count').innerText = '0'; } else { let html = '<div class="row g-1">'; APP_DATA.WARGA.forEach(w => { let isChecked = (regu.anggota || []).includes(w.nama); html += `<div class="col-6 anggota-item" data-search="${(w.nama + ' ' + (w.no_rumah||'')).toLowerCase()}"><div class="form-check p-1 px-2 border rounded bg-white d-flex align-items-center gap-1 mb-1 shadow-sm"><input class="form-check-input ms-0 me-1" type="checkbox" value="${w.nama}" id="cb-regu-${w.id}" ${isChecked ? 'checked' : ''} onchange="updateAnggotaCount()"><label class="form-check-label small text-truncate fw-semibold" for="cb-regu-${w.id}" style="font-size:0.75rem;">${w.nama} <span class="text-muted fw-normal">(${w.no_rumah||'-'})</span></label></div></div>`; }); html += '</div>'; container.innerHTML = html; updateAnggotaCount(); } new bootstrap.Modal(document.getElementById('modalAnggotaRegu')).show(); }
@@ -1045,12 +1040,12 @@
 
     /* RAB */
     function openModalRab(idKegiatan) { currentRabKegiatanId = idKegiatan; let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan)); document.getElementById('rab-kegiatan-title').innerText = keg ? keg.nama_kegiatan : ''; document.getElementById('form-rab-item').reset(); document.getElementById('rab-id').value = ''; document.getElementById('btn-submit-rab').innerText = '+ Tambah Ke Anggaran'; renderRabList(); new bootstrap.Modal(document.getElementById('modalRab')).show(); }
-    function renderRabList() { let items = (APP_DATA.ANGGARAN || []).filter(a => String(a.id_kegiatan) === String(currentRabKegiatanId)); let container = document.getElementById('rab-items-container'); let grandTotal = 0; if (items.length === 0) { container.innerHTML = `<tr><td colspan="5" class="text-center text-muted small py-3">Belum ada rincian RAB.</td></tr>`; } else { container.innerHTML = items.map(item => { let qty = Number(item.jumlah) || 0; let harga = Number(item.harga_satuan) || 0; let tot = qty * harga; grandTotal += tot; let satuanTxt = item.satuan ? `<span class="badge bg-light text-dark border ms-1">${item.satuan}</span>` : ''; return `<tr><td class="small fw-semibold">${item.nama_kebutuhan}</td><td class="small text-center">${qty} ${satuanTxt}</td><td class="small text-end">Rp ${harga.toLocaleString('id-ID')}</td><td class="small text-end fw-bold text-success">Rp ${tot.toLocaleString('id-ID')}</td><td class="text-center text-nowrap"><button class="btn btn-sm btn-link text-secondary p-0 me-2" onclick="editRabItem('${item.id}')"><i class="bi bi-pencil-square"></i></button><button class="btn btn-sm btn-link text-danger p-0" onclick="deleteItem('ANGGARAN', '${item.id}')"><i class="bi bi-trash"></i></button></td></tr>`; }).join(''); } document.getElementById('rab-grand-total').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID'); }
+    function renderRabList() { let items = (APP_DATA.ANGGARAN || []).filter(a => String(a.id_kegiatan) === String(currentRabKegiatanId)); let container = document.getElementById('rab-items-container'); let grandTotal = 0; if (items.length === 0) { container.innerHTML = `<tr><td colspan="5" class="text-center text-muted small py-3">Belum ada rincian RAB.</td></tr>`; } else { container.innerHTML = items.map(item => { let qty = Number(item.jumlah) || 0; let harga = Number(item.harga_satuan) || 0; let tot = qty * harga; grandTotal += tot; let satuanTxt = item.satuan ? `<span class="badge bg-light text-dark border ms-1">${item.satuan}</span>` : ''; return `<tr><td class="small fw-semibold">${item.nama_kebutuhan}</td><td class="small text-center">${qty}${satuanTxt}</td><td class="small text-end">Rp ${harga.toLocaleString('id-ID')}</td><td class="small text-end fw-bold text-success">Rp ${tot.toLocaleString('id-ID')}</td><td class="text-center text-nowrap"><button class="btn btn-sm btn-link text-secondary p-0 me-2" onclick="editRabItem('${item.id}')"><i class="bi bi-pencil-square"></i></button><button class="btn btn-sm btn-link text-danger p-0" onclick="deleteItem('ANGGARAN', '${item.id}')"><i class="bi bi-trash"></i></button></td></tr>`; }).join(''); } document.getElementById('rab-grand-total').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID'); }
     function editRabItem(idItem) { let item = APP_DATA.ANGGARAN.find(a => String(a.id) === String(idItem)); if(!item) return; document.getElementById('rab-id').value = item.id; document.getElementById('rab-nama-kebutuhan').value = item.nama_kebutuhan || ''; document.getElementById('rab-jumlah').value = item.jumlah || ''; document.getElementById('rab-satuan').value = item.satuan || ''; document.getElementById('rab-harga').value = item.harga_satuan || ''; document.getElementById('btn-submit-rab').innerText = 'Update Anggaran'; }
     document.getElementById('form-rab-item').addEventListener('submit', function(e) { e.preventDefault(); let newItem = { id: document.getElementById('rab-id').value, id_kegiatan: currentRabKegiatanId, nama_kebutuhan: document.getElementById('rab-nama-kebutuhan').value, jumlah: document.getElementById('rab-jumlah').value, satuan: document.getElementById('rab-satuan').value, harga_satuan: document.getElementById('rab-harga').value, total: (Number(document.getElementById('rab-jumlah').value)||0) * (Number(document.getElementById('rab-harga').value)||0) }; saveLocalAndSync('ANGGARAN', newItem); document.getElementById('form-rab-item').reset(); document.getElementById('rab-id').value = ''; document.getElementById('btn-submit-rab').innerText = '+ Tambah Ke Anggaran'; renderRabList(); showToast('RAB Disimpan'); });
 
     /* SHARE WA AGENDA */
-    function shareAgendaWA(idKegiatan) { let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan)); if (!keg) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let txt = `📋 *PERENCANAAN AGENDA & REGU KERJA*\n🏛️ *${rt} - ${desa}*\n━━━━━━━━━━━━━━━━━━━━━\n📌 *Agenda Utama:* ${keg.nama_kegiatan}\n📅 *Tanggal:* ${formatTanggal(keg.tgl)}\n📍 *Lokasi:* ${keg.lokasi || '-'}\n👤 *PJ Utama:* ${keg.penanggung_jawab || '-'}\n━━━━━━━━━━━━━━━━━━━━━\n\n`; let reguItems = (APP_DATA.REGU || []).filter(r => String(r.id_kegiatan) === String(idKegiatan)); txt += `👥 *PEMBAGIAN KELOMPOK KERJA:*\n\n`; if (reguItems.length > 0) { reguItems.forEach((r, idx) => { txt += `*${idx+1}. ${r.nama_regu}*\n   • Waktu: ${formatTanggal(r.tgl)} (Jam ${r.jam})\n   • Target Lokasi: ${r.lokasi}\n   • Koordinator Regu: ${r.koordinator}\n   • Anggota Warga (${(r.anggota||[]).length} Orang):\n`; if (r.anggota && r.anggota.length > 0) { r.anggota.forEach((a, i) => { txt += `      ${i+1}) ${a}\n`; }); } else { txt += `      _(Belum ada anggota)_\n`; } txt += `\n`; }); } else { txt += `_Belum ada pembagian kelompok kerja._\n\n`; } txt += `━━━━━━━━━━━━━━━━━━━━━\n\n`; let rabItems = (APP_DATA.ANGGARAN || []).filter(a => String(a.id_kegiatan) === String(idKegiatan)); let grandTotal = 0; txt += `💰 *RENCANA ANGGARAN BIAYA (RAB):*\n\n`; if (rabItems.length > 0) { rabItems.forEach((item, idx) => { let qty = Number(item.jumlah) || 0; let harga = Number(item.harga_satuan) || 0; let tot = qty * harga; grandTotal += tot; let satuanTxt = item.satuan ? ` ${item.satuan}` : ''; txt += `🔹 *${idx+1}. ${item.nama_kebutuhan}*\n   ${qty}${satuanTxt} x Rp ${harga.toLocaleString('id-ID')} = *Rp ${tot.toLocaleString('id-ID')}*\n`; }); txt += `\n💸 *TOTAL RAB: Rp ${grandTotal.toLocaleString('id-ID')}*\n\n`; } else { txt += `_Belum ada rincian RAB._\n\n`; } txt += `━━━━━━━━━━━━━━━━━━━━━\n_Dibuat via Aplikasi Notulen RT (${APP_VERSION}) | Powered By Ari GPM_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
+    function shareAgendaWA(idKegiatan) { let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan)); if (!keg) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let txt = `📋 *PERENCANAAN AGENDA & REGU KERJA*\n🏛️ *${rt} -${desa}*\n━━━━━━━━━━━━━━━━━━━━━\n📌 *Agenda Utama:* ${keg.nama_kegiatan}\n📅 *Tanggal:* ${formatTanggal(keg.tgl)}\n📍 *Lokasi:* ${keg.lokasi || '-'}\n👤 *PJ Utama:* ${keg.penanggung_jawab || '-'}\n━━━━━━━━━━━━━━━━━━━━━\n\n`; let reguItems = (APP_DATA.REGU || []).filter(r => String(r.id_kegiatan) === String(idKegiatan)); txt += `👥 *PEMBAGIAN KELOMPOK KERJA:*\n\n`; if (reguItems.length > 0) { reguItems.forEach((r, idx) => { txt += `*${idx+1}.${r.nama_regu}*\n   • Waktu: ${formatTanggal(r.tgl)} (Jam${r.jam})\n   • Target Lokasi: ${r.lokasi}\n   • Koordinator Regu: ${r.koordinator}\n   • Anggota Warga (${(r.anggota||[]).length} Orang):\n`; if (r.anggota && r.anggota.length > 0) { r.anggota.forEach((a, i) => { txt += `      ${i+1})${a}\n`; }); } else { txt += `      _(Belum ada anggota)_\n`; } txt += `\n`; }); } else { txt += `_Belum ada pembagian kelompok kerja._\n\n`; } txt += `━━━━━━━━━━━━━━━━━━━━━\n\n`; let rabItems = (APP_DATA.ANGGARAN || []).filter(a => String(a.id_kegiatan) === String(idKegiatan)); let grandTotal = 0; txt += `💰 *RENCANA ANGGARAN BIAYA (RAB):*\n\n`; if (rabItems.length > 0) { rabItems.forEach((item, idx) => { let qty = Number(item.jumlah) || 0; let harga = Number(item.harga_satuan) || 0; let tot = qty * harga; grandTotal += tot; let satuanTxt = item.satuan ? ` ${item.satuan}` : ''; txt += `🔹 *${idx+1}.${item.nama_kebutuhan}*\n   ${qty}${satuanTxt} x Rp ${harga.toLocaleString('id-ID')} = *Rp${tot.toLocaleString('id-ID')}*\n`; }); txt += `\n💸 *TOTAL RAB: Rp ${grandTotal.toLocaleString('id-ID')}*\n\n`; } else { txt += `_Belum ada rincian RAB._\n\n`; } txt += `━━━━━━━━━━━━━━━━━━━━━\n_Dibuat via Aplikasi Notulen RT (${APP_VERSION}) | Powered By Ari GPM_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
 
     /* PRESENSI */
     function openModalPresensi() { 
@@ -1079,52 +1074,4 @@
       let html = `<div class="row g-1">`; 
       APP_DATA.WARGA.forEach(w => { 
         let isCh = exist.includes(w.nama); 
-        html += `<div class="col-6 presensi-item" data-search="${(w.nama + ' ' + (w.no_rumah||'')).toLowerCase()}"><div class="form-check p-1 px-2 border rounded bg-white d-flex align-items-center gap-1 mb-1"><input class="form-check-input ms-0 me-1" type="checkbox" value="${w.nama}" id="chk-${w.id}" ${isCh ? 'checked' : ''} onchange="updatePresensiCount()"><label class="form-check-label small text-truncate fw-semibold" for="chk-${w.id}" style="font-size:0.75rem;">${w.nama} <span class="text-muted fw-normal">(${w.no_rumah || '-'})</span></label></div></div>`; 
-      }); 
-      html += `</div>`; 
-      container.innerHTML = html; 
-    }
-    function filterPresensiWarga() { let q = (document.getElementById('presensi-search-warga').value || '').toLowerCase(); document.querySelectorAll('.presensi-item').forEach(item => { item.style.display = (item.getAttribute('data-search') || '').includes(q) ? 'block' : 'none'; }); }
-    function updatePresensiCount() { document.getElementById('presensi-count').innerText = document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').length; }
-    function selectAllPresensi(st) { document.querySelectorAll('#presensi-checklist-container .presensi-item').forEach(item => { if (item.style.display !== 'none') { let chk = item.querySelector('input[type="checkbox"]'); if (chk) chk.checked = st; } }); updatePresensiCount(); }
-    async function savePresensi() { let selId = document.getElementById('presensi-agenda-select').value; APP_DATA.KEHADIRAN = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) !== String(selId)); document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').forEach(chk => { saveLocalAndSync('KEHADIRAN', { id_kegiatan: selId, nama: chk.value, status_hadir: 'Hadir Manual', waktu: new Date().toLocaleTimeString('id-ID') }); }); localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); bootstrap.Modal.getInstance(document.getElementById('modalPresensi'))?.hide(); showToast('Daftar Hadir Disimpan!'); }
-    function shareWA(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if (!item) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama); let txt = `📢 *HASIL MUSYAWARAH RT*\n🏛️ *${rt} - ${desa}*\n━━━━━━━━━━━━━━━━━━━━━\n📌 *Agenda:* ${item.agenda}\n📅 *Tgl:* ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '(' + item.waktu + ')' : ''}\n📍 *Tempat:* ${item.tempat || '-'}\n👤 *Pimpinan:* ${item.pimpinan || '-'}\n✍️ *Notulis:* ${item.notulis || '-'}\n━━━━━━━━━━━━━━━━━━━━━\n\n👥 *DAFTAR HADIR (${kehadiranList.length} KK):*\n`; if (kehadiranList.length > 0) txt += `${kehadiranList.map((n, i) => `  ${i+1}. ${n}`).join('\n')}\n\n`; else txt += `_Belum ada presensi_\n\n`; txt += `💡 *PEMBAHASAN:*\n${item.pembahasan || '-'}\n\n✅ *KEPUTUSAN FINAL:* \n${item.keputusan || '-'}\n\n_Dibuat via Aplikasi Notulen RT (${APP_VERSION}) | Powered By Ari GPM_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
-
-    /* NOTULEN FORM */
-    function openFormNotulen() { document.getElementById('form-notulen').reset(); document.getElementById('notulen-id').value = ''; document.getElementById('notulen-tgl').value = new Date().toISOString().split('T')[0]; updateDatalistWarga(); document.getElementById('modalNotulenTitle').innerText = "Buat Notulen Musyawarah"; new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
-    function editNotulen(id) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('notulen-id').value = item.id; document.getElementById('notulen-agenda').value = item.agenda || ''; document.getElementById('notulen-tgl').value = item.tgl_rapat ? item.tgl_rapat.toString().split('T')[0] : ''; document.getElementById('notulen-waktu').value = item.waktu || ''; document.getElementById('notulen-tempat').value = item.tempat || ''; document.getElementById('notulen-pimpinan').value = item.pimpinan || ''; document.getElementById('notulen-notulis').value = item.notulis || ''; document.getElementById('notulen-pembahasan').value = item.pembahasan || ''; document.getElementById('notulen-keputusan').value = item.keputusan || ''; updateDatalistWarga(); document.getElementById('modalNotulenTitle').innerText = "Edit Notulen Musyawarah"; new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
-    document.getElementById('form-notulen').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('NOTULEN', { id: document.getElementById('notulen-id').value, agenda: document.getElementById('notulen-agenda').value, tgl_rapat: document.getElementById('notulen-tgl').value, waktu: document.getElementById('notulen-waktu').value, tempat: document.getElementById('notulen-tempat').value, pimpinan: document.getElementById('notulen-pimpinan').value, notulis: document.getElementById('notulen-notulis').value, pembahasan: document.getElementById('notulen-pembahasan').value, keputusan: document.getElementById('notulen-keputusan').value }); bootstrap.Modal.getInstance(document.getElementById('modalNotulen'))?.hide(); showToast('Notulen Disimpan'); });
-
-    /* KEGIATAN FORM */
-    function openFormKegiatan() { document.getElementById('form-kegiatan').reset(); document.getElementById('kegiatan-id').value = ''; document.getElementById('kegiatan-tgl').value = new Date().toISOString().split('T')[0]; updateDatalistWarga(); document.getElementById('modalKegiatanTitle').innerText = "Buat Agenda Kegiatan"; new bootstrap.Modal(document.getElementById('modalKegiatan')).show(); }
-    function editKegiatan(id) { let item = APP_DATA.KEGIATAN.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('kegiatan-id').value = item.id; document.getElementById('kegiatan-nama').value = item.nama_kegiatan || ''; document.getElementById('kegiatan-tgl').value = item.tgl ? item.tgl.toString().split('T')[0] : ''; document.getElementById('kegiatan-status').value = item.status || 'Rencana'; document.getElementById('kegiatan-lokasi').value = item.lokasi || ''; document.getElementById('kegiatan-pj').value = item.penanggung_jawab || ''; updateDatalistWarga(); document.getElementById('modalKegiatanTitle').innerText = "Edit Agenda Kegiatan"; new bootstrap.Modal(document.getElementById('modalKegiatan')).show(); }
-    document.getElementById('form-kegiatan').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('KEGIATAN', { id: document.getElementById('kegiatan-id').value, nama_kegiatan: document.getElementById('kegiatan-nama').value, tgl: document.getElementById('kegiatan-tgl').value, status: document.getElementById('kegiatan-status').value, lokasi: document.getElementById('kegiatan-lokasi').value, penanggung_jawab: document.getElementById('kegiatan-pj').value }); bootstrap.Modal.getInstance(document.getElementById('modalKegiatan'))?.hide(); showToast('Agenda Disimpan'); });
-
-    /* WARGA FORM */
-    function openFormWarga() { document.getElementById('form-warga').reset(); document.getElementById('warga-id').value = ''; document.getElementById('modalWargaTitle').innerText = "Tambah Data Warga"; new bootstrap.Modal(document.getElementById('modalWarga')).show(); }
-    function editWarga(id) { let item = APP_DATA.WARGA.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('warga-id').value = item.id; document.getElementById('warga-nama').value = item.nama || ''; document.getElementById('warga-rumah').value = item.no_rumah || ''; document.getElementById('warga-wa').value = item.no_wa || ''; document.getElementById('modalWargaTitle').innerText = "Edit Data Warga"; new bootstrap.Modal(document.getElementById('modalWarga')).show(); }
-    document.getElementById('form-warga').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('WARGA', { id: document.getElementById('warga-id').value, nama: document.getElementById('warga-nama').value, no_rumah: document.getElementById('warga-rumah').value, no_wa: document.getElementById('warga-wa').value }); bootstrap.Modal.getInstance(document.getElementById('modalWarga'))?.hide(); showToast('Warga Disimpan'); });
-
-    function openPrintModal(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if (!item) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let kehadiran = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama); document.getElementById('print-area').innerHTML = `<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3"><div class="d-flex align-items-center gap-3"><img src="icon-192.png" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;" onerror="this.style.display='none'"><div><h4 class="fw-bold mb-0 text-dark">RUKUN TETANGGA (${rt})</h4><p class="mb-0 text-muted small fw-semibold">${desa.toUpperCase()}</p></div></div><div class="text-end"><span class="badge bg-light text-dark border px-2 py-1">Versi: ${APP_VERSION}</span></div></div><table class="table table-sm table-borderless mb-3 small"><tr><td width="130" class="fw-bold">Agenda</td><td>: ${item.agenda}</td></tr><tr><td class="fw-bold">Tanggal</td><td>: ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '| ' + item.waktu : ''}</td></tr><tr><td class="fw-bold">Tempat</td><td>: ${item.tempat || '-'}</td></tr><tr><td class="fw-bold">Pimpinan Rapat</td><td>: ${item.pimpinan || '-'}</td></tr><tr><td class="fw-bold">Notulis</td><td>: ${item.notulis || '-'}</td></tr></table><div class="mb-3"><h6 class="fw-bold border-bottom pb-1">I. PEMBAHASAN & URAIAN</h6><p class="small text-secondary" style="white-space: pre-line;">${item.pembahasan || '-'}</p></div><div class="mb-3"><h6 class="fw-bold border-bottom pb-1">II. KEPUTUSAN MUSYAWARAH</h6><p class="small text-secondary" style="white-space: pre-line;">${item.keputusan || '-'}</p></div><div class="mb-4"><h6 class="fw-bold border-bottom pb-1">III. DAFTAR HADIR (${kehadiran.length} Org)</h6><p class="small text-secondary">${kehadiran.length > 0 ? kehadiran.join(', ') : 'Belum ada presensi'}</p></div><div class="row text-center mt-5 small"><div class="col-6">Pimpinan Rapat,<br><br><br><b>(${item.pimpinan || 'Ketua RT'})</b></div><div class="col-6">Notulis,<br><br><br><b>(${item.notulis || 'Sekretaris'})</b></div></div>`; new bootstrap.Modal(document.getElementById('modalCetak')).show(); }
-
-    async function saveLocalAndSync(table, data) {
-      if (!APP_DATA[table]) APP_DATA[table] = [];
-      if (!data.id || data.id === '') { 
-        data.id = table.substring(0,3) + '-' + new Date().getTime(); 
-        APP_DATA[table].push(data); 
-      } else { 
-        let idx = APP_DATA[table].findIndex(x => String(x.id) === String(data.id)); 
-        if (idx !== -1) APP_DATA[table][idx] = { ...APP_DATA[table][idx], ...data }; 
-        else APP_DATA[table].push(data); 
-      }
-      localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
-      renderUI(); if (table === 'REGU') renderReguList(); if (table === 'ANGGARAN') renderRabList();
-      if (API_URL) { try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'save', table: table, data: data }) }); setTimeout(syncData, 500); } catch (e) { console.warn('Offline Mode'); } }
-    }
-    
-    function deleteItem(table, id) { customConfirm('Yakin ingin menghapus data ini?', async () => { if (APP_DATA[table]) { APP_DATA[table] = APP_DATA[table].filter(x => String(x.id) !== String(id)); localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); renderUI(); if (table === 'ANGGARAN') renderRabList(); if (table === 'REGU') renderReguList(); showToast('Data dihapus', 'info'); } if (API_URL) { try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', table: table, data: { id: id } }) }); } catch (e) {} } }); }
-    
-    async function syncData() { if (!API_URL) return; let sb = document.getElementById('sync-status'); if (sb) { sb.className = 'badge bg-warning text-dark d-none'; sb.innerText = 'Menyingkronkan...'; } try { let res = await fetch(API_URL + '?action=sync'); let json = await res.json(); if (json.status === 'success') { let c = APP_DATA.SETTINGS; APP_DATA = json.data; if (!APP_DATA.SETTINGS) APP_DATA.SETTINGS = c; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); renderUI(); if (sb) { sb.className = 'badge bg-success d-none'; sb.innerText = 'Tersinkronisasi'; } } } catch (err) { if (sb) { sb.className = 'badge bg-secondary d-none'; sb.innerText = 'Modus Offline'; } } }
-  </script>
-</body>
-</html>
+        html += `<div class="col-6 pres
