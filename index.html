@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.9.2</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.9.3</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -114,13 +114,13 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.2</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.3</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
         </span>
         <div class="d-flex align-items-center gap-2">
-          <button id="btn-sync" class="btn btn-sm btn-light rounded-circle shadow-sm" onclick="syncData()" title="Sinkronkan Data">
+          <button id="btn-sync" class="btn btn-sm btn-light rounded-circle shadow-sm" onclick="syncData()" title="Sinkronkan Data Manual">
             <i class="bi bi-arrow-repeat text-primary-custom"></i>
           </button>
           <button class="btn btn-sm btn-light rounded-circle shadow-sm" onclick="logoutApp()" title="Log Out">
@@ -265,7 +265,7 @@
 
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.2</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.3</span></div>
       </div>
     </div>
 
@@ -322,7 +322,7 @@
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
           Powered By Ari GPM • 
-          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.9.2</span>
+          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.9.3</span>
         </div>
       </div>
     </div>
@@ -429,7 +429,7 @@
   <!-- SCRIPT LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.9.2";
+    const APP_VERSION = "v3.9.3";
     
     // URL GS TERBARU
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
@@ -452,14 +452,12 @@
     function showToast(title, icon = 'success') { Swal.fire({ toast: true, position: 'top-end', icon: icon, title: title, showConfirmButton: false, timer: 2000, timerProgressBar: true }); }
     function customConfirm(message, callback) { Swal.fire({ title: 'Konfirmasi', text: message, icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#6c757d', confirmButtonText: 'Ya, Lanjutkan', cancelButtonText: 'Batal', borderRadius: '15px' }).then((result) => { if (result.isConfirmed) { callback(); } }); }
 
-    // FUNGSI PENUTUP MODAL SUPER AMAN (Mencegah Layar Macet)
     function hideModalSafe(modalId) {
       const el = document.getElementById(modalId);
       if (!el) return;
       const m = bootstrap.Modal.getInstance(el);
       if (m) { m.hide(); } else { bootstrap.Modal.getOrCreateInstance(el).hide(); }
       
-      // Keamanan ekstra untuk memastikan backdrop hilang
       setTimeout(() => {
         if (!document.querySelector('.modal.show')) {
           document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
@@ -703,7 +701,7 @@
         sessionStorage.setItem('rt_app_authenticated', 'true'); 
         document.getElementById('pin-login-error').style.display = 'none'; 
         inputEl.value = ''; 
-        hideModalSafe('modalPinLogin'); // PENGGUNAAN FUNGSI AMAN
+        hideModalSafe('modalPinLogin');
       } else { 
         document.getElementById('pin-login-error').style.display = 'block'; 
       } 
@@ -938,7 +936,7 @@
       `).join('');
     }
 
-    /* REGU KELOMPOK KERJA MULTI / BANYAK REGU - LOGIKA BARU */
+    /* REGU KELOMPOK KERJA MULTI / BANYAK REGU */
     function openModalRegu(idKegiatan) { 
       currentReguKegiatanId = idKegiatan; 
       let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan)); 
@@ -951,11 +949,7 @@
 
     function resetFormReguBaru() {
       document.getElementById('form-regu-item').reset(); 
-      
-      // LOGIKA KUNCI MULTI REGU: Pastikan ID ini selalu kosong saat mereset form
-      // Sehingga data yang disimpan tidak menimpa data yang sudah ada, melainkan membuat ID regu baru
       document.getElementById('regu-id').value = ''; 
-      
       document.getElementById('btn-submit-regu').innerText = '+ Simpan & Tambah Regu Lainnya'; 
       
       let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(currentReguKegiatanId)); 
@@ -999,7 +993,7 @@
     function editReguItem(idRegu) { 
       let item = APP_DATA.REGU.find(r => String(r.id) === String(idRegu)); 
       if(!item) return; 
-      document.getElementById('regu-id').value = item.id; // Menyimpan ID regu yang akan diedit
+      document.getElementById('regu-id').value = item.id; 
       document.getElementById('regu-nama-input').value = item.nama_regu || ''; 
       document.getElementById('regu-tgl-input').value = item.tgl ? item.tgl.split('T')[0] : ''; 
       document.getElementById('regu-jam-input').value = item.jam || '08:00'; 
@@ -1010,7 +1004,7 @@
 
     document.getElementById('form-regu-item').addEventListener('submit', function(e) { 
       e.preventDefault(); 
-      let rId = document.getElementById('regu-id').value; // Mengambil ID yang tersembunyi
+      let rId = document.getElementById('regu-id').value; 
       let existingAnggota = []; 
       
       if (rId) { 
@@ -1019,7 +1013,7 @@
       } 
       
       let newItem = { 
-        id: rId, // Jika rId KOSONG, maka fungsi saveLocalAndSync otomatis MEMBUAT ID BARU (multi-regu bekerja)
+        id: rId, 
         id_kegiatan: currentReguKegiatanId, 
         nama_regu: document.getElementById('regu-nama-input').value, 
         tgl: document.getElementById('regu-tgl-input').value, 
@@ -1030,8 +1024,8 @@
       }; 
       
       saveLocalAndSync('REGU', newItem); 
-      resetFormReguBaru(); // Otomatis mengosongkan regu-id kembali
-      renderReguList(); // Update tampilan daftar
+      resetFormReguBaru(); 
+      renderReguList(); 
       showToast('Regu berhasil disimpan!'); 
     });
 
@@ -1085,7 +1079,18 @@
     function filterPresensiWarga() { let q = (document.getElementById('presensi-search-warga').value || '').toLowerCase(); document.querySelectorAll('.presensi-item').forEach(item => { item.style.display = (item.getAttribute('data-search') || '').includes(q) ? 'block' : 'none'; }); }
     function updatePresensiCount() { document.getElementById('presensi-count').innerText = document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').length; }
     function selectAllPresensi(st) { document.querySelectorAll('#presensi-checklist-container .presensi-item').forEach(item => { if (item.style.display !== 'none') { let chk = item.querySelector('input[type="checkbox"]'); if (chk) chk.checked = st; } }); updatePresensiCount(); }
-    async function savePresensi() { let selId = document.getElementById('presensi-agenda-select').value; APP_DATA.KEHADIRAN = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) !== String(selId)); document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').forEach(chk => { saveLocalAndSync('KEHADIRAN', { id_kegiatan: selId, nama: chk.value, status_hadir: 'Hadir Manual', waktu: new Date().toLocaleTimeString('id-ID') }); }); localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); hideModalSafe('modalPresensi'); showToast('Daftar Hadir Disimpan!'); }
+    
+    async function savePresensi() { 
+      let selId = document.getElementById('presensi-agenda-select').value; 
+      APP_DATA.KEHADIRAN = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) !== String(selId)); 
+      document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').forEach(chk => { 
+        saveLocalAndSync('KEHADIRAN', { id_kegiatan: selId, nama: chk.value, status_hadir: 'Hadir Manual', waktu: new Date().toLocaleTimeString('id-ID') }); 
+      }); 
+      localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); 
+      hideModalSafe('modalPresensi'); 
+      showToast('Daftar Hadir Disimpan!'); 
+    }
+    
     function shareWA(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if (!item) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama); let txt = `📢 *HASIL MUSYAWARAH RT*\n🏛️ *${rt} - ${desa}*\n━━━━━━━━━━━━━━━━━━━━━\n📌 *Agenda:* ${item.agenda}\n📅 *Tgl:* ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '(' + item.waktu + ')' : ''}\n📍 *Tempat:* ${item.tempat || '-'}\n👤 *Pimpinan:* ${item.pimpinan || '-'}\n✍️ *Notulis:* ${item.notulis || '-'}\n━━━━━━━━━━━━━━━━━━━━━\n\n👥 *DAFTAR HADIR (${kehadiranList.length} KK):*\n`; if (kehadiranList.length > 0) txt += `${kehadiranList.map((n, i) => `  ${i+1}. ${n}`).join('\n')}\n\n`; else txt += `_Belum ada presensi_\n\n`; txt += `💡 *PEMBAHASAN:*\n${item.pembahasan || '-'}\n\n✅ *KEPUTUSAN FINAL:* \n${item.keputusan || '-'}\n\n_Dibuat via Aplikasi Notulen RT (${APP_VERSION}) | Powered By Ari GPM_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
 
     /* NOTULEN FORM */
@@ -1105,24 +1110,72 @@
 
     function openPrintModal(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if (!item) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let kehadiran = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama); document.getElementById('print-area').innerHTML = `<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3"><div class="d-flex align-items-center gap-3"><img src="icon-192.png" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;" onerror="this.style.display='none'"><div><h4 class="fw-bold mb-0 text-dark">RUKUN TETANGGA (${rt})</h4><p class="mb-0 text-muted small fw-semibold">${desa.toUpperCase()}</p></div></div><div class="text-end"><span class="badge bg-light text-dark border px-2 py-1">Versi: ${APP_VERSION}</span></div></div><table class="table table-sm table-borderless mb-3 small"><tr><td width="130" class="fw-bold">Agenda</td><td>: ${item.agenda}</td></tr><tr><td class="fw-bold">Tanggal</td><td>: ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '| ' + item.waktu : ''}</td></tr><tr><td class="fw-bold">Tempat</td><td>: ${item.tempat || '-'}</td></tr><tr><td class="fw-bold">Pimpinan Rapat</td><td>: ${item.pimpinan || '-'}</td></tr><tr><td class="fw-bold">Notulis</td><td>: ${item.notulis || '-'}</td></tr></table><div class="mb-3"><h6 class="fw-bold border-bottom pb-1">I. PEMBAHASAN & URAIAN</h6><p class="small text-secondary" style="white-space: pre-line;">${item.pembahasan || '-'}</p></div><div class="mb-3"><h6 class="fw-bold border-bottom pb-1">II. KEPUTUSAN MUSYAWARAH</h6><p class="small text-secondary" style="white-space: pre-line;">${item.keputusan || '-'}</p></div><div class="mb-4"><h6 class="fw-bold border-bottom pb-1">III. DAFTAR HADIR (${kehadiran.length} Org)</h6><p class="small text-secondary">${kehadiran.length > 0 ? kehadiran.join(', ') : 'Belum ada presensi'}</p></div><div class="row text-center mt-5 small"><div class="col-6">Pimpinan Rapat,<br><br><br><b>(${item.pimpinan || 'Ketua RT'})</b></div><div class="col-6">Notulis,<br><br><br><b>(${item.notulis || 'Sekretaris'})</b></div></div>`; new bootstrap.Modal(document.getElementById('modalCetak')).show(); }
 
+    // =========================================================================================
+    // FUNGSI INTI YANG DIPERBAIKI: Hapus pemanggilan Auto-Sync background yg menimpa data baru
+    // =========================================================================================
     async function saveLocalAndSync(table, data) {
       if (!APP_DATA[table]) APP_DATA[table] = [];
+      
       if (!data.id || data.id === '') { 
-        data.id = table.substring(0,3) + '-' + new Date().getTime(); 
+        // Tambahkan pengacak (Math.random) agar ID lebih unik saat ditekan beruntun cepat
+        data.id = table.substring(0,3) + '-' + new Date().getTime() + Math.floor(Math.random()*1000); 
         APP_DATA[table].push(data); 
       } else { 
         let idx = APP_DATA[table].findIndex(x => String(x.id) === String(data.id)); 
         if (idx !== -1) APP_DATA[table][idx] = { ...APP_DATA[table][idx], ...data }; 
         else APP_DATA[table].push(data); 
       }
+      
       localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
-      renderUI(); if (table === 'REGU') renderReguList(); if (table === 'ANGGARAN') renderRabList();
-      if (API_URL) { try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'save', table: table, data: data }) }); setTimeout(syncData, 500); } catch (e) { console.warn('Offline Mode'); } }
+      renderUI(); 
+      if (table === 'REGU') renderReguList(); 
+      if (table === 'ANGGARAN') renderRabList();
+      
+      // Kirim POST secara diam-diam. Tidak ada auto syncData() lagi setelah ini.
+      if (API_URL) { 
+        try { 
+          fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'save', table: table, data: data }) })
+          .catch(e => console.log('Offline pending.')); 
+        } catch (e) { console.warn('Offline Mode'); } 
+      }
     }
     
-    function deleteItem(table, id) { customConfirm('Yakin ingin menghapus data ini?', async () => { if (APP_DATA[table]) { APP_DATA[table] = APP_DATA[table].filter(x => String(x.id) !== String(id)); localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); renderUI(); if (table === 'ANGGARAN') renderRabList(); if (table === 'REGU') renderReguList(); showToast('Data dihapus', 'info'); } if (API_URL) { try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', table: table, data: { id: id } }) }); } catch (e) {} } }); }
+    function deleteItem(table, id) { 
+      customConfirm('Yakin ingin menghapus data ini?', async () => { 
+        if (APP_DATA[table]) { 
+          APP_DATA[table] = APP_DATA[table].filter(x => String(x.id) !== String(id)); 
+          localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); 
+          renderUI(); 
+          if (table === 'ANGGARAN') renderRabList(); 
+          if (table === 'REGU') renderReguList(); 
+          showToast('Data dihapus', 'info'); 
+        } 
+        if (API_URL) { 
+          try { 
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', table: table, data: { id: id } }) })
+            .catch(e => console.log(e)); 
+          } catch (e) {} 
+        } 
+      }); 
+    }
     
-    async function syncData() { if (!API_URL) return; let sb = document.getElementById('sync-status'); if (sb) { sb.className = 'badge bg-warning text-dark d-none'; sb.innerText = 'Menyingkronkan...'; } try { let res = await fetch(API_URL + '?action=sync'); let json = await res.json(); if (json.status === 'success') { let c = APP_DATA.SETTINGS; APP_DATA = json.data; if (!APP_DATA.SETTINGS) APP_DATA.SETTINGS = c; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); renderUI(); if (sb) { sb.className = 'badge bg-success d-none'; sb.innerText = 'Tersinkronisasi'; } } } catch (err) { if (sb) { sb.className = 'badge bg-secondary d-none'; sb.innerText = 'Modus Offline'; } } }
+    async function syncData() { 
+      if (!API_URL) return; 
+      let sb = document.getElementById('sync-status'); 
+      if (sb) { sb.className = 'badge bg-warning text-dark d-none'; sb.innerText = 'Menyingkronkan...'; } 
+      try { 
+        let res = await fetch(API_URL + '?action=sync'); 
+        let json = await res.json(); 
+        if (json.status === 'success') { 
+          let c = APP_DATA.SETTINGS; APP_DATA = json.data; if (!APP_DATA.SETTINGS) APP_DATA.SETTINGS = c; 
+          localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); 
+          renderUI(); 
+          if (sb) { sb.className = 'badge bg-success d-none'; sb.innerText = 'Tersinkronisasi'; } 
+        } 
+      } catch (err) { 
+        if (sb) { sb.className = 'badge bg-secondary d-none'; sb.innerText = 'Modus Offline'; } 
+      } 
+    }
   </script>
 </body>
 </html>
