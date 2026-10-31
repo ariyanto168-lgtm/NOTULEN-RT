@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.8.6</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.8.7</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -82,7 +82,6 @@
 
     #qrcode-box img { margin: 0 auto; border: 10px solid #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
     
-    /* Style Kamera Scanner */
     #scanner-reader-container {
       width: 100%; max-width: 380px; margin: 0 auto; background: #000;
       border-radius: 16px; overflow: hidden; border: 2px solid var(--primary-color);
@@ -114,7 +113,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.8.6</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.8.7</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -171,9 +170,13 @@
           </div>
         </div>
         
-        <!-- REKAP KEHADIRAN RAPAT / AGENDA TERBARU -->
-        <h6 class="fw-bold text-muted mb-2"><i class="bi bi-bar-chart-fill me-1"></i> Rekap Kehadiran Rapat & Agenda Terbaru</h6>
-        <div id="dashboard-recent-presensi" class="mb-4"></div>
+        <!-- KARTU 1: REKAP KEHADIRAN RAPAT TERBARU -->
+        <h6 class="fw-bold text-muted mb-2"><i class="bi bi-bar-chart-fill me-1"></i> Rekap Kehadiran Rapat Terbaru</h6>
+        <div id="dashboard-recent-presensi-rapat" class="mb-3"></div>
+
+        <!-- KARTU 2: REKAP KEHADIRAN AGENDA / KEGIATAN TERBARU -->
+        <h6 class="fw-bold text-muted mb-2"><i class="bi bi-calendar-check-fill me-1"></i> Rekap Kehadiran Agenda Kegiatan Terbaru</h6>
+        <div id="dashboard-recent-presensi-kegiatan" class="mb-4"></div>
 
         <h6 class="fw-bold text-muted mb-2">Notulen Musyawarah Terbaru</h6>
         <div id="dashboard-recent-notulen"></div>
@@ -263,7 +266,7 @@
 
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.8.6</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.8.7</span></div>
       </div>
     </div>
 
@@ -293,7 +296,6 @@
           <small class="text-muted" style="font-size: 0.7rem;">Ketik nama atau nomor rumah Anda, lalu pilih dari daftar.</small>
         </div>
         
-        <!-- Agenda & Kegiatan Tergabung agar Bisa Dipilih Untuk Scan -->
         <div class="mb-3">
           <label class="form-label small fw-bold text-info mb-1"><i class="bi bi-journal-text me-1"></i> 2. Pilih Agenda Rapat / Regu Kerja</label>
           <input type="text" id="scanner-agenda-input" class="form-control rounded-pill bg-light text-dark fw-bold" list="dl-scanner-agenda" placeholder="🔍 Pilih atau cari agenda rapat/kegiatan...">
@@ -323,7 +325,7 @@
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
           Powered By Ari GPM • 
-          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.8.6</span>
+          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.8.7</span>
         </div>
       </div>
     </div>
@@ -431,7 +433,7 @@
   <!-- SCRIPT LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.8.6";
+    const APP_VERSION = "v3.8.7";
     
     // URL GS TERBARU
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
@@ -484,7 +486,7 @@
     });
 
     /* ========================================================================= */
-    /* LOGIKA SCANNER WARGA (MENGGABUNGKAN NOTULEN & KEGIATAN AGENDA)            */
+    /* LOGIKA SCANNER WARGA                                                      */
     /* ========================================================================= */
     let html5QrcodeScanner = null;
     let scannerAppData = { NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], REGU: [] };
@@ -512,7 +514,6 @@
             dlWarga.innerHTML = w.map(x => `<option value="${x.nama} (${x.no_rumah || '-'})" data-realname="${x.nama}"></option>`).join('');
           }
 
-          // Gabungkan Notulen & Kegiatan Agenda agar user bisa memilih keduanya untuk scan
           let nList = [...(scannerAppData.NOTULEN || [])].map(n => ({ id: n.id, title: n.agenda, date: n.tgl_rapat }));
           let kList = [...(scannerAppData.KEGIATAN || [])].map(k => ({ id: k.id, title: k.nama_kegiatan, date: k.tgl }));
           let combinedAgenda = [...nList, ...kList].reverse();
@@ -581,7 +582,7 @@
             { facingMode: "environment" },
             { fps: 15, qrbox: { width: 250, height: 250 } },
             (decodedText) => { stopScannerNative(); processScanResult(decodedText, namaWarga, idAgenda); },
-            (errorMessage) => { /* abaikan error frame */ }
+            (errorMessage) => {}
           );
         } catch(err) {
           try {
@@ -592,7 +593,7 @@
               (errorMessage) => {}
             );
           } catch(e2) {
-            showAlert('Kamera Error', 'Kamera tidak dapat diakses. Pastikan browser memiliki izin (Permission) untuk menggunakan kamera.', 'error');
+            showAlert('Kamera Error', 'Kamera tidak dapat diakses. Pastikan browser memiliki izin untuk menggunakan kamera.', 'error');
             stopScanner();
           }
         }
@@ -789,40 +790,65 @@
       let elWarga = document.getElementById('stat-warga'); if(elWarga) elWarga.innerText = APP_DATA.WARGA ? APP_DATA.WARGA.length : 0;
 
       // =========================================================================
-      // REKAP KEHADIRAN RAPAT & AGENDA TERBARU (DENGAN NAMA WARGA LENGKAP)
+      // KARTU 1: REKAP KEHADIRAN RAPAT TERBARU (TERPISAH)
       // =========================================================================
-      let presensiContainer = document.getElementById('dashboard-recent-presensi');
-      if (presensiContainer) {
+      let presensiRapatContainer = document.getElementById('dashboard-recent-presensi-rapat');
+      if (presensiRapatContainer) {
         let allNotulen = APP_DATA.NOTULEN || [];
-        let allKegiatan = APP_DATA.KEGIATAN || [];
-        
-        // Ambil agenda terbaru (gabungan notulen & kegiatan)
-        let lastAgenda = allNotulen.length > 0 ? allNotulen[allNotulen.length - 1] : (allKegiatan.length > 0 ? allKegiatan[allKegiatan.length - 1] : null);
-        
-        if (!lastAgenda) {
-          presensiContainer.innerHTML = `<div class="card card-custom p-3 text-center text-muted small border bg-light">Belum ada data rapat atau agenda kegiatan.</div>`;
+        if (allNotulen.length === 0) {
+          presensiRapatContainer.innerHTML = `<div class="card card-custom p-3 text-center text-muted small border bg-light">Belum ada data notulen rapat.</div>`;
         } else {
-          let agendaId = lastAgenda.id;
-          let agendaTitle = lastAgenda.agenda || lastAgenda.nama_kegiatan || 'Agenda Utama';
-          let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(agendaId)).map(k => k.nama);
+          let lastRapat = allNotulen[allNotulen.length - 1];
+          let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(lastRapat.id)).map(k => k.nama);
           let totalWarga = APP_DATA.WARGA ? APP_DATA.WARGA.length : 0;
           let persentase = totalWarga === 0 ? 0 : Math.round((kehadiranList.length / totalWarga) * 100);
           
-          let daftarNamaHtml = '';
-          if (kehadiranList.length > 0) {
-            daftarNamaHtml = `<div class="mt-2 pt-2 border-top border-warning-subtle small"><strong class="text-dark d-block mb-1">Daftar Warga/KK yang Sudah Absen:</strong><div class="d-flex flex-wrap gap-1">${kehadiranList.map(nama => `<span class="badge bg-warning text-dark border border-warning">${nama}</span>`).join('')}</div></div>`;
-          } else {
-            daftarNamaHtml = `<div class="mt-2 pt-2 border-top border-warning-subtle small text-muted">Belum ada warga yang melakukan presensi pada agenda ini.</div>`;
-          }
+          let daftarNamaHtml = kehadiranList.length > 0 
+            ? `<div class="mt-2 pt-2 border-top border-warning-subtle small"><strong class="text-dark d-block mb-1">Daftar Warga/KK yang Sudah Absen:</strong><div class="d-flex flex-wrap gap-1">${kehadiranList.map(nama => `<span class="badge bg-warning text-dark border border-warning">${nama}</span>`).join('')}</div></div>`
+            : `<div class="mt-2 pt-2 border-top border-warning-subtle small text-muted">Belum ada warga yang absen pada rapat ini.</div>`;
 
-          presensiContainer.innerHTML = `
+          presensiRapatContainer.innerHTML = `
             <div class="card card-custom p-3 border-start border-warning border-4 bg-warning bg-opacity-10 shadow-sm">
               <div class="d-flex justify-content-between align-items-center mb-1">
-                <h6 class="fw-bold mb-0 text-dark text-truncate" style="max-width: 70%;">${agendaTitle}</h6>
+                <h6 class="fw-bold mb-0 text-dark text-truncate" style="max-width: 70%;">${lastRapat.agenda}</h6>
                 <span class="badge bg-warning text-dark shadow-sm">${persentase}% Hadir</span>
               </div>
               <div class="progress mt-2 border border-warning" style="height: 10px; background-color: #fef08a;">
                 <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" style="width: ${persentase}%"></div>
+              </div>
+              <small class="text-muted mt-2 d-block"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>
+              ${daftarNamaHtml}
+            </div>
+          `;
+        }
+      }
+
+      // =========================================================================
+      // KARTU 2: REKAP KEHADIRAN AGENDA / KEGIATAN TERBARU (TERPISAH)
+      // =========================================================================
+      let presensiKegiatanContainer = document.getElementById('dashboard-recent-presensi-kegiatan');
+      if (presensiKegiatanContainer) {
+        let allKegiatan = APP_DATA.KEGIATAN || [];
+        if (allKegiatan.length === 0) {
+          presensiKegiatanContainer.innerHTML = `<div class="card card-custom p-3 text-center text-muted small border bg-light">Belum ada data agenda kegiatan.</div>`;
+        } else {
+          let lastKegiatan = allKegiatan[allKegiatan.length - 1];
+          let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(lastKegiatan.id)).map(k => k.nama);
+          let totalWarga = APP_DATA.WARGA ? APP_DATA.WARGA.length : 0;
+          let persentase = totalWarga === 0 ? 0 : Math.round((kehadiranList.length / totalWarga) * 100);
+          
+          let daftarNamaHtml = kehadiranList.length > 0 
+            ? `<div class="mt-2 pt-2 border-top border-success-subtle small"><strong class="text-dark d-block mb-1">Daftar Warga/KK yang Sudah Absen:</strong><div class="d-flex flex-wrap gap-1">${kehadiranList.map(nama => `<span class="badge bg-success text-white border border-success">${nama}</span>`).join('')}</div></div>`
+            : `<div class="mt-2 pt-2 border-top border-success-subtle small text-muted">Belum ada warga yang absen pada kegiatan ini.</div>`;
+
+          presensiKegiatanContainer.innerHTML = `
+            <div class="card card-custom p-3 border-start border-success border-4 bg-success bg-opacity-10 shadow-sm">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <h6 class="fw-bold mb-0 text-dark text-truncate" style="max-width: 70%;">${lastKegiatan.nama_kegiatan}</h6>
+                <span class="badge bg-success text-white shadow-sm">${persentase}% Hadir</span>
+              </div>
+              <div class="progress mt-2 border border-success" style="height: 10px; background-color: #d1fae5;">
+                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: ${persentase}%"></div>
               </div>
               <small class="text-muted mt-2 d-block"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>
               ${daftarNamaHtml}
