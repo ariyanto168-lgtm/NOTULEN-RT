@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.9.3</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.9.4</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -114,7 +114,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.3</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.4</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -265,7 +265,7 @@
 
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.3</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.4</span></div>
       </div>
     </div>
 
@@ -303,10 +303,14 @@
           <small class="text-muted" style="font-size: 0.7rem;">Agenda rapat & kegiatan kerja terbaru otomatis tersedia.</small>
         </div>
 
-        <label class="form-label small fw-bold text-info mb-1">3. Scan Master QR Permanen</label>
-        <button id="btn-start-scan" class="btn btn-info w-100 rounded-pill fw-bold text-white py-3 shadow" onclick="startScanner()">
-          <i class="bi bi-camera-fill me-2 fs-5"></i>Buka Kamera & Scan QR RT
-        </button>
+        <label class="form-label small fw-bold text-info mb-1" id="label-step-3">3. Scan Master QR Permanen</label>
+        
+        <!-- BAGIAN INI DIPERBAIKI UNTUK LOCK FITUR SCAN -->
+        <div id="btn-scan-container">
+          <button id="btn-start-scan" class="btn btn-info w-100 rounded-pill fw-bold text-white py-3 shadow" onclick="startScanner()">
+            <i class="bi bi-camera-fill me-2 fs-5"></i>Buka Kamera & Scan QR RT
+          </button>
+        </div>
       </div>
 
       <div id="scanner-reader-container" style="display:none; max-width: 400px; margin: 0 auto;" class="mb-3">
@@ -322,7 +326,7 @@
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
           Powered By Ari GPM • 
-          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.9.3</span>
+          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.9.4</span>
         </div>
       </div>
     </div>
@@ -429,7 +433,7 @@
   <!-- SCRIPT LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.9.3";
+    const APP_VERSION = "v3.9.4";
     
     // URL GS TERBARU
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
@@ -488,13 +492,43 @@
     });
 
     /* ========================================================================= */
-    /* LOGIKA SCANNER WARGA                                                      */
+    /* LOGIKA SCANNER WARGA - DENGAN LOCK SYSTEM                                 */
     /* ========================================================================= */
     let html5QrcodeScanner = null;
     let scannerAppData = { NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], REGU: [] };
     let scannerApiUrl = ""; 
     
     async function initScannerWarga() {
+      // CEK APAKAH PERANGKAT INI SUDAH ABSEN (TERKUNCI)
+      let sessionScanner = localStorage.getItem('rt_scanner_session');
+      if (sessionScanner) {
+         let sessionData = JSON.parse(sessionScanner);
+         document.getElementById('scanner-warga-input').value = sessionData.namaWarga;
+         document.getElementById('scanner-warga-input').disabled = true;
+         document.getElementById('scanner-agenda-input').disabled = true;
+         document.getElementById('label-step-3').innerText = "3. Sesi Absen Terkunci";
+         
+         document.getElementById('btn-scan-container').innerHTML = `
+           <div class="alert alert-dark border-success bg-black text-center mb-0">
+             <i class="bi bi-check-circle-fill text-success fs-2 mb-2 d-block"></i>
+             <h6 class="text-white fw-bold">Sesi Anda Tersimpan</h6>
+             <small class="text-muted d-block mb-3">Sdr/i ${sessionData.namaWarga} sudah login di perangkat ini.</small>
+             <button class="btn btn-outline-info w-100 rounded-pill fw-bold" onclick="showDirectTaskView('${sessionData.idAgenda}', '${sessionData.namaWarga}')">
+               Lihat Detail Tugas/Agenda
+             </button>
+           </div>
+         `;
+         // Tarik data background
+         scannerApiUrl = API_URL;
+         try {
+           let res = await fetch(scannerApiUrl + '?action=sync');
+           let json = await res.json();
+           if (json.status === 'success') scannerAppData = json.data;
+         } catch(e){}
+         return; // Hentikan eksekusi normal
+      }
+
+      // ALUR NORMAL JIKA BELUM ABSEN
       let dlWarga = document.getElementById('dl-scanner-warga');
       let dlAgenda = document.getElementById('dl-scanner-agenda');
       let inWarga = document.getElementById('scanner-warga-input');
@@ -547,6 +581,12 @@
       }
     }
 
+    // FUNGSI UNTUK MENAMPILKAN TASK VIEW DARI SESI YG TERKUNCI
+    function showDirectTaskView(idAgenda, namaWarga) {
+      document.getElementById('scanner-status').style.display = 'none';
+      renderWargaTaskDetail(idAgenda, namaWarga);
+    }
+
     async function startScanner() {
       try {
         let inWargaVal = document.getElementById('scanner-warga-input').value.trim();
@@ -571,7 +611,7 @@
         
         let readerContainer = document.getElementById('scanner-reader-container');
         readerContainer.style.display = 'block';
-        document.getElementById('btn-start-scan').style.display = 'none';
+        document.getElementById('btn-scan-container').style.display = 'none';
         
         if(!html5QrcodeScanner) html5QrcodeScanner = new Html5Qrcode("scanner-reader"); 
         
@@ -602,7 +642,7 @@
     }
 
     function stopScannerNative() { try { if(html5QrcodeScanner) html5QrcodeScanner.stop().catch(e=>console.log(e)); } catch(e){} }
-    function stopScanner() { stopScannerNative(); document.getElementById('scanner-reader-container').style.display = 'none'; document.getElementById('btn-start-scan').style.display = 'block'; }
+    function stopScanner() { stopScannerNative(); document.getElementById('scanner-reader-container').style.display = 'none'; document.getElementById('btn-scan-container').style.display = 'block'; }
 
     async function processScanResult(qrText, namaWarga, idAgenda) {
       let parts = qrText.split('|');
@@ -611,7 +651,7 @@
 
       if (parts.length !== 2 || parts[0] !== 'NOTULENRT_MASTER') {
         statusBox.innerHTML = "<span class='text-danger fw-bold'>❌ QR Code Tidak Valid. Harap scan Master QR resmi RT!</span>";
-        document.getElementById('btn-start-scan').style.display = 'block'; return;
+        document.getElementById('btn-scan-container').style.display = 'block'; return;
       }
       statusBox.innerHTML = "<div class='spinner-border spinner-border-sm text-info me-2'></div> Memeriksa data...";
       
@@ -626,7 +666,10 @@
         if (existingHadir) {
           statusBox.className = "alert alert-dark border-warning mx-auto text-center py-3 bg-black text-white";
           statusBox.innerHTML = `<h6 class='fw-bold text-warning mb-1'><i class='bi bi-exclamation-triangle-fill'></i> Sudah Absen!</h6><small class='text-light'>Sdr/i <b>${namaWarga}</b> tercatat sudah melakukan presensi sebelumnya.</small><button class='btn btn-sm btn-outline-light mt-3 w-100 rounded-pill' onclick='location.reload()'>Selesai</button>`;
-          document.getElementById('btn-start-scan').style.display = 'none';
+          
+          // LOCK SESSION
+          localStorage.setItem('rt_scanner_session', JSON.stringify({namaWarga: namaWarga, idAgenda: idAgenda}));
+          
           renderWargaTaskDetail(idAgenda, namaWarga);
           return;
         }
@@ -636,12 +679,15 @@
 
         statusBox.className = "alert alert-dark border-success mx-auto text-center py-3 bg-black text-white";
         statusBox.innerHTML = `<h5 class='fw-bold mb-1 text-success'><i class='bi bi-check-circle-fill'></i> Presensi Berhasil!</h5><small class='text-light'>Terima kasih <b>${namaWarga}</b>, kehadiran Anda telah dikunci di sistem.</small>`;
-        document.getElementById('btn-start-scan').style.display = 'none';
+        
+        // LOCK SESSION AGAR HP INI TIDAK BISA DIPAKAI ORANG LAIN
+        localStorage.setItem('rt_scanner_session', JSON.stringify({namaWarga: namaWarga, idAgenda: idAgenda}));
+        
         renderWargaTaskDetail(idAgenda, namaWarga);
 
       } catch(e) {
         statusBox.innerHTML = "<span class='text-danger fw-bold'>❌ Gagal mengirim data ke server. Periksa koneksi internet.</span>";
-        document.getElementById('btn-start-scan').style.display = 'block';
+        document.getElementById('btn-scan-container').style.display = 'block';
       }
     }
 
@@ -968,7 +1014,20 @@
         container.innerHTML = `<div class="text-center text-muted small py-3">Belum ada pembagian kelompok. Silakan buat regu di atas.</div>`; 
         return; 
       }
-      container.innerHTML = items.map(item => `
+      
+      // LOGIKA TAMPILKAN NAMA ANGGOTA TIAP REGU
+      container.innerHTML = items.map(item => {
+        let anggotaListHtml = '';
+        if (item.anggota && item.anggota.length > 0) {
+           anggotaListHtml = `<div class="d-flex flex-wrap gap-1 mt-2 mb-2 p-2 bg-light rounded-3 border border-info-subtle">
+             <small class="w-100 fw-bold text-info mb-1" style="font-size:0.7rem;">Daftar Anggota:</small>
+             ${item.anggota.map(a => `<span class="badge bg-white text-dark border shadow-sm">${a}</span>`).join('')}
+           </div>`;
+        } else {
+           anggotaListHtml = `<div class="mt-2 mb-2 p-2 bg-light rounded-3 border border-secondary text-muted small fst-italic">Belum ada anggota.</div>`;
+        }
+        
+        return `
         <div class="card border border-info mb-3 shadow-sm rounded-4">
           <div class="card-body p-3">
             <div class="d-flex justify-content-between align-items-start mb-2 border-bottom border-info-subtle pb-2">
@@ -978,16 +1037,18 @@
                 <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="deleteItem('REGU', '${item.id}')" title="Hapus Regu"><i class="bi bi-trash"></i></button>
               </div>
             </div>
-            <div class="row g-2 small text-muted mb-2">
+            <div class="row g-2 small text-muted mb-1">
               <div class="col-6"><i class="bi bi-calendar me-1"></i>${formatTanggal(item.tgl)}</div>
               <div class="col-6"><i class="bi bi-clock me-1"></i>${item.jam}</div>
               <div class="col-12"><i class="bi bi-geo-alt me-1"></i>${item.lokasi}</div>
               <div class="col-12 fw-bold text-dark"><i class="bi bi-person-badge me-1 text-info"></i>PJ: ${item.koordinator}</div>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-info w-100 rounded-pill fw-bold" onclick="openModalAnggotaRegu('${item.id}')"><i class="bi bi-people-fill me-1"></i>Anggota (${(item.anggota || []).length})</button>
+            ${anggotaListHtml}
+            <button type="button" class="btn btn-sm btn-outline-info w-100 rounded-pill fw-bold" onclick="openModalAnggotaRegu('${item.id}')"><i class="bi bi-people-fill me-1"></i>Kelola Anggota (${(item.anggota || []).length})</button>
           </div>
         </div>
-      `).join('');
+        `;
+      }).join('');
     }
     
     function editReguItem(idRegu) { 
@@ -1029,11 +1090,66 @@
       showToast('Regu berhasil disimpan!'); 
     });
 
-    function openModalAnggotaRegu(idRegu) { currentAnggotaReguId = idRegu; let regu = APP_DATA.REGU.find(r => r.id === idRegu); document.getElementById('anggota-regu-title').innerText = `Target: ${regu.nama_regu}`; document.getElementById('anggota-search-warga').value = ''; let container = document.getElementById('anggota-checklist-container'); if (!APP_DATA.WARGA || APP_DATA.WARGA.length === 0) { container.innerHTML = `<div class="text-center text-muted small py-2">Data warga kosong.</div>`; document.getElementById('anggota-count').innerText = '0'; } else { let html = '<div class="row g-1">'; APP_DATA.WARGA.forEach(w => { let isChecked = (regu.anggota || []).includes(w.nama); html += `<div class="col-6 anggota-item" data-search="${(w.nama + ' ' + (w.no_rumah||'')).toLowerCase()}"><div class="form-check p-1 px-2 border rounded bg-white d-flex align-items-center gap-1 mb-1 shadow-sm"><input class="form-check-input ms-0 me-1" type="checkbox" value="${w.nama}" id="cb-regu-${w.id}" ${isChecked ? 'checked' : ''} onchange="updateAnggotaCount()"><label class="form-check-label small text-truncate fw-semibold" for="cb-regu-${w.id}" style="font-size:0.75rem;">${w.nama} <span class="text-muted fw-normal">(${w.no_rumah||'-'})</span></label></div></div>`; }); html += '</div>'; container.innerHTML = html; updateAnggotaCount(); } new bootstrap.Modal(document.getElementById('modalAnggotaRegu')).show(); }
+    // CEGAH DOUBLE INPUT ANGGOTA
+    function openModalAnggotaRegu(idRegu) { 
+      currentAnggotaReguId = idRegu; 
+      let regu = APP_DATA.REGU.find(r => r.id === idRegu); 
+      document.getElementById('anggota-regu-title').innerText = `Target: ${regu.nama_regu}`; 
+      document.getElementById('anggota-search-warga').value = ''; 
+      let container = document.getElementById('anggota-checklist-container'); 
+      
+      if (!APP_DATA.WARGA || APP_DATA.WARGA.length === 0) { 
+        container.innerHTML = `<div class="text-center text-muted small py-2">Data warga kosong.</div>`; 
+        document.getElementById('anggota-count').innerText = '0'; 
+      } else { 
+        // Ambil semua regu di kegiatan yang sama
+        let allReguInAgenda = (APP_DATA.REGU || []).filter(r => String(r.id_kegiatan) === String(currentReguKegiatanId));
+        
+        let html = '<div class="row g-1">'; 
+        APP_DATA.WARGA.forEach(w => { 
+          let isChecked = (regu.anggota || []).includes(w.nama); 
+          
+          // Cek apakah warga ini sudah masuk di regu LAIN dalam agenda yg SAMA
+          let inOtherRegu = false;
+          let otherReguName = '';
+          allReguInAgenda.forEach(otherR => {
+            if (otherR.id !== idRegu && (otherR.anggota || []).includes(w.nama)) {
+              inOtherRegu = true;
+              otherReguName = otherR.nama_regu;
+            }
+          });
+          
+          if (inOtherRegu) {
+            // Disable checkbox jika sudah di regu lain
+            html += `<div class="col-6 anggota-item" data-search="${(w.nama + ' ' + (w.no_rumah||'')).toLowerCase()}">
+                       <div class="form-check p-1 px-2 border rounded bg-light d-flex flex-column mb-1 shadow-sm opacity-50">
+                         <div class="d-flex align-items-center gap-1">
+                           <input class="form-check-input ms-0 me-1" type="checkbox" disabled>
+                           <label class="form-check-label small text-truncate fw-semibold text-muted" style="font-size:0.75rem;">${w.nama}</label>
+                         </div>
+                         <small class="text-danger" style="font-size: 0.6rem;">Masuk ${otherReguName}</small>
+                       </div>
+                     </div>`;
+          } else {
+            html += `<div class="col-6 anggota-item" data-search="${(w.nama + ' ' + (w.no_rumah||'')).toLowerCase()}">
+                       <div class="form-check p-1 px-2 border rounded bg-white d-flex align-items-center gap-1 mb-1 shadow-sm">
+                         <input class="form-check-input ms-0 me-1 valid-cb" type="checkbox" value="${w.nama}" id="cb-regu-${w.id}" ${isChecked ? 'checked' : ''} onchange="updateAnggotaCount()">
+                         <label class="form-check-label small text-truncate fw-semibold" for="cb-regu-${w.id}" style="font-size:0.75rem;">${w.nama} <span class="text-muted fw-normal">(${w.no_rumah||'-'})</span></label>
+                       </div>
+                     </div>`;
+          }
+        }); 
+        html += '</div>'; 
+        container.innerHTML = html; 
+        updateAnggotaCount(); 
+      } 
+      new bootstrap.Modal(document.getElementById('modalAnggotaRegu')).show(); 
+    }
+    
     function filterAnggotaRegu() { let q = (document.getElementById('anggota-search-warga').value || '').toLowerCase(); document.querySelectorAll('.anggota-item').forEach(item => { item.style.display = (item.getAttribute('data-search') || '').includes(q) ? 'block' : 'none'; }); }
     function updateAnggotaCount() { document.getElementById('anggota-count').innerText = document.querySelectorAll('#anggota-checklist-container input[type="checkbox"]:checked').length; }
-    function selectAllAnggota(status) { document.querySelectorAll('#anggota-checklist-container .anggota-item').forEach(item => { if (item.style.display !== 'none') { let chk = item.querySelector('input[type="checkbox"]'); if (chk) chk.checked = status; } }); updateAnggotaCount(); }
-    function saveAnggotaRegu() { let regu = APP_DATA.REGU.find(r => r.id === currentAnggotaReguId); if(!regu) return; regu.anggota = Array.from(document.querySelectorAll('#anggota-checklist-container input[type="checkbox"]:checked')).map(cb => cb.value); saveLocalAndSync('REGU', regu); hideModalSafe('modalAnggotaRegu'); renderReguList(); showToast('Anggota disave!'); }
+    function selectAllAnggota(status) { document.querySelectorAll('#anggota-checklist-container .anggota-item').forEach(item => { if (item.style.display !== 'none') { let chk = item.querySelector('input[type="checkbox"].valid-cb'); if (chk && !chk.disabled) chk.checked = status; } }); updateAnggotaCount(); }
+    function saveAnggotaRegu() { let regu = APP_DATA.REGU.find(r => r.id === currentAnggotaReguId); if(!regu) return; regu.anggota = Array.from(document.querySelectorAll('#anggota-checklist-container input[type="checkbox"].valid-cb:checked')).map(cb => cb.value); saveLocalAndSync('REGU', regu); hideModalSafe('modalAnggotaRegu'); renderReguList(); showToast('Anggota disave!'); }
 
     /* RAB */
     function openModalRab(idKegiatan) { currentRabKegiatanId = idKegiatan; let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan)); document.getElementById('rab-kegiatan-title').innerText = keg ? keg.nama_kegiatan : ''; document.getElementById('form-rab-item').reset(); document.getElementById('rab-id').value = ''; document.getElementById('btn-submit-rab').innerText = '+ Tambah Ke Anggaran'; renderRabList(); new bootstrap.Modal(document.getElementById('modalRab')).show(); }
@@ -1110,14 +1226,10 @@
 
     function openPrintModal(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if (!item) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let kehadiran = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama); document.getElementById('print-area').innerHTML = `<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3"><div class="d-flex align-items-center gap-3"><img src="icon-192.png" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;" onerror="this.style.display='none'"><div><h4 class="fw-bold mb-0 text-dark">RUKUN TETANGGA (${rt})</h4><p class="mb-0 text-muted small fw-semibold">${desa.toUpperCase()}</p></div></div><div class="text-end"><span class="badge bg-light text-dark border px-2 py-1">Versi: ${APP_VERSION}</span></div></div><table class="table table-sm table-borderless mb-3 small"><tr><td width="130" class="fw-bold">Agenda</td><td>: ${item.agenda}</td></tr><tr><td class="fw-bold">Tanggal</td><td>: ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '| ' + item.waktu : ''}</td></tr><tr><td class="fw-bold">Tempat</td><td>: ${item.tempat || '-'}</td></tr><tr><td class="fw-bold">Pimpinan Rapat</td><td>: ${item.pimpinan || '-'}</td></tr><tr><td class="fw-bold">Notulis</td><td>: ${item.notulis || '-'}</td></tr></table><div class="mb-3"><h6 class="fw-bold border-bottom pb-1">I. PEMBAHASAN & URAIAN</h6><p class="small text-secondary" style="white-space: pre-line;">${item.pembahasan || '-'}</p></div><div class="mb-3"><h6 class="fw-bold border-bottom pb-1">II. KEPUTUSAN MUSYAWARAH</h6><p class="small text-secondary" style="white-space: pre-line;">${item.keputusan || '-'}</p></div><div class="mb-4"><h6 class="fw-bold border-bottom pb-1">III. DAFTAR HADIR (${kehadiran.length} Org)</h6><p class="small text-secondary">${kehadiran.length > 0 ? kehadiran.join(', ') : 'Belum ada presensi'}</p></div><div class="row text-center mt-5 small"><div class="col-6">Pimpinan Rapat,<br><br><br><b>(${item.pimpinan || 'Ketua RT'})</b></div><div class="col-6">Notulis,<br><br><br><b>(${item.notulis || 'Sekretaris'})</b></div></div>`; new bootstrap.Modal(document.getElementById('modalCetak')).show(); }
 
-    // =========================================================================================
-    // FUNGSI INTI YANG DIPERBAIKI: Hapus pemanggilan Auto-Sync background yg menimpa data baru
-    // =========================================================================================
     async function saveLocalAndSync(table, data) {
       if (!APP_DATA[table]) APP_DATA[table] = [];
       
       if (!data.id || data.id === '') { 
-        // Tambahkan pengacak (Math.random) agar ID lebih unik saat ditekan beruntun cepat
         data.id = table.substring(0,3) + '-' + new Date().getTime() + Math.floor(Math.random()*1000); 
         APP_DATA[table].push(data); 
       } else { 
@@ -1131,7 +1243,6 @@
       if (table === 'REGU') renderReguList(); 
       if (table === 'ANGGARAN') renderRabList();
       
-      // Kirim POST secara diam-diam. Tidak ada auto syncData() lagi setelah ini.
       if (API_URL) { 
         try { 
           fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'save', table: table, data: data }) })
