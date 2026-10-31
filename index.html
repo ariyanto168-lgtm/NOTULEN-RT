@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.8.0</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.8.1</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -82,7 +82,7 @@
 
     #qrcode-box img { margin: 0 auto; border: 10px solid #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
     
-    /* Styling Kotak Kamera Scanner agar Pasti Tampil */
+    /* Perbaikan Kotak Kamera Scanner agar Tidak Blank Hitam */
     #scanner-reader-container {
       width: 100%;
       max-width: 380px;
@@ -96,11 +96,11 @@
     #scanner-reader {
       width: 100% !important;
       min-height: 280px !important;
-      border: none !important;
+      background: #000 !important;
     }
     #scanner-reader video {
       width: 100% !important;
-      height: auto !important;
+      height: 280px !important;
       object-fit: cover !important;
     }
 
@@ -127,7 +127,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.8.0</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.8.1</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -271,7 +271,7 @@
 
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.8.0</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.8.1</span></div>
       </div>
     </div>
 
@@ -293,17 +293,25 @@
       <h4 class="fw-bold mb-1 text-info">Presensi Mandiri Warga</h4>
       <p class="small text-light opacity-75 mb-3" id="scanner-rt-header">Memuat data RT...</p>
 
+      <!-- KARTU 1: INPUT IDENTITAS & AGENDA TERPISAH -->
       <div class="card bg-dark border-secondary p-3 mb-3 shadow-lg text-start mx-auto" style="max-width: 400px; border-radius: 16px;">
-        <!-- 1. LIVE SEARCH / DATALIST PILIH NAMA WARGA -->
-        <label class="form-label small fw-bold text-info mb-1">1. Ketik / Pilih Nama Anda</label>
-        <input type="text" id="scanner-warga-input" class="form-control mb-2 rounded-pill bg-light text-dark fw-bold" list="dl-scanner-warga" placeholder="🔍 Ketik nama warga...">
-        <datalist id="dl-scanner-warga"></datalist>
         
-        <!-- 2. LIVE SEARCH / DATALIST PILIH AGENDA RAPAT (TERBARU DI ATAS) -->
-        <label class="form-label small fw-bold text-info mb-1">2. Ketik / Pilih Agenda Rapat</label>
-        <input type="text" id="scanner-agenda-input" class="form-control mb-3 rounded-pill bg-light text-dark fw-bold" list="dl-scanner-agenda" placeholder="🔍 Pilih atau cari agenda rapat...">
-        <datalist id="dl-scanner-agenda"></datalist>
-        <input type="hidden" id="scanner-agenda-id-val">
+        <!-- Kolom Nama & No Rumah (Live Search Datalist) -->
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-info mb-1"><i class="bi bi-person-badge-fill me-1"></i> 1. Ketik Nama / No. Rumah</label>
+          <input type="text" id="scanner-warga-input" class="form-control rounded-pill bg-light text-dark fw-bold" list="dl-scanner-warga" placeholder="🔍 Contoh: Roni / J10">
+          <datalist id="dl-scanner-warga"></datalist>
+          <small class="text-muted" style="font-size: 0.7rem;">Ketik nama atau nomor rumah Anda, lalu pilih dari daftar.</small>
+        </div>
+        
+        <!-- Kolom Pilih Agenda Rapat (Terbaru di Atas) -->
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-info mb-1"><i class="bi bi-journal-text me-1"></i> 2. Pilih Agenda Rapat Tujuan</label>
+          <input type="text" id="scanner-agenda-input" class="form-control rounded-pill bg-light text-dark fw-bold" list="dl-scanner-agenda" placeholder="🔍 Pilih atau cari agenda rapat...">
+          <datalist id="dl-scanner-agenda"></datalist>
+          <input type="hidden" id="scanner-agenda-id-val">
+          <small class="text-muted" style="font-size: 0.7rem;">Agenda rapat terbaru otomatis berada di urutan atas.</small>
+        </div>
 
         <label class="form-label small fw-bold text-info mb-1">3. Scan Master QR Permanen</label>
         <button id="btn-start-scan" class="btn btn-info w-100 rounded-pill fw-bold text-white py-3 shadow" onclick="startScanner()">
@@ -311,20 +319,23 @@
         </button>
       </div>
 
-      <!-- Area Scanner Kamera (Dipastikan Tampil) -->
-      <div id="scanner-reader-container" style="display:none;" class="mb-3">
+      <!-- KARTU 2: AREA KAMERA SCAN (TERPISAH) -->
+      <div id="scanner-reader-container" style="display:none; max-width: 400px; margin: 0 auto;" class="mb-3">
         <div id="scanner-reader"></div>
         <button class="btn btn-danger btn-sm w-100 rounded-0 py-2 fw-bold" onclick="stopScanner()">Batalkan Scan</button>
       </div>
 
+      <!-- KARTU 3: STATUS & HASIL ABSEN (TERPISAH OTOMATIS UPDATE) -->
       <div id="scanner-status" class="alert alert-dark border-secondary mx-auto text-center py-3 mb-3" style="max-width: 400px; display:none; border-radius: 14px;"></div>
+      
+      <!-- KARTU 4: DETAIL TUGAS & REKAP RAPAT WARGA (TERPISAH) -->
       <div id="warga-task-view" style="display:none; max-width: 400px; text-align: left;" class="mx-auto card bg-dark border-info p-3 shadow-lg rounded-4 mb-4"></div>
       
       <div class="mt-4 pb-3">
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
           Powered By Ari GPM • 
-          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.8.0</span>
+          <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;" title="Login Petugas">v3.8.1</span>
         </div>
       </div>
     </div>
@@ -432,7 +443,7 @@
   <!-- SCRIPT LENGKAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.8.0";
+    const APP_VERSION = "v3.8.1";
     
     // URL GS TERBARU
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
@@ -485,7 +496,7 @@
     });
 
     /* ========================================================================= */
-    /* LOGIKA SCANNER WARGA (LIVE SEARCH & TERBARU DI ATAS)                      */
+    /* LOGIKA SCANNER WARGA (AUTO UPDATE & PEMISAHAN KARTU TERSENDIRI)            */
     /* ========================================================================= */
     let html5QrcodeScanner = null;
     let scannerAppData = null;
@@ -508,13 +519,13 @@
           let ds = scannerAppData.SETTINGS?.desa_alamat || "";
           document.getElementById('scanner-rt-header').innerText = `${rt} - ${ds}`;
           
-          // WARGA DATALIST
+          // WARGA DATALIST (NAMA & NO RUMAH)
           let w = scannerAppData.WARGA || [];
           if (dlWarga) {
             dlWarga.innerHTML = w.map(x => `<option value="${x.nama} (${x.no_rumah || '-'})" data-realname="${x.nama}"></option>`).join('');
           }
 
-          // AGENDA NOTULEN DATALIST (URUT TERBARU DI ATAS & RAPI)
+          // AGENDA RAPAT TERBARU DI ATAS
           let nList = [...(scannerAppData.NOTULEN || [])].reverse();
           if (dlAgenda) {
             dlAgenda.innerHTML = nList.map(n => {
@@ -524,14 +535,12 @@
             }).join('');
           }
 
-          // Listener untuk mencocokkan input teks agenda ke ID asli
           inAgenda.addEventListener('input', function() {
             let val = this.value;
             let matched = nList.find(n => `${(n.agenda||'').toUpperCase()} | ${formatTanggal(n.tgl_rapat)}` === val);
             if (matched) {
               hidAgendaId.value = matched.id;
             } else {
-              // Cek pencarian parsial
               let found = nList.find(n => val.includes((n.agenda||'').toUpperCase()));
               if (found) hidAgendaId.value = found.id;
             }
@@ -548,17 +557,15 @@
       }
     }
 
-    function startScanner() {
+    async function startScanner() {
       let inWargaVal = document.getElementById('scanner-warga-input').value.trim();
       let agendaVal = document.getElementById('scanner-agenda-input').value.trim();
       let idAgenda = document.getElementById('scanner-agenda-id-val').value;
 
-      // Ekstrak nama asli warga dari format "Nama (No Rumah)"
       let namaWarga = inWargaVal.split('(')[0].trim();
-      if (!namaWarga) return showAlert('Perhatian', 'Silakan ketik atau pilih nama Anda terlebih dahulu!', 'warning');
+      if (!namaWarga) return showAlert('Perhatian', 'Silakan ketik atau pilih nama & no rumah Anda terlebih dahulu!', 'warning');
       
       if (!idAgenda) {
-        // Cari otomatis berdasarkan string input jika hidAgendaId kosong
         let nList = scannerAppData.NOTULEN || [];
         let found = nList.find(n => agendaVal.toUpperCase().includes((n.agenda||'').toUpperCase()));
         if (found) idAgenda = found.id;
@@ -569,30 +576,39 @@
       document.getElementById('scanner-status').style.display = 'none';
       document.getElementById('warga-task-view').style.display = 'none';
       
-      // PASTIKAN KOTAK KAMERA MUNCUL & TOMBOL MULAI DISEMBUNYIKAN
+      // MUNCULKAN KOTAK KAMERA
       let readerContainer = document.getElementById('scanner-reader-container');
       readerContainer.style.display = 'block';
       document.getElementById('btn-start-scan').style.display = 'none';
       
       if(!html5QrcodeScanner) { html5QrcodeScanner = new Html5Qrcode("scanner-reader"); }
       
-      html5QrcodeScanner.start(
-        { 
-          facingMode: "environment",
-          advanced: [{ focusMode: "continuous" }]
-        }, 
-        { 
-          fps: 30,
-          qrbox: { width: 240, height: 240 },
-          aspectRatio: 1.0,
-          disableFlip: false 
-        },
-        (decodedText) => { stopScannerNative(); processScanResult(decodedText, namaWarga, idAgenda); },
-        (errorMessage) => { /* abaikan error frame */ }
-      ).catch(err => {
-        showAlert('Kamera Error', 'Gagal mengakses kamera. Berikan izin kamera pada browser.', 'error');
-        stopScanner();
-      });
+      try {
+        await html5QrcodeScanner.start(
+          { facingMode: "environment" },
+          { 
+            fps: 30,
+            qrbox: { width: 240, height: 240 },
+            aspectRatio: 1.0,
+            disableFlip: false 
+          },
+          (decodedText) => { stopScannerNative(); processScanResult(decodedText, namaWarga, idAgenda); },
+          (errorMessage) => { /* abaikan error frame */ }
+        );
+      } catch(err) {
+        // Fallback izin kamera atau kamera depan jika environment gagal
+        try {
+          await html5QrcodeScanner.start(
+            { facingMode: "user" },
+            { fps: 30, qrbox: { width: 240, height: 240 } },
+            (decodedText) => { stopScannerNative(); processScanResult(decodedText, namaWarga, idAgenda); },
+            (errorMessage) => {}
+          );
+        } catch(e2) {
+          showAlert('Kamera Error', 'Gagal mengakses kamera. Berikan izin kamera pada browser Anda.', 'error');
+          stopScanner();
+        }
+      }
     }
 
     function stopScannerNative() { if(html5QrcodeScanner && html5QrcodeScanner.isScanning) html5QrcodeScanner.stop().catch(e=>console.log(e)); }
@@ -649,7 +665,7 @@
       let taskBox = document.getElementById('warga-task-view');
       taskBox.style.display = 'block';
 
-      let html = `<h6 class='fw-bold text-info border-bottom border-secondary pb-2 mb-2'><i class='bi bi-clipboard2-check-fill me-1'></i> Detail Rapat & Tugas Anda</h6>`;
+      let html = `<h6 class='fw-bold text-info border-bottom border-secondary pb-2 mb-2'><i class='bi bi-clipboard2-check-fill me-1'></i> Rekap Kehadiran & Tugas Rapat</h6>`;
       if(notulen) {
         html += `<p class='small mb-1'><b>Agenda:</b> ${notulen.agenda}</p>`;
         html += `<p class='small mb-1'><b>Tanggal:</b> ${formatTanggal(notulen.tgl_rapat)} | <b>Tempat:</b> ${notulen.tempat || '-'}</p>`;
@@ -686,7 +702,7 @@
 
     function shareScannerLinkWA() {
       let publicUrl = window.location.href.split('?')[0] + '?mode=scanner';
-      let txt = `📢 *LINK ABSEN MANDIRI WARGA*\n\nSilakan klik link di bawah ini untuk melakukan presensi kehadiran rapat via QR Posko:\n\n🌐 ${publicUrl}\n\n_1. Klik Link di atas_\n_2. Ketik Nama & Pilih Agenda Rapat_\n_3. Buka Kamera & Scan Master QR Permanen di Posko RT_\n\n_Aplikasi Notulen RT ${APP_VERSION}_`;
+      let txt = `📢 *LINK ABSEN MANDIRI WARGA*\n\nSilakan klik link di bawah ini untuk melakukan presensi kehadiran rapat via QR Posko:\n\n🌐 ${publicUrl}\n\n_1. Klik Link di atas_\n_2. Ketik Nama/No Rumah & Pilih Agenda Rapat_\n_3. Buka Kamera & Scan Master QR Permanen di Posko RT_\n\n_Aplikasi Notulen RT ${APP_VERSION}_`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
     }
 
@@ -1002,7 +1018,7 @@
     function filterPresensiWarga() { let q = (document.getElementById('presensi-search-warga').value || '').toLowerCase(); document.querySelectorAll('.presensi-item').forEach(item => { item.style.display = (item.getAttribute('data-search') || '').includes(q) ? 'block' : 'none'; }); }
     function updatePresensiCount() { document.getElementById('presensi-count').innerText = document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').length; }
     function selectAllPresensi(st) { document.querySelectorAll('#presensi-checklist-container .presensi-item').forEach(item => { if (item.style.display !== 'none') { let chk = item.querySelector('input[type="checkbox"]'); if (chk) chk.checked = st; } }); updatePresensiCount(); }
-    async function savePresensi() { let selId = document.getElementById('presensi-agenda-select').value; APP_DATA.KEHADIRAN = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) !== String(selId)); document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').forEach(chk => { saveLocalAndSync('KEHADIRAN', { id_kegiatan: selId, nama: chk.value, status_hadir: 'Hadir Manual', waktu: new Date().toLocaleTimeString('id-ID') }); }); localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); bootstrap.Modal.getInstance(document.getElementById('modalPresensi'))?.hide(); showToast('Daftar Hadir Disimpan!'); }
+    async function savePresensi() { let selId = document.getElementById('presensi-agenda-select').value; APP_DATA.KEHADIRAN = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) !== String(selId)); document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked'].forEach(chk => { saveLocalAndSync('KEHADIRAN', { id_kegiatan: selId, nama: chk.value, status_hadir: 'Hadir Manual', waktu: new Date().toLocaleTimeString('id-ID') }); }); localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); bootstrap.Modal.getInstance(document.getElementById('modalPresensi'))?.hide(); showToast('Daftar Hadir Disimpan!'); }
     function shareWA(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if (!item) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama); let txt = `📢 *HASIL MUSYAWARAH RT*\n🏛️ *${rt} - ${desa}*\n━━━━━━━━━━━━━━━━━━━━━\n📌 *Agenda:* ${item.agenda}\n📅 *Tgl:* ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '(' + item.waktu + ')' : ''}\n📍 *Tempat:* ${item.tempat || '-'}\n👤 *Pimpinan:* ${item.pimpinan || '-'}\n✍️ *Notulis:* ${item.notulis || '-'}\n━━━━━━━━━━━━━━━━━━━━━\n\n👥 *DAFTAR HADIR (${kehadiranList.length} KK):*\n`; if (kehadiranList.length > 0) txt += `${kehadiranList.map((n, i) => `  ${i+1}. ${n}`).join('\n')}\n\n`; else txt += `_Belum ada presensi_\n\n`; txt += `💡 *PEMBAHASAN:*\n${item.pembahasan || '-'}\n\n✅ *KEPUTUSAN FINAL:* \n${item.keputusan || '-'}\n\n_Dibuat via Aplikasi Notulen RT (${APP_VERSION}) | Powered By Ari GPM_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
 
     /* NOTULEN FORM */
