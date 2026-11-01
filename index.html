@@ -26,6 +26,10 @@
     [data-theme="sunset"] { --primary-color: #f97316; --primary-dark: #ea580c; }
     [data-theme="dark"] { --primary-color: #38bdf8; --primary-dark: #0284c7; --bg-light: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --border-color: #334155; }
     body { background-color: var(--bg-light); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding-bottom: 95px; user-select: none; transition: background-color 0.2s, color 0.2s; }
+    
+    /* ANTI FLASHING ADMIN UI */
+    #admin-app-container { display: none; } 
+
     .bg-primary-custom { background-color: var(--primary-color) !important; }
     .text-primary-custom { color: var(--primary-color) !important; }
     .btn-primary-custom { background-color: var(--primary-color) !important; color: #ffffff !important; border: none !important; }
@@ -233,7 +237,7 @@
           <datalist id="dl-scanner-warga"></datalist>
         </div>
         
-        <!-- MANUAL SELECT (HANYA MUNCUL JIKA LINK TIDAK SPESIFIK) -->
+        <!-- MANUAL SELECT -->
         <div class="mb-3" id="scanner-manual-select-group">
           <label class="form-label small fw-bold text-info mb-1"><i class="bi bi-journal-text me-1"></i> 2. Pilih Agenda Rapat / Regu Kerja</label>
           <input type="text" id="scanner-agenda-input" class="form-control rounded-pill bg-light text-dark fw-bold" list="dl-scanner-agenda" placeholder="🔍 Pilih agenda rapat...">
@@ -259,11 +263,12 @@
       
       <div class="mt-4 pb-3">
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
-        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">Powered By Ari GPM • <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;">v3.9.10</span></div>
+        <!-- PINTU KELUAR RAHASIA ADMIN -->
+        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">Powered By Ari GPM • <span onclick="keluarModeScanner()" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;">v3.9.10</span></div>
       </div>
     </div>
   </div>
   <!-- ================= END WADAH SCANNER ================= -->
 
   <!-- Modals -->
-  <div class="modal fade" id="modalPermanentQR" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal
+  <div class="modal fade" id="modalPermanentQR" tabindex="-1"><div class="modal-dialog 
