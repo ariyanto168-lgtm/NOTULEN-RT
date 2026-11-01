@@ -1,4 +1,4 @@
-const CACHE_NAME = "notulen-rt-v3.9.9-force";
+const CACHE_NAME = "notulen-rt-v3.9.10-force";
 
 const ASSETS_TO_CACHE = [
   "./",
@@ -24,7 +24,7 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// 2. ACTIVATE: Sapu bersih semua cache versi 3.9.7 dan versi lama lainnya
+// 2. ACTIVATE: Sapu bersih semua cache versi lama
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
