@@ -1,12 +1,10 @@
-const CACHE_NAME = "notulen-rt-v3.9.9";
+const CACHE_NAME = "notulen-rt-v3.9.9-force";
 
-// Daftar aset utama yang langsung disimpan saat aplikasi pertama kali diakses
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.json",
   "./icon-192.png",
-  // Cache library pihak ketiga agar fitur tetap jalan saat offline penuh
   "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
   "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
@@ -15,19 +13,18 @@ const ASSETS_TO_CACHE = [
   "https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
 ];
 
-// 1. INSTALL EVENT: Menyimpan aset awal ke dalam cache
+// 1. INSTALL: Paksa Service Worker baru untuk langsung aktif (skipWaiting)
 self.addEventListener("install", (event) => {
+  self.skipWaiting(); 
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log("[Service Worker] Caching App Shell...");
       return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => {
-      return self.skipWaiting(); // Memaksa service worker baru untuk langsung aktif
-    })
+    }).catch(err => console.log("Gagal cache:", err))
   );
 });
 
-// 2. ACTIVATE EVENT: Menghapus cache versi lama ketika ada versi baru
+// 2. ACTIVATE: Sapu bersih semua cache versi 3.9.7 dan versi lama lainnya
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -39,13 +36,12 @@ self.addEventListener("activate", (event) => {
           }
         })
       );
-    }).then(() => self.clients.claim())
+    }).then(() => self.clients.claim()) // Paksa halaman langsung pakai SW baru
   );
 });
 
-// 3. FETCH EVENT: Strategi Network-First untuk HTML/Aset
+// 3. FETCH: Mode "Network First" yang lebih agresif
 self.addEventListener("fetch", (event) => {
-  // Abaikan request ke database Google Apps Script dan request selain GET (seperti POST save data)
   if (event.request.url.includes("script.google.com") || event.request.method !== "GET") {
     return;
   }
@@ -53,17 +49,16 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Jika jaringan terhubung, kembalikan respons dan perbarui cache secara dinamis
-        if (response && response.status === 200) {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          return response;
         }
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseClone);
+        });
         return response;
       })
       .catch(() => {
-        // Jika gagal (Offline / Tidak ada sinyal), ambil dari cache yang tersimpan
         return caches.match(event.request);
       })
   );
