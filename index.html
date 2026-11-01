@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.9.7</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.9.8</title>
   
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0ea5e9">
@@ -69,7 +69,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.7</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.8</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -82,16 +82,6 @@
     </nav>
 
     <div class="container py-3">
-      <div id="install-banner" class="install-banner shadow-sm">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center gap-2">
-            <img src="icon-192.png" alt="Logo" style="width:42px; height:42px; border-radius:12px; background:#fff; padding:3px;" onerror="this.style.display='none'">
-            <div><h6 class="fw-bold mb-0">Instal Aplikasi</h6><small class="opacity-90">Pasang di Layar Utama</small></div>
-          </div>
-          <button id="btn-install" class="btn btn-light text-primary-custom fw-bold btn-sm rounded-pill px-3 ms-2">Instal</button>
-        </div>
-      </div>
-
       <!-- SEKSI 1: DASHBOARD -->
       <div id="sec-dashboard" class="page-section">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -196,7 +186,7 @@
       </div>
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.7</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.8</span></div>
       </div>
     </div>
 
@@ -259,7 +249,7 @@
       
       <div class="mt-4 pb-3">
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
-        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">Powered By Ari GPM • <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;">v3.9.7</span></div>
+        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">Powered By Ari GPM • <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;">v3.9.8</span></div>
       </div>
     </div>
   </div>
@@ -270,12 +260,12 @@
   <div class="modal fade" id="modalPinLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content rounded-4 border-0 text-center p-3 shadow-lg"><div class="modal-body p-2"><div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex p-3 mb-2 text-primary-custom"><i class="bi bi-lock-fill fs-3"></i></div><h5 class="fw-bold mb-1 text-dark">Notulen RT</h5><p class="small text-muted mb-3">Masukkan PIN Keamanan Aplikasi</p><form id="form-pin-login" onsubmit="verifyPin(event)"><div class="mb-3"><input type="password" id="input-pin-login" class="form-control text-center rounded-pill py-2" placeholder="••••••••" style="letter-spacing: 4px;" autocomplete="off" required><div id="pin-login-error" class="text-danger small mt-1 fw-bold" style="display:none; font-size: 0.75rem;">PIN Salah!</div></div><button type="submit" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm mb-3">Buka Aplikasi</button></form><a href="#" onclick="openModalLupaPin(); return false;" class="small text-primary-custom text-decoration-none fw-semibold"><i class="bi bi-key-fill me-1"></i>Lupa PIN?</a></div></div></div></div>
   <div class="modal fade" id="modalLupaPin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content rounded-4 border-0 p-3 shadow-lg"><div class="modal-body p-2"><div class="d-flex justify-content-between align-items-center mb-2"><h5 class="fw-bold text-dark mb-0">Reset PIN</h5><button type="button" class="btn-close shadow-none" onclick="closeModalLupaPin()"></button></div><form id="form-otp-step1" onsubmit="sendOtpEmail(event)"><p class="small text-muted mb-3" style="font-size: 0.8rem;">Masukkan email pemulihan terdaftar.</p><div class="mb-3"><input type="email" id="input-otp-email" class="form-control form-control-sm rounded-pill py-2 text-center" placeholder="contoh@gmail.com" required></div><button type="submit" id="btn-send-otp" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm">Kirim OTP</button></form><form id="form-otp-step2" onsubmit="verifyOtpCode(event)" style="display:none;"><p class="small text-success mb-2 fw-semibold">Kode OTP telah dikirim.</p><div class="mb-3"><input type="text" id="input-otp-code" class="form-control form-control-sm rounded-pill text-center fw-bold fs-5" placeholder="123456" maxlength="6" autocomplete="off" required></div><button type="submit" class="btn btn-success w-100 rounded-pill fw-bold py-2 shadow-sm">Verifikasi OTP</button></form><form id="form-otp-step3" onsubmit="resetPinWithOtp(event)" style="display:none;"><div class="mb-2"><input type="password" id="input-new-pin-otp" class="form-control form-control-sm rounded-pill text-center" placeholder="PIN Baru" required></div><div class="mb-3"><input type="password" id="input-confirm-pin-otp" class="form-control form-control-sm rounded-pill text-center" placeholder="Konfirmasi PIN Baru" required></div><button type="submit" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm">Simpan PIN Baru</button></form></div></div></div></div>
 
-  <!-- Form Modal Notulen (UPDATE: Tambah Batas Waktu Scanner) -->
+  <!-- Form Modal Notulen (DENGAN TIMER SCANNER) -->
   <div class="modal fade" id="modalNotulen" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold" id="modalNotulenTitle">Notulen Musyawarah</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="form-notulen"><input type="hidden" id="notulen-id"><div class="mb-2"><label class="form-label small fw-bold">Agenda</label><input type="text" id="notulen-agenda" class="form-control" required></div><div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Tanggal</label><input type="date" id="notulen-tgl" class="form-control" required></div><div class="col-6"><label class="form-label small fw-bold">Waktu Rapat</label><input type="time" id="notulen-waktu" class="form-control"></div></div><div class="mb-2"><label class="form-label small fw-bold">Tempat</label><input type="text" id="notulen-tempat" class="form-control" list="dl-warga-list"></div><div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Pimpinan</label><input type="text" id="notulen-pimpinan" class="form-control" list="dl-warga-list"></div><div class="col-6"><label class="form-label small fw-bold">Notulis</label><input type="text" id="notulen-notulis" class="form-control" list="dl-warga-list"></div></div><div class="mb-2"><label class="form-label small fw-bold">Uraian</label><textarea id="notulen-pembahasan" class="form-control" rows="3"></textarea></div><div class="mb-3"><label class="form-label small fw-bold">Keputusan</label><textarea id="notulen-keputusan" class="form-control" rows="2"></textarea></div>
   <div class="border rounded p-2 mb-3 bg-light"><h6 class="small fw-bold text-info mb-2"><i class="bi bi-qr-code-scan"></i> Pengaturan Waktu Akses Scanner QR</h6><div class="row g-2"><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Mulai Buka</label><input type="datetime-local" id="notulen-scan-start" class="form-control form-control-sm"></div><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Tutup Otomatis</label><input type="datetime-local" id="notulen-scan-end" class="form-control form-control-sm"></div></div></div>
   <button type="submit" class="btn btn-primary-custom text-white w-100 btn-rounded shadow-sm">Simpan Notulen</button></form></div></div></div></div>
   
-  <!-- Form Modal Kegiatan (UPDATE: Tambah Batas Waktu Scanner) -->
+  <!-- Form Modal Kegiatan (DENGAN TIMER SCANNER) -->
   <div class="modal fade" id="modalKegiatan" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold" id="modalKegiatanTitle">Buat Agenda Kegiatan</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="form-kegiatan"><input type="hidden" id="kegiatan-id"><div class="mb-2"><label class="form-label small fw-bold">Nama Kegiatan</label><input type="text" id="kegiatan-nama" class="form-control" required placeholder="Contoh: Siskamling, Kerja Bakti"></div><div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Tanggal</label><input type="date" id="kegiatan-tgl" class="form-control" required></div><div class="col-6"><label class="form-label small fw-bold">Status</label><select id="kegiatan-status" class="form-select"><option value="Rencana">Rencana</option><option value="Berjalan">Berjalan</option><option value="Selesai">Selesai</option></select></div></div><div class="mb-2"><label class="form-label small fw-bold">Lokasi</label><input type="text" id="kegiatan-lokasi" class="form-control" list="dl-warga-list"></div><div class="mb-3"><label class="form-label small fw-bold">PJ Utama</label><input type="text" id="kegiatan-pj" class="form-control" list="dl-warga-list"></div>
   <div class="border rounded p-2 mb-3 bg-light"><h6 class="small fw-bold text-success mb-2"><i class="bi bi-qr-code-scan"></i> Pengaturan Waktu Akses Scanner QR</h6><div class="row g-2"><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Mulai Buka</label><input type="datetime-local" id="kegiatan-scan-start" class="form-control form-control-sm"></div><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Tutup Otomatis</label><input type="datetime-local" id="kegiatan-scan-end" class="form-control form-control-sm"></div></div></div>
   <button type="submit" class="btn btn-success w-100 btn-rounded shadow-sm">Simpan Agenda</button></form></div></div></div></div>
@@ -289,10 +279,10 @@
   <div class="modal fade" id="modalPresensi" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0 d-flex justify-content-between align-items-center"><h5 class="modal-title fw-bold">Presensi Kehadiran</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body pt-2"><div class="mb-2"><label class="form-label small fw-bold mb-1">Pilih Agenda</label><select id="presensi-agenda-select" class="form-select form-select-sm" onchange="loadPresensiChecklist()"></select></div><div class="d-flex justify-content-between align-items-center my-2"><small class="fw-bold text-muted">Hadir: <span id="presensi-count" class="text-primary-custom fw-bold">0</span> / <span id="presensi-total">0</span> KK</small><div class="d-flex gap-1"><button class="btn btn-xs btn-outline-primary rounded-pill py-0 px-2" style="font-size:0.72rem;" onclick="selectAllPresensi(true)">Pilih Semua</button><button class="btn btn-xs btn-outline-secondary rounded-pill py-0 px-2" style="font-size:0.72rem;" onclick="selectAllPresensi(false)">Reset</button></div></div><input type="text" id="presensi-search-warga" class="form-control form-control-sm mb-2 rounded-pill" placeholder="🔍 Cari nama atau blok..." onkeyup="filterPresensiWarga()"><div id="presensi-checklist-container" class="border rounded-3 p-2 bg-light" style="max-height: 280px; overflow-y: auto;"></div><button class="btn btn-warning w-100 btn-rounded text-dark fw-bold mt-3 shadow-sm" onclick="savePresensi()">Simpan Daftar Hadir Manual</button></div></div></div></div>
   <div class="modal fade" id="modalCetak" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 no-print"><h5 class="modal-title fw-bold">Pratinjau Cetak Notulen</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body p-4" id="print-area"></div><div class="modal-footer border-0 no-print"><button class="btn btn-primary-custom text-white rounded-pill px-4 shadow-sm" onclick="window.print()"><i class="bi bi-printer me-2"></i>Cetak PDF</button></div></div></div></div>
 
-  <!-- SCRIPT UTAMA FULL -->
+  <!-- SCRIPT UTAMA -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.9.7";
+    const APP_VERSION = "v3.9.8";
     // ISI DENGAN URL GOOGLE APPS SCRIPT ANDA
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
     
@@ -325,7 +315,7 @@
     }
 
     /* ========================================================================= */
-    /* LOGIKA KEAMANAN, PENGATURAN, DAN CETAK QR POSKO                           */
+    /* LOGIKA KEAMANAN & PENGATURAN                                              */
     /* ========================================================================= */
     function showPermanentMasterQR() {
       let container = document.getElementById('qrcode-box');
@@ -335,7 +325,6 @@
       new bootstrap.Modal(document.getElementById('modalPermanentQR')).show();
     }
 
-    // FUNGSI BARU: Share Auto-Locked Scanner Link
     function shareAutoScannerLink(tipe, idItem) {
       let itemTitle = "";
       if(tipe === 'NOTULEN') { let dt = APP_DATA.NOTULEN.find(x => x.id === idItem); if(dt) itemTitle = "Rapat: " + dt.agenda; }
@@ -428,25 +417,30 @@
       let pKegiatan = document.getElementById('dashboard-recent-presensi-kegiatan');
       if (pKegiatan) {
         let allKegiatan = APP_DATA.KEGIATAN || [];
-        if (allKegiatan.length === 0) pKegiatan.innerHTML = `<div class="card card-custom p-3 text-center text-muted small border bg-light">Belum ada data agenda.</div>`;
-        else {
-          let lastKegiatan = allKegiatan[allKegiatan.length - 1];
-          let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => k && String(k.id_kegiatan) === String(lastKegiatan.id));
-          let totalWarga = APP_DATA.WARGA ? APP_DATA.WARGA.length : 0;
-          let persentase = totalWarga === 0 ? 0 : Math.round((kehadiranList.length / totalWarga) * 100);
-          
-          let listHtml = kehadiranList.length > 0 
-            ? `<div class="mt-2 pt-2 border-top border-success-subtle small"><strong class="text-dark d-block mb-2">Sudah Absen:</strong><div class="d-flex flex-wrap gap-1">${kehadiranList.map(k => {
-                 let rL = "";
-                 if (k.status_hadir && String(k.status_hadir).includes('Regu:')) {
-                    let rName = String(k.status_hadir).split('Regu:')[1].replace(')', '').trim();
-                    rL = `<span class="badge bg-success opacity-75 ms-1" style="font-size:0.55rem;">(${rName.toUpperCase()})</span>`;
-                 }
-                 return `<span class="badge bg-success text-white shadow-sm px-2 py-1 mb-1 d-flex align-items-center">${k.nama}${rL}</span>`;
-               }).join('')}</div></div>`
-            : `<div class="mt-2 pt-2 border-top border-success-subtle small text-muted">Belum ada absen.</div>`;
+        // MENAMPILKAN 3 KEGIATAN TERAKHIR (AGAR KERJABAKTI, SISKAMLING DLL SEMUA TAMPIL)
+        let activeKegiatans = allKegiatan.slice(-3).reverse(); 
+        
+        if (activeKegiatans.length === 0) {
+            pKegiatan.innerHTML = `<div class="card card-custom p-3 text-center text-muted small border bg-light">Belum ada data agenda.</div>`;
+        } else {
+            pKegiatan.innerHTML = activeKegiatans.map(keg => {
+                let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => k && String(k.id_kegiatan) === String(keg.id));
+                let totalWarga = APP_DATA.WARGA ? APP_DATA.WARGA.length : 0;
+                let persentase = totalWarga === 0 ? 0 : Math.round((kehadiranList.length / totalWarga) * 100);
+                
+                let listHtml = kehadiranList.length > 0 
+                  ? `<div class="mt-2 pt-2 border-top border-success-subtle small"><strong class="text-dark d-block mb-2">Sudah Absen:</strong><div class="d-flex flex-wrap gap-1">${kehadiranList.map(k => {
+                       let rL = "";
+                       if (k.status_hadir && String(k.status_hadir).includes('Regu:')) {
+                          let rName = String(k.status_hadir).split('Regu:')[1].replace(')', '').trim();
+                          rL = `<span class="badge bg-success opacity-75 ms-1" style="font-size:0.55rem;">(${rName.toUpperCase()})</span>`;
+                       }
+                       return `<span class="badge bg-success text-white shadow-sm px-2 py-1 mb-1 d-flex align-items-center">${k.nama}${rL}</span>`;
+                     }).join('')}</div></div>`
+                  : `<div class="mt-2 pt-2 border-top border-success-subtle small text-muted">Belum ada absen.</div>`;
 
-          pKegiatan.innerHTML = `<div class="card card-custom p-3 border-success border-2 shadow-sm" style="background-color: #f0fdf4;"><div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0 text-dark text-truncate" style="max-width: 70%;">${lastKegiatan.nama_kegiatan.toUpperCase()}</h6><span class="badge bg-success text-white shadow-sm">${persentase}% Hadir</span></div><div class="progress mt-2 border border-success" style="height: 10px; background-color: #fff;"><div class="progress-bar bg-success" style="width: ${persentase}%"></div></div><small class="text-dark mt-2 d-block fw-semibold"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>${listHtml}</div>`;
+                return `<div class="card card-custom p-3 border-success border-2 shadow-sm mb-3" style="background-color: #f0fdf4;"><div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0 text-dark text-truncate" style="max-width: 70%;">${keg.nama_kegiatan.toUpperCase()}</h6><span class="badge bg-success text-white shadow-sm">${persentase}% Hadir</span></div><div class="progress mt-2 border border-success" style="height: 10px; background-color: #fff;"><div class="progress-bar bg-success" style="width: ${persentase}%"></div></div><small class="text-dark mt-2 d-block fw-semibold"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>${listHtml}</div>`;
+            }).join('');
         }
       }
 
@@ -463,7 +457,7 @@
     }
 
     /* ========================================================================= */
-    /* DAFTAR LISTING ADMIN (DENGAN TOMBOL LINK SCANNER)                         */
+    /* DAFTAR LISTING ADMIN                                                      */
     /* ========================================================================= */
     function renderNotulenList() {
       let q = (document.getElementById('search-notulen')?.value || '').toLowerCase(); let container = document.getElementById('list-notulen-container');
@@ -529,7 +523,7 @@
     document.getElementById('form-warga').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('WARGA', { id: document.getElementById('warga-id').value, nama: document.getElementById('warga-nama').value, no_rumah: document.getElementById('warga-rumah').value, no_wa: document.getElementById('warga-wa').value }); hideModalSafe('modalWarga'); showToast('Warga Disimpan'); });
 
     /* ========================================================================= */
-    /* LOGIKA REGU, RAB, SYNC DLL (TETAP SAMA SEPERTI SEBELUMNYA)                */
+    /* LOGIKA REGU, RAB, SYNC DLL                                                */
     /* ========================================================================= */
     function openModalRegu(idKegiatan) { currentReguKegiatanId = idKegiatan; let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan)); document.getElementById('regu-kegiatan-title').innerText = keg ? keg.nama_kegiatan : ''; resetFormReguBaru(); renderReguList(); new bootstrap.Modal(document.getElementById('modalRegu')).show(); }
     function resetFormReguBaru() { document.getElementById('form-regu-item').reset(); document.getElementById('regu-id').value = ''; document.getElementById('btn-submit-regu').innerText = '+ Simpan Regu'; let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(currentReguKegiatanId)); document.getElementById('regu-tgl-input').value = keg && keg.tgl ? keg.tgl.split('T')[0] : new Date().toISOString().split('T')[0]; document.getElementById('regu-jam-input').value = "08:00"; }
@@ -571,21 +565,30 @@
     async function syncData() { if (!API_URL) return; let sb = document.getElementById('sync-status'); if (sb) { sb.className = 'badge bg-warning text-dark d-none'; sb.innerText = 'Sync...'; } try { let res = await fetch(API_URL + '?action=sync'); let json = await res.json(); if (json.status === 'success') { let c = APP_DATA.SETTINGS; APP_DATA = json.data; if (!APP_DATA.SETTINGS) APP_DATA.SETTINGS = c; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); renderUI(); if (sb) { sb.className = 'badge bg-success d-none'; sb.innerText = 'Sync OK'; } } } catch (err) { if (sb) { sb.className = 'badge bg-secondary d-none'; sb.innerText = 'Offline'; } } }
     
     /* ========================================================================= */
-    /* LOGIKA SCANNER WARGA (AUTO-LOCK & TIME RESTRICTION)                       */
+    /* LOGIKA SCANNER WARGA (AUTO-LOCK, ANTI-DUPLICATE SPECIFIC, TIME LIMIT)     */
     /* ========================================================================= */
     let html5QrcodeScanner = null, scannerAppData = { NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], REGU: [] }, scannerApiUrl = ""; 
     
     async function initScannerWarga(forcedAgendaId) {
-      // 1. Cek Sesi Tersimpan
+      // 1. Cek Sesi Tersimpan (Anti Duplicate yang sekarang lebih spesifik)
       let sessionScanner = localStorage.getItem('rt_scanner_session');
       if (sessionScanner) {
          let sData = JSON.parse(sessionScanner);
-         document.getElementById('scanner-warga-input').value = sData.namaWarga;
-         document.getElementById('scanner-warga-input').disabled = true; 
-         document.getElementById('scanner-manual-select-group').style.display = 'none';
-         document.getElementById('label-step-3').innerText = "3. Sesi Absen Selesai";
-         document.getElementById('btn-scan-container').innerHTML = `<div class="alert alert-dark border-success bg-black text-center mb-0"><i class="bi bi-check-circle-fill text-success fs-2 mb-2 d-block"></i><h6 class="text-white fw-bold">Sesi Anda Tersimpan</h6><small class="text-muted d-block mb-3">Sdr/i ${sData.namaWarga} sudah login.</small><button class="btn btn-outline-info w-100 rounded-pill fw-bold" onclick="showDirectTaskView('${sData.idAgenda}', '${sData.namaWarga}')">Lihat Detail Penugasan</button></div>`;
-         scannerApiUrl = API_URL; try { let res = await fetch(scannerApiUrl + '?action=sync'); let json = await res.json(); if (json.status === 'success') scannerAppData = json.data; } catch(e){} return; 
+         
+         // PERUBAHAN: Hanya kunci layar jika warga membuka LINK agenda yang sama.
+         // Jika warga membuka link agenda baru (contoh kemarin siskamling, sekarang kerjabakti) hapus sesi lama.
+         if (!forcedAgendaId || String(sData.idAgenda) === String(forcedAgendaId)) {
+             document.getElementById('scanner-warga-input').value = sData.namaWarga;
+             document.getElementById('scanner-warga-input').disabled = true; 
+             document.getElementById('scanner-manual-select-group').style.display = 'none';
+             document.getElementById('label-step-3').innerText = "3. Sesi Absen Selesai";
+             document.getElementById('btn-scan-container').innerHTML = `<div class="alert alert-dark border-success bg-black text-center mb-0"><i class="bi bi-check-circle-fill text-success fs-2 mb-2 d-block"></i><h6 class="text-white fw-bold">Sesi Anda Tersimpan</h6><small class="text-muted d-block mb-3">Sdr/i ${sData.namaWarga} sudah absen di agenda ini.</small><button class="btn btn-outline-info w-100 rounded-pill fw-bold" onclick="showDirectTaskView('${sData.idAgenda}', '${sData.namaWarga}')">Lihat Detail Penugasan</button></div>`;
+             
+             scannerApiUrl = API_URL; try { let res = await fetch(scannerApiUrl + '?action=sync'); let json = await res.json(); if (json.status === 'success') scannerAppData = json.data; } catch(e){} return; 
+         } else {
+             // Jika beda agenda, warga diizinkan absen di agenda baru ini
+             localStorage.removeItem('rt_scanner_session');
+         }
       }
 
       // 2. Load Data dari Server
