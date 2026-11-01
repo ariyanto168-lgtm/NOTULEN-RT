@@ -1,56 +1,265 @@
-const CACHE_NAME = 'notulen-rt-v3.9.6';
-const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './manifest.json',
-  'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
-  'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css',
-  'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js'
-];
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Notulen & Perencanaan Kegiatan RT v3.9.8</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0ea5e9">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Notulen RT">
+  <link rel="apple-touch-icon" href="icon-192.png">
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
-  );
-  self.skipWaiting();
-});
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) return caches.delete(key);
-        })
-      );
-    })
-  );
-  self.clients.claim();
-});
+  <style>
+    :root { --primary-color: #0ea5e9; --primary-dark: #0284c7; --bg-light: #f8fafc; --card-bg: #ffffff; --text-main: #0f172a; --border-color: #e2e8f0; }
+    [data-theme="emerald"] { --primary-color: #10b981; --primary-dark: #059669; }
+    [data-theme="indigo"] { --primary-color: #6366f1; --primary-dark: #4f46e5; }
+    [data-theme="sunset"] { --primary-color: #f97316; --primary-dark: #ea580c; }
+    [data-theme="dark"] { --primary-color: #38bdf8; --primary-dark: #0284c7; --bg-light: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --border-color: #334155; }
+    body { background-color: var(--bg-light); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding-bottom: 95px; user-select: none; transition: background-color 0.2s, color 0.2s; }
+    .bg-primary-custom { background-color: var(--primary-color) !important; }
+    .text-primary-custom { color: var(--primary-color) !important; }
+    .btn-primary-custom { background-color: var(--primary-color) !important; color: #ffffff !important; border: none !important; }
+    .btn-primary-custom:hover { background-color: var(--primary-dark) !important; color: #ffffff !important; }
+    .navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
+    .app-logo-nav { width: 54px; height: 54px; object-fit: contain; border-radius: 14px; background: #ffffff; padding: 3px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); }
+    .card-custom { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.1s; }
+    .card-custom:active { transform: scale(0.98); }
+    .icon-badge { width: 38px; height: 38px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .btn-rounded { border-radius: 12px; font-weight: 600; padding: 10px 16px; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1030; box-shadow: 0 -4px 16px rgba(0,0,0,0.04); }
+    .nav-item-btn { background: none; border: none; color: #64748b; font-size: 0.72rem; display: flex; flex-direction: column; align-items: center; gap: 3px; width: 20%; transition: color 0.15s; }
+    .nav-item-btn i { font-size: 1.35rem; }
+    .nav-item-btn.active { color: var(--primary-color); font-weight: 700; }
+    .install-banner { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; border-radius: 18px; padding: 14px; margin-bottom: 16px; display: none; }
+    .badge-status { font-size: 0.75rem; padding: 5px 12px; border-radius: 20px; }
+    .footer-branding { text-align: center; padding: 15px 0 5px 0; font-size: 0.75rem; color: #64748b; }
+    #qrcode-box img { margin: 0 auto; border: 10px solid #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    #scanner-reader-container { width: 100%; max-width: 380px; margin: 0 auto; background: #000; border-radius: 16px; overflow: hidden; border: 2px solid var(--primary-color); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
+    #scanner-reader { width: 100% !important; min-height: 280px !important; background: #000 !important; }
+    #scanner-reader video { width: 100% !important; height: auto !important; object-fit: cover !important; }
+    @media print {
+      .bottom-nav, .navbar, .btn, .no-print, .install-banner, .footer-branding, .modal-header button { display: none !important; }
+      body { background: #fff !important; color: #000 !important; padding: 0 !important; }
+      .modal { position: absolute !important; left: 0 !important; top: 0 !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; }
+      .modal-dialog { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
+      .modal-content { border: none !important; box-shadow: none !important; background: #fff !important; }
+      .modal-body { padding: 0 !important; overflow: visible !important; }
+    }
+  </style>
+</head>
+<body>
 
-self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+  <!-- ================= WADAH UTAMA ADMIN ================= -->
+  <div id="admin-app-container">
+    <datalist id="dl-warga-list"></datalist>
+    <nav class="navbar navbar-expand navbar-dark bg-primary-custom sticky-top shadow-sm py-2">
+      <div class="container">
+        <span class="navbar-brand mb-0 h1 d-flex align-items-center gap-2">
+          <img src="icon-192.png" alt="Logo" class="app-logo-nav" onerror="this.style.display='none'">
+          <div>
+            <div class="d-flex align-items-center gap-1">
+              <span>NOTULEN RT</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.8</span>
+            </div>
+            <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
+          </div>
+        </span>
+        <div class="d-flex align-items-center gap-2">
+          <button id="btn-sync" class="btn btn-sm btn-light rounded-circle shadow-sm" onclick="syncData()" title="Sinkronkan Data Manual"><i class="bi bi-arrow-repeat text-primary-custom"></i></button>
+          <button class="btn btn-sm btn-light rounded-circle shadow-sm" onclick="logoutApp()" title="Log Out"><i class="bi bi-box-arrow-right text-danger"></i></button>
+        </div>
+      </div>
+    </nav>
 
-  if (url.hostname.includes('script.google.com')) {
-    event.respondWith(
-      fetch(event.request).catch(() => {
-        return new Response(JSON.stringify({ status: 'offline', message: 'Offline Mode' }), {
-          headers: { 'Content-Type': 'application/json' }
-        });
-      })
-    );
-    return;
-  }
+    <div class="container py-3">
+      <div id="install-banner" class="install-banner shadow-sm">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-2">
+            <img src="icon-192.png" alt="Logo" style="width:42px; height:42px; border-radius:12px; background:#fff; padding:3px;" onerror="this.style.display='none'">
+            <div><h6 class="fw-bold mb-0">Instal Aplikasi</h6><small class="opacity-90">Pasang di Layar Utama</small></div>
+          </div>
+          <button id="btn-install" class="btn btn-light text-primary-custom fw-bold btn-sm rounded-pill px-3 ms-2">Instal</button>
+        </div>
+      </div>
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      const fetchPromise = fetch(event.request).then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200) {
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse.clone()));
-        }
-        return networkResponse;
-      }).catch(() => {});
-      return cachedResponse || fetchPromise;
-    })
-  );
-});
+      <!-- SEKSI 1: DASHBOARD -->
+      <div id="sec-dashboard" class="page-section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0">Ringkasan RT</h5>
+          <span id="sync-status" class="badge bg-secondary d-none" style="display:none !important;">Offline Cache</span>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-4"><div class="card card-custom p-2 text-center bg-primary-custom text-white"><h3 id="stat-notulen" class="fw-bold mb-0">0</h3><small class="opacity-90" style="font-size:0.7rem;">Notulen</small></div></div>
+          <div class="col-4"><div class="card card-custom p-2 text-center bg-success text-white"><h3 id="stat-kegiatan" class="fw-bold mb-0">0</h3><small class="opacity-90" style="font-size:0.7rem;">Agenda</small></div></div>
+          <div class="col-4"><div class="card card-custom p-2 text-center bg-info text-white"><h3 id="stat-warga" class="fw-bold mb-0">0</h3><small class="opacity-90" style="font-size:0.7rem;">Warga</small></div></div>
+        </div>
+        <h6 class="fw-bold text-muted mb-2">Aksi Cepat Petugas</h6>
+        <div class="row g-2 mb-4">
+          <div class="col-6">
+            <button class="btn btn-light card-custom w-100 p-3 text-start border d-flex flex-column gap-2" onclick="switchTab('notulen'); openFormNotulen();">
+              <div class="icon-badge bg-primary-subtle text-primary-custom"><i class="bi bi-journal-plus"></i></div>
+              <div><span class="fw-bold d-block mt-1">+ Buat Notulen</span><small class="text-muted">Hasil musyawarah</small></div>
+            </button>
+          </div>
+          <div class="col-6">
+            <button class="btn btn-light card-custom w-100 p-3 text-start border d-flex flex-column gap-2" onclick="openModalPresensi()">
+              <div class="icon-badge bg-warning-subtle text-warning"><i class="bi bi-person-check-fill"></i></div>
+              <div><span class="fw-bold d-block mt-1">Presensi Manual</span><small class="text-muted">Absen warga hadir</small></div>
+            </button>
+          </div>
+        </div>
+        
+        <h6 class="fw-bold text-muted mb-2"><i class="bi bi-bar-chart-fill me-1"></i> Rekap Kehadiran Rapat Terbaru</h6>
+        <div id="dashboard-recent-presensi-rapat" class="mb-3"></div>
+        <h6 class="fw-bold text-muted mb-2"><i class="bi bi-shield-check me-1"></i> Rekap Kehadiran Siskamling Terbaru</h6>
+        <div id="dashboard-recent-presensi-siskamling" class="mb-3"></div>
+        <h6 class="fw-bold text-muted mb-2"><i class="bi bi-tools me-1"></i> Rekap Kehadiran Kerja Bakti Terbaru</h6>
+        <div id="dashboard-recent-presensi-kerjabakti" class="mb-4"></div>
+        <h6 class="fw-bold text-muted mb-2">Notulen Musyawarah Terbaru</h6>
+        <div id="dashboard-recent-notulen"></div>
+      </div>
+
+      <!-- SEKSI 2: NOTULEN -->
+      <div id="sec-notulen" class="page-section" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold mb-0">Notulen Rapat RT</h5>
+          <button class="btn btn-primary-custom text-white btn-sm rounded-pill px-3" onclick="openFormNotulen()"><i class="bi bi-plus-lg me-1"></i>Tambah</button>
+        </div>
+        <input type="text" id="search-notulen" class="form-control form-control-sm mb-3 rounded-pill" placeholder="🔍 Cari agenda notulen..." onkeyup="renderNotulenList()">
+        <div id="list-notulen-container"></div>
+      </div>
+
+      <!-- SEKSI 3: KEGIATAN -->
+      <div id="sec-kegiatan" class="page-section" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold mb-0">Perencanaan Kegiatan</h5>
+          <button class="btn btn-success btn-sm rounded-pill px-3" onclick="openFormKegiatan()"><i class="bi bi-plus-lg me-1"></i>Agenda Baru</button>
+        </div>
+        <input type="text" id="search-kegiatan" class="form-control form-control-sm mb-3 rounded-pill" placeholder="🔍 Cari nama agenda..." onkeyup="renderKegiatanList()">
+        <div id="list-kegiatan-container"></div>
+      </div>
+
+      <!-- SEKSI 4: WARGA -->
+      <div id="sec-warga" class="page-section" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold mb-0">Data Warga & Pengurus</h5>
+          <button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="openFormWarga()"><i class="bi bi-plus-lg me-1"></i>Tambah Warga</button>
+        </div>
+        <input type="text" id="search-warga" class="form-control form-control-sm mb-3 rounded-pill" placeholder="🔍 Cari nama atau blok rumah..." onkeyup="renderWargaList()">
+        <div id="list-warga-container"></div>
+      </div>
+
+      <!-- SEKSI 5: PENGATURAN -->
+      <div id="sec-pengaturan" class="page-section" style="display:none;">
+        <h5 class="fw-bold mb-3">Pengaturan & Data</h5>
+        
+        <div class="card card-custom p-3 mb-3 border-dark bg-dark text-white shadow-sm">
+          <h6 class="fw-bold mb-2 text-info"><i class="bi bi-qr-code-scan me-2"></i>Master QR Permanen RT</h6>
+          <p class="small opacity-75 mb-2">Cetak Master QR ini, laminating, lalu tempel permanen di pos ronda / balai RT.</p>
+          <button class="btn btn-warning fw-bold w-100 rounded-pill shadow text-dark" onclick="showPermanentMasterQR()"><i class="bi bi-printer-fill me-1"></i>Cetak QR Master Posko</button>
+        </div>
+
+        <div class="card card-custom p-3 mb-3 border-warning-subtle">
+          <h6 class="fw-bold mb-2 text-warning"><i class="bi bi-shield-lock me-2"></i>Ubah Keamanan PIN</h6>
+          <div class="mb-2"><input type="password" id="setting-pin-lama" class="form-control form-control-sm rounded-pill" placeholder="PIN Lama"></div>
+          <div class="mb-3"><input type="password" id="setting-pin-baru" class="form-control form-control-sm rounded-pill" placeholder="PIN Baru (Min. 4 digit)"></div>
+          <button class="btn btn-sm btn-primary-custom text-white rounded-pill fw-bold w-100 py-2 shadow-sm" onclick="changePinSecure()">Simpan PIN Baru</button>
+        </div>
+        
+        <div class="card card-custom p-3 mb-3 border-success-subtle bg-success-subtle bg-opacity-10">
+          <h6 class="fw-bold mb-2 text-success"><i class="bi bi-envelope-check me-2"></i>Email Pemulihan</h6>
+          <div class="mb-3"><input type="email" id="setting-email-admin" class="form-control form-control-sm rounded-pill" placeholder="contoh@gmail.com"></div>
+          <button class="btn btn-sm btn-success rounded-pill fw-bold w-100 py-2 shadow-sm" onclick="saveEmailPemulihan()">Simpan Email</button>
+        </div>
+        
+        <div class="card card-custom p-3 mb-3 border-primary-subtle">
+          <h6 class="fw-bold mb-2 text-primary-custom"><i class="bi bi-building me-2"></i>Identitas Header & Kop Surat</h6>
+          <div class="mb-2"><input type="text" id="setting-nama-rt" class="form-control form-control-sm" placeholder="Nama RT / RW"></div>
+          <div class="mb-2"><input type="text" id="setting-desa-alamat" class="form-control form-control-sm" placeholder="Desa / Kelurahan"></div>
+          <button class="btn btn-sm btn-primary-custom text-white rounded-pill fw-bold w-100 mt-1 py-2 shadow-sm" onclick="saveHeaderSettings()">Simpan Header</button>
+        </div>
+        
+        <div class="card card-custom p-3 mb-3">
+          <h6 class="fw-bold mb-2"><i class="bi bi-palette-fill me-2 text-primary-custom"></i>Tema Warna</h6>
+          <div class="d-flex flex-wrap gap-2 mb-2">
+            <button class="btn btn-sm btn-outline-primary rounded-pill fw-semibold" onclick="applyTheme('default')">🔵 Biru Ocean</button>
+            <button class="btn btn-sm btn-outline-success rounded-pill fw-semibold" onclick="applyTheme('emerald')">🟢 Hijau Emerald</button>
+            <button class="btn btn-sm btn-outline-indigo rounded-pill fw-semibold" style="color:#6366f1; border-color:#6366f1;" onclick="applyTheme('indigo')">🟣 Ungu Indigo</button>
+            <button class="btn btn-sm btn-outline-warning rounded-pill fw-semibold text-dark" onclick="applyTheme('sunset')">🟠 Oranye Sunset</button>
+            <button class="btn btn-sm btn-outline-dark rounded-pill fw-semibold" onclick="applyTheme('dark')">🌙 Dark Mode</button>
+          </div>
+        </div>
+        <div class="card card-custom p-3 mb-3 border-danger-subtle bg-danger-subtle">
+          <div class="d-flex justify-content-between align-items-center">
+            <div><h6 class="fw-bold text-danger mb-0"><i class="bi bi-box-arrow-right me-2"></i>Sesi Aplikasi</h6><small class="text-danger opacity-75">Keluar aplikasi</small></div>
+            <button class="btn btn-sm btn-danger rounded-pill fw-bold px-3" onclick="logoutApp()">Log Out</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-branding no-print">
+        <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.8</span></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
+      <button class="nav-item-btn active" onclick="switchTab('dashboard')"><i class="bi bi-grid-1x2-fill"></i><span>Beranda</span></button>
+      <button class="nav-item-btn" onclick="switchTab('notulen')"><i class="bi bi-journal-text"></i><span>Notulen</span></button>
+      <button class="nav-item-btn" onclick="switchTab('kegiatan')"><i class="bi bi-calendar-event"></i><span>Agenda</span></button>
+      <button class="nav-item-btn" onclick="switchTab('warga')"><i class="bi bi-people-fill"></i><span>Warga</span></button>
+      <button class="nav-item-btn" onclick="switchTab('pengaturan')"><i class="bi bi-sliders"></i><span>Pengaturan</span></button>
+    </nav>
+  </div>
+  <!-- ================= END WADAH ADMIN ================= -->
+
+  <!-- ================= WADAH MODE SCANNER WARGA ================= -->
+  <div id="warga-scanner-app" style="display:none; background: #0f172a; min-height: 100vh; color: #fff; position: absolute; top:0; left:0; width:100%; z-index:9999;">
+    <div class="container py-4 text-center">
+      <img src="icon-192.png" alt="Logo" style="width: 70px; border-radius: 15px; background: #fff; padding: 5px; margin-bottom: 15px;">
+      <h4 class="fw-bold mb-1 text-info">Presensi Mandiri Warga</h4>
+      <p class="small text-light opacity-75 mb-3" id="scanner-rt-header">Memuat data RT...</p>
+
+      <div class="card bg-dark border-secondary p-3 mb-3 shadow-lg text-start mx-auto" style="max-width: 400px; border-radius: 16px;" id="scanner-main-card">
+        
+        <!-- AUTO LOCK INFO -->
+        <div id="scanner-locked-info" class="mb-3 p-3 bg-info bg-opacity-10 border border-info rounded-3 text-center" style="display:none;">
+          <h6 class="text-info fw-bold mb-1"><i class="bi bi-pin-angle-fill me-1"></i>Agenda Saat Ini:</h6>
+          <h5 class="text-white fw-bold mb-1" id="locked-agenda-name">Nama Agenda</h5>
+          <small class="text-light opacity-75 d-block" id="locked-agenda-time">Batas Waktu: -</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-info mb-1"><i class="bi bi-person-badge-fill me-1"></i> 1. Ketik Nama / No. Rumah</label>
+          <input type="text" id="scanner-warga-input" class="form-control rounded-pill bg-light text-dark fw-bold" list="dl-scanner-warga" placeholder="🔍 Cari Nama / Blok...">
+          <datalist id="dl-scanner-warga"></datalist>
+        </div>
+        
+        <!-- MANUAL SELECT (HANYA MUNCUL JIKA LINK TIDAK SPESIFIK) -->
+        <div class="mb-3" id="scanner-manual-select-group">
+          <label class="form-label small fw-bold text-info mb-1"><i class="bi bi-journal-text me-1"></i> 2. Pilih Agenda Rapat / Regu Kerja</label>
+          <input type="text" id="scanner-agenda-input" class="form-control rounded-pill bg-light text-dark fw-bold" list="dl-scanner-agenda" placeholder="🔍 Pilih agenda rapat...">
+          <datalist id="dl-scanner-agenda"></datalist>
+        </div>
+        <input type="hidden" id="scanner-agenda-id-val">
+        
+        <label class="form-label small fw-bold text-info mb-1" id="label-step-3">Scan Master QR di Posko/Lokasi</label>
+        
+        <div id="btn-scan-container">
+          <button id="btn-start-scan" class="btn btn-info w-100 rounded-pill fw-bold text-white py-3 shadow" onclick="startScanner()">
+            <i class="bi bi-camera-fill me-2 fs-5"></i>Buka Kamera & Scan QR
+          </button>
+        </div>
+      </div>
+
+      <div id="scanner-reader-container" style="display:none; max-width: 4
