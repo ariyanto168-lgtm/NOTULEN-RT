@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.9.8</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.9.9</title>
   
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0ea5e9">
@@ -69,7 +69,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.8</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.9</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -186,7 +186,7 @@
       </div>
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.8</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.9</span></div>
       </div>
     </div>
 
@@ -249,7 +249,7 @@
       
       <div class="mt-4 pb-3">
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
-        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">Powered By Ari GPM • <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;">v3.9.8</span></div>
+        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">Powered By Ari GPM • <span onclick="window.location.href = window.location.href.split('?')[0];" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;">v3.9.9</span></div>
       </div>
     </div>
   </div>
@@ -260,12 +260,12 @@
   <div class="modal fade" id="modalPinLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content rounded-4 border-0 text-center p-3 shadow-lg"><div class="modal-body p-2"><div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex p-3 mb-2 text-primary-custom"><i class="bi bi-lock-fill fs-3"></i></div><h5 class="fw-bold mb-1 text-dark">Notulen RT</h5><p class="small text-muted mb-3">Masukkan PIN Keamanan Aplikasi</p><form id="form-pin-login" onsubmit="verifyPin(event)"><div class="mb-3"><input type="password" id="input-pin-login" class="form-control text-center rounded-pill py-2" placeholder="••••••••" style="letter-spacing: 4px;" autocomplete="off" required><div id="pin-login-error" class="text-danger small mt-1 fw-bold" style="display:none; font-size: 0.75rem;">PIN Salah!</div></div><button type="submit" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm mb-3">Buka Aplikasi</button></form><a href="#" onclick="openModalLupaPin(); return false;" class="small text-primary-custom text-decoration-none fw-semibold"><i class="bi bi-key-fill me-1"></i>Lupa PIN?</a></div></div></div></div>
   <div class="modal fade" id="modalLupaPin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content rounded-4 border-0 p-3 shadow-lg"><div class="modal-body p-2"><div class="d-flex justify-content-between align-items-center mb-2"><h5 class="fw-bold text-dark mb-0">Reset PIN</h5><button type="button" class="btn-close shadow-none" onclick="closeModalLupaPin()"></button></div><form id="form-otp-step1" onsubmit="sendOtpEmail(event)"><p class="small text-muted mb-3" style="font-size: 0.8rem;">Masukkan email pemulihan terdaftar.</p><div class="mb-3"><input type="email" id="input-otp-email" class="form-control form-control-sm rounded-pill py-2 text-center" placeholder="contoh@gmail.com" required></div><button type="submit" id="btn-send-otp" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm">Kirim OTP</button></form><form id="form-otp-step2" onsubmit="verifyOtpCode(event)" style="display:none;"><p class="small text-success mb-2 fw-semibold">Kode OTP telah dikirim.</p><div class="mb-3"><input type="text" id="input-otp-code" class="form-control form-control-sm rounded-pill text-center fw-bold fs-5" placeholder="123456" maxlength="6" autocomplete="off" required></div><button type="submit" class="btn btn-success w-100 rounded-pill fw-bold py-2 shadow-sm">Verifikasi OTP</button></form><form id="form-otp-step3" onsubmit="resetPinWithOtp(event)" style="display:none;"><div class="mb-2"><input type="password" id="input-new-pin-otp" class="form-control form-control-sm rounded-pill text-center" placeholder="PIN Baru" required></div><div class="mb-3"><input type="password" id="input-confirm-pin-otp" class="form-control form-control-sm rounded-pill text-center" placeholder="Konfirmasi PIN Baru" required></div><button type="submit" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm">Simpan PIN Baru</button></form></div></div></div></div>
 
-  <!-- Form Modal Notulen (DENGAN TIMER SCANNER) -->
+  <!-- Form Modal Notulen -->
   <div class="modal fade" id="modalNotulen" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold" id="modalNotulenTitle">Notulen Musyawarah</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="form-notulen"><input type="hidden" id="notulen-id"><div class="mb-2"><label class="form-label small fw-bold">Agenda</label><input type="text" id="notulen-agenda" class="form-control" required></div><div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Tanggal</label><input type="date" id="notulen-tgl" class="form-control" required></div><div class="col-6"><label class="form-label small fw-bold">Waktu Rapat</label><input type="time" id="notulen-waktu" class="form-control"></div></div><div class="mb-2"><label class="form-label small fw-bold">Tempat</label><input type="text" id="notulen-tempat" class="form-control" list="dl-warga-list"></div><div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Pimpinan</label><input type="text" id="notulen-pimpinan" class="form-control" list="dl-warga-list"></div><div class="col-6"><label class="form-label small fw-bold">Notulis</label><input type="text" id="notulen-notulis" class="form-control" list="dl-warga-list"></div></div><div class="mb-2"><label class="form-label small fw-bold">Uraian</label><textarea id="notulen-pembahasan" class="form-control" rows="3"></textarea></div><div class="mb-3"><label class="form-label small fw-bold">Keputusan</label><textarea id="notulen-keputusan" class="form-control" rows="2"></textarea></div>
   <div class="border rounded p-2 mb-3 bg-light"><h6 class="small fw-bold text-info mb-2"><i class="bi bi-qr-code-scan"></i> Pengaturan Waktu Akses Scanner QR</h6><div class="row g-2"><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Mulai Buka</label><input type="datetime-local" id="notulen-scan-start" class="form-control form-control-sm"></div><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Tutup Otomatis</label><input type="datetime-local" id="notulen-scan-end" class="form-control form-control-sm"></div></div></div>
   <button type="submit" class="btn btn-primary-custom text-white w-100 btn-rounded shadow-sm">Simpan Notulen</button></form></div></div></div></div>
   
-  <!-- Form Modal Kegiatan (DENGAN TIMER SCANNER) -->
+  <!-- Form Modal Kegiatan -->
   <div class="modal fade" id="modalKegiatan" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold" id="modalKegiatanTitle">Buat Agenda Kegiatan</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="form-kegiatan"><input type="hidden" id="kegiatan-id"><div class="mb-2"><label class="form-label small fw-bold">Nama Kegiatan</label><input type="text" id="kegiatan-nama" class="form-control" required placeholder="Contoh: Siskamling, Kerja Bakti"></div><div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Tanggal</label><input type="date" id="kegiatan-tgl" class="form-control" required></div><div class="col-6"><label class="form-label small fw-bold">Status</label><select id="kegiatan-status" class="form-select"><option value="Rencana">Rencana</option><option value="Berjalan">Berjalan</option><option value="Selesai">Selesai</option></select></div></div><div class="mb-2"><label class="form-label small fw-bold">Lokasi</label><input type="text" id="kegiatan-lokasi" class="form-control" list="dl-warga-list"></div><div class="mb-3"><label class="form-label small fw-bold">PJ Utama</label><input type="text" id="kegiatan-pj" class="form-control" list="dl-warga-list"></div>
   <div class="border rounded p-2 mb-3 bg-light"><h6 class="small fw-bold text-success mb-2"><i class="bi bi-qr-code-scan"></i> Pengaturan Waktu Akses Scanner QR</h6><div class="row g-2"><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Mulai Buka</label><input type="datetime-local" id="kegiatan-scan-start" class="form-control form-control-sm"></div><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Tutup Otomatis</label><input type="datetime-local" id="kegiatan-scan-end" class="form-control form-control-sm"></div></div></div>
   <button type="submit" class="btn btn-success w-100 btn-rounded shadow-sm">Simpan Agenda</button></form></div></div></div></div>
@@ -282,7 +282,7 @@
   <!-- SCRIPT UTAMA -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.9.8";
+    const APP_VERSION = "v3.9.9";
     // ISI DENGAN URL GOOGLE APPS SCRIPT ANDA
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
     
@@ -314,9 +314,6 @@
       setTimeout(() => { if (!document.querySelector('.modal.show')) { document.querySelectorAll('.modal-backdrop').forEach(b => b.remove()); document.body.classList.remove('modal-open'); document.body.style = ''; } }, 350);
     }
 
-    /* ========================================================================= */
-    /* LOGIKA KEAMANAN & PENGATURAN                                              */
-    /* ========================================================================= */
     function showPermanentMasterQR() {
       let container = document.getElementById('qrcode-box');
       container.innerHTML = '';
@@ -327,27 +324,26 @@
 
     function shareAutoScannerLink(tipe, idItem) {
       let itemTitle = "";
-      if(tipe === 'NOTULEN') { let dt = APP_DATA.NOTULEN.find(x => x.id === idItem); if(dt) itemTitle = "Rapat: " + dt.agenda; }
-      else if(tipe === 'KEGIATAN') { let dt = APP_DATA.KEGIATAN.find(x => x.id === idItem); if(dt) itemTitle = "Kegiatan: " + dt.nama_kegiatan; }
-      
+      if(tipe === 'NOTULEN') { let dt = APP_DATA.NOTULEN.find(x => x.id === idItem); if(dt) itemTitle = "Rapat: " + (dt.agenda || ''); }
+      else if(tipe === 'KEGIATAN') { let dt = APP_DATA.KEGIATAN.find(x => x.id === idItem); if(dt) itemTitle = "Kegiatan: " + (dt.nama_kegiatan || ''); }
       let publicUrl = window.location.href.split('?')[0] + `?mode=scanner&agenda_id=${idItem}`;
       let txt = `📢 *LINK ABSEN OTOMATIS:*\n*${itemTitle}*\n\nSilakan klik link di bawah ini untuk absen kehadiran via HP Anda:\n\n🌐 ${publicUrl}\n\n_1. Klik Link di atas_\n_2. Ketik Nama / Blok Rumah_\n_3. Arahkan Kamera ke Master QR di Lokasi (Posko)_\n\n_Aplikasi Notulen RT ${APP_VERSION}_`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
     }
 
-    function verifyPin(e) { e.preventDefault(); let inputEl = document.getElementById('input-pin-login'); let currentPin = (APP_DATA.SETTINGS && APP_DATA.SETTINGS.pin) ? APP_DATA.SETTINGS.pin.trim().toLowerCase() : "kamu nanyak"; if ((inputEl.value || '').trim().toLowerCase() === currentPin) { sessionStorage.setItem('rt_app_authenticated', 'true'); document.getElementById('pin-login-error').style.display = 'none'; inputEl.value = ''; hideModalSafe('modalPinLogin'); } else { document.getElementById('pin-login-error').style.display = 'block'; } }
+    function verifyPin(e) { e.preventDefault(); let inputEl = document.getElementById('input-pin-login'); let currentPin = (APP_DATA.SETTINGS && APP_DATA.SETTINGS.pin) ? String(APP_DATA.SETTINGS.pin).trim().toLowerCase() : "kamu nanyak"; if (String(inputEl.value || '').trim().toLowerCase() === currentPin) { sessionStorage.setItem('rt_app_authenticated', 'true'); document.getElementById('pin-login-error').style.display = 'none'; inputEl.value = ''; hideModalSafe('modalPinLogin'); } else { document.getElementById('pin-login-error').style.display = 'block'; } }
     function openModalLupaPin() { hideModalSafe('modalPinLogin'); document.getElementById('form-otp-step1').style.display = 'block'; document.getElementById('form-otp-step2').style.display = 'none'; document.getElementById('form-otp-step3').style.display = 'none'; bootstrap.Modal.getOrCreateInstance(document.getElementById('modalLupaPin')).show(); }
     function closeModalLupaPin() { hideModalSafe('modalLupaPin'); if (!sessionStorage.getItem('rt_app_authenticated')) bootstrap.Modal.getOrCreateInstance(document.getElementById('modalPinLogin')).show(); }
-    async function sendOtpEmail(e) { e.preventDefault(); let emailInput = document.getElementById('input-otp-email').value.trim(); let registeredEmail = (APP_DATA.SETTINGS.email_admin || '').trim(); if (!registeredEmail) return showAlert('Error', 'Email pemulihan belum diatur di Pengaturan!', 'error'); if (emailInput.toLowerCase() !== registeredEmail.toLowerCase()) return showAlert('Error', 'Email tidak sesuai data!', 'error'); generatedOtpCode = Math.floor(100000 + Math.random() * 900000).toString(); let btn = document.getElementById('btn-send-otp'); btn.disabled = true; btn.innerHTML = 'Mengirim...'; try { let response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'sendOtp', email: registeredEmail, otp: generatedOtpCode, nama_rt: APP_DATA.SETTINGS.nama_rt }) }); let result = await response.json(); if(result.status === 'success' || result) { document.getElementById('form-otp-step1').style.display = 'none'; document.getElementById('form-otp-step2').style.display = 'block'; showToast('OTP terkirim!'); } } catch(err) { showAlert('Gagal', 'Koneksi internet bermasalah.', 'error'); } finally { btn.disabled = false; btn.innerHTML = 'Kirim OTP'; } }
-    function verifyOtpCode(e) { e.preventDefault(); if (document.getElementById('input-otp-code').value.trim() === generatedOtpCode) { document.getElementById('form-otp-step2').style.display = 'none'; document.getElementById('form-otp-step3').style.display = 'block'; } else { showAlert('Error', 'OTP Salah!', 'error'); } }
-    function resetPinWithOtp(e) { e.preventDefault(); let np = document.getElementById('input-new-pin-otp').value.trim().toLowerCase(); let cp = document.getElementById('input-confirm-pin-otp').value.trim().toLowerCase(); if(np.length < 4) return showAlert('Perhatian', 'Minimal 4 digit', 'warning'); if(np !== cp) return showAlert('Error', 'Konfirmasi tidak cocok', 'error'); APP_DATA.SETTINGS.pin = np; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); showAlert('Berhasil!', 'PIN berhasil direset.', 'success'); closeModalLupaPin(); }
-    function changePinSecure() { let pl = document.getElementById('setting-pin-lama').value.trim().toLowerCase(); let pb = document.getElementById('setting-pin-baru').value.trim().toLowerCase(); let c = APP_DATA.SETTINGS.pin.trim().toLowerCase(); if(pl !== c) return showAlert('Error', 'PIN Lama Salah', 'error'); if(pb.length < 4) return showAlert('Perhatian', 'Minimal 4 digit', 'warning'); APP_DATA.SETTINGS.pin = pb; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); document.getElementById('setting-pin-lama').value=''; document.getElementById('setting-pin-baru').value=''; showToast('PIN diubah!'); }
-    function saveEmailPemulihan() { let v = document.getElementById('setting-email-admin').value.trim(); if(!v || !v.includes('@')) return showAlert('Perhatian', 'Email tidak valid', 'warning'); APP_DATA.SETTINGS.email_admin = v; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); showToast('Email disimpan!'); }
+    async function sendOtpEmail(e) { e.preventDefault(); let emailInput = String(document.getElementById('input-otp-email').value || '').trim(); let registeredEmail = String(APP_DATA.SETTINGS.email_admin || '').trim(); if (!registeredEmail) return showAlert('Error', 'Email pemulihan belum diatur di Pengaturan!', 'error'); if (emailInput.toLowerCase() !== registeredEmail.toLowerCase()) return showAlert('Error', 'Email tidak sesuai data!', 'error'); generatedOtpCode = Math.floor(100000 + Math.random() * 900000).toString(); let btn = document.getElementById('btn-send-otp'); btn.disabled = true; btn.innerHTML = 'Mengirim...'; try { let response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'sendOtp', email: registeredEmail, otp: generatedOtpCode, nama_rt: APP_DATA.SETTINGS.nama_rt }) }); let result = await response.json(); if(result.status === 'success' || result) { document.getElementById('form-otp-step1').style.display = 'none'; document.getElementById('form-otp-step2').style.display = 'block'; showToast('OTP terkirim!'); } } catch(err) { showAlert('Gagal', 'Koneksi internet bermasalah.', 'error'); } finally { btn.disabled = false; btn.innerHTML = 'Kirim OTP'; } }
+    function verifyOtpCode(e) { e.preventDefault(); if (String(document.getElementById('input-otp-code').value || '').trim() === generatedOtpCode) { document.getElementById('form-otp-step2').style.display = 'none'; document.getElementById('form-otp-step3').style.display = 'block'; } else { showAlert('Error', 'OTP Salah!', 'error'); } }
+    function resetPinWithOtp(e) { e.preventDefault(); let np = String(document.getElementById('input-new-pin-otp').value || '').trim().toLowerCase(); let cp = String(document.getElementById('input-confirm-pin-otp').value || '').trim().toLowerCase(); if(np.length < 4) return showAlert('Perhatian', 'Minimal 4 digit', 'warning'); if(np !== cp) return showAlert('Error', 'Konfirmasi tidak cocok', 'error'); APP_DATA.SETTINGS.pin = np; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); showAlert('Berhasil!', 'PIN berhasil direset.', 'success'); closeModalLupaPin(); }
+    function changePinSecure() { let pl = String(document.getElementById('setting-pin-lama').value || '').trim().toLowerCase(); let pb = String(document.getElementById('setting-pin-baru').value || '').trim().toLowerCase(); let c = String(APP_DATA.SETTINGS.pin || '').trim().toLowerCase(); if(pl !== c) return showAlert('Error', 'PIN Lama Salah', 'error'); if(pb.length < 4) return showAlert('Perhatian', 'Minimal 4 digit', 'warning'); APP_DATA.SETTINGS.pin = pb; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); document.getElementById('setting-pin-lama').value=''; document.getElementById('setting-pin-baru').value=''; showToast('PIN diubah!'); }
+    function saveEmailPemulihan() { let v = String(document.getElementById('setting-email-admin').value || '').trim(); if(!v || !v.includes('@')) return showAlert('Perhatian', 'Email tidak valid', 'warning'); APP_DATA.SETTINGS.email_admin = v; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); showToast('Email disimpan!'); }
     function saveHeaderSettings() { APP_DATA.SETTINGS.nama_rt = document.getElementById('setting-nama-rt').value.trim() || "RT 01"; APP_DATA.SETTINGS.desa_alamat = document.getElementById('setting-desa-alamat').value.trim() || "Desa"; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); loadHeaderSettingsToUI(); showToast('Identitas disimpan!'); }
     function logoutApp() { customConfirm('Keluar dari aplikasi?', () => { sessionStorage.removeItem('rt_app_authenticated'); localStorage.removeItem('rt_active_tab'); switchTab('dashboard'); bootstrap.Modal.getOrCreateInstance(document.getElementById('modalPinLogin')).show(); }); }
 
     /* ========================================================================= */
-    /* LOGIKA INIT DAN UI                                                        */
+    /* LOGIKA INIT DAN UI (SUDAH DIPERBAIKI BUG .TOUPPERCASE NYA)                */
     /* ========================================================================= */
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -355,7 +351,7 @@
          document.getElementById('admin-app-container').style.display = 'none';
          document.body.style.backgroundColor = '#0f172a';
          document.getElementById('warga-scanner-app').style.display = 'block';
-         let forcedAgendaId = urlParams.get('agenda_id'); // GET THE AUTO-LOCK ID
+         let forcedAgendaId = urlParams.get('agenda_id');
          initScannerWarga(forcedAgendaId);
          return;
       }
@@ -395,7 +391,7 @@
       let elKegiatan = document.getElementById('stat-kegiatan'); if(elKegiatan) elKegiatan.innerText = APP_DATA.KEGIATAN ? APP_DATA.KEGIATAN.length : 0;
       let elWarga = document.getElementById('stat-warga'); if(elWarga) elWarga.innerText = APP_DATA.WARGA ? APP_DATA.WARGA.length : 0;
 
-      // PEMBARUAN VISUALISASI DASHBOARD
+      // REKAP NOTULEN
       let pRapat = document.getElementById('dashboard-recent-presensi-rapat');
       if (pRapat) {
         let allNotulen = APP_DATA.NOTULEN || [];
@@ -410,14 +406,16 @@
             ? `<div class="mt-2 pt-2 border-top border-warning-subtle small"><strong class="text-dark d-block mb-1">Sudah Absen:</strong><div class="d-flex flex-wrap gap-1">${kehadiranList.map(k => `<span class="badge bg-warning text-dark shadow-sm px-2">${k.nama}</span>`).join('')}</div></div>`
             : `<div class="mt-2 pt-2 border-top border-warning-subtle small text-muted">Belum ada absen.</div>`;
 
-          pRapat.innerHTML = `<div class="card card-custom p-3 border-warning border shadow-sm mb-3" style="background-color: #fffaf0;"><div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0 text-dark text-truncate" style="max-width: 70%;">${lastRapat.agenda.toUpperCase()}</h6><span class="badge bg-warning text-dark shadow-sm">${persentase}% Hadir</span></div><div class="progress mt-2 border border-warning" style="height: 10px; background-color: #fff;"><div class="progress-bar bg-warning" style="width: ${persentase}%"></div></div><small class="text-muted mt-2 d-block"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>${listHtml}</div>`;
+          // (BUG FIX) pastikan string aman dengan (lastRapat.agenda || '')
+          let safeTitle = String(lastRapat.agenda || '').toUpperCase();
+          pRapat.innerHTML = `<div class="card card-custom p-3 border-warning border shadow-sm mb-3" style="background-color: #fffaf0;"><div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0 text-dark text-truncate" style="max-width: 70%;">${safeTitle}</h6><span class="badge bg-warning text-dark shadow-sm">${persentase}% Hadir</span></div><div class="progress mt-2 border border-warning" style="height: 10px; background-color: #fff;"><div class="progress-bar bg-warning" style="width: ${persentase}%"></div></div><small class="text-muted mt-2 d-block"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>${listHtml}</div>`;
         }
       }
 
+      // REKAP KEGIATAN MULTIPLE
       let pKegiatan = document.getElementById('dashboard-recent-presensi-kegiatan');
       if (pKegiatan) {
         let allKegiatan = APP_DATA.KEGIATAN || [];
-        // MENAMPILKAN 3 KEGIATAN TERAKHIR (AGAR KERJABAKTI, SISKAMLING DLL SEMUA TAMPIL)
         let activeKegiatans = allKegiatan.slice(-3).reverse(); 
         
         if (activeKegiatans.length === 0) {
@@ -431,15 +429,20 @@
                 let listHtml = kehadiranList.length > 0 
                   ? `<div class="mt-2 pt-2 border-top border-success-subtle small"><strong class="text-dark d-block mb-2">Sudah Absen:</strong><div class="d-flex flex-wrap gap-1">${kehadiranList.map(k => {
                        let rL = "";
-                       if (k.status_hadir && String(k.status_hadir).includes('Regu:')) {
-                          let rName = String(k.status_hadir).split('Regu:')[1].replace(')', '').trim();
-                          rL = `<span class="badge bg-success opacity-75 ms-1" style="font-size:0.55rem;">(${rName.toUpperCase()})</span>`;
+                       // (BUG FIX) Aman pecah string Regu
+                       let sHadir = String(k.status_hadir || '');
+                       if (sHadir.includes('Regu:')) {
+                          let splitRegu = sHadir.split('Regu:');
+                          let rName = splitRegu.length > 1 ? splitRegu[1].replace(')', '').trim() : '';
+                          if(rName) rL = `<span class="badge bg-success opacity-75 ms-1" style="font-size:0.55rem;">(${rName.toUpperCase()})</span>`;
                        }
                        return `<span class="badge bg-success text-white shadow-sm px-2 py-1 mb-1 d-flex align-items-center">${k.nama}${rL}</span>`;
                      }).join('')}</div></div>`
                   : `<div class="mt-2 pt-2 border-top border-success-subtle small text-muted">Belum ada absen.</div>`;
 
-                return `<div class="card card-custom p-3 border-success border-2 shadow-sm mb-3" style="background-color: #f0fdf4;"><div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0 text-dark text-truncate" style="max-width: 70%;">${keg.nama_kegiatan.toUpperCase()}</h6><span class="badge bg-success text-white shadow-sm">${persentase}% Hadir</span></div><div class="progress mt-2 border border-success" style="height: 10px; background-color: #fff;"><div class="progress-bar bg-success" style="width: ${persentase}%"></div></div><small class="text-dark mt-2 d-block fw-semibold"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>${listHtml}</div>`;
+                // (BUG FIX) pastikan string aman dengan (keg.nama_kegiatan || '')
+                let safeTitle = String(keg.nama_kegiatan || '').toUpperCase();
+                return `<div class="card card-custom p-3 border-success border-2 shadow-sm mb-3" style="background-color: #f0fdf4;"><div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0 text-dark text-truncate" style="max-width: 70%;">${safeTitle}</h6><span class="badge bg-success text-white shadow-sm">${persentase}% Hadir</span></div><div class="progress mt-2 border border-success" style="height: 10px; background-color: #fff;"><div class="progress-bar bg-success" style="width: ${persentase}%"></div></div><small class="text-dark mt-2 d-block fw-semibold"><b>${kehadiranList.length}</b> dari <b>${totalWarga}</b> KK hadir.</small>${listHtml}</div>`;
             }).join('');
         }
       }
@@ -449,24 +452,23 @@
         if (!APP_DATA.NOTULEN || APP_DATA.NOTULEN.length === 0) rNot.innerHTML = `<div class="text-center text-muted py-3 small">Belum ada notulen.</div>`;
         else {
           let l = APP_DATA.NOTULEN[APP_DATA.NOTULEN.length - 1];
-          rNot.innerHTML = `<div class="card card-custom p-3 border-primary border shadow-sm"><h6 class="fw-bold mb-1">${l.agenda.toUpperCase()}</h6><div class="small text-muted mb-2">${formatTanggal(l.tgl_rapat)}</div><p class="small text-secondary mb-2">${l.keputusan || l.pembahasan || '-'}</p><button class="btn btn-sm btn-outline-primary rounded-pill fw-bold w-100" onclick="shareWA('${l.id}')"><i class="bi bi-whatsapp me-1"></i>Share Rangkuman</button></div>`;
+          // (BUG FIX) pastikan string aman dengan (l.agenda || '')
+          let safeTitle = String(l.agenda || '').toUpperCase();
+          rNot.innerHTML = `<div class="card card-custom p-3 border-primary border shadow-sm"><h6 class="fw-bold mb-1">${safeTitle}</h6><div class="small text-muted mb-2">${formatTanggal(l.tgl_rapat)}</div><p class="small text-secondary mb-2">${l.keputusan || l.pembahasan || '-'}</p><button class="btn btn-sm btn-outline-primary rounded-pill fw-bold w-100" onclick="shareWA('${l.id}')"><i class="bi bi-whatsapp me-1"></i>Share Rangkuman</button></div>`;
         }
       }
 
       renderNotulenList(); renderKegiatanList(); renderWargaList();
     }
 
-    /* ========================================================================= */
-    /* DAFTAR LISTING ADMIN                                                      */
-    /* ========================================================================= */
     function renderNotulenList() {
-      let q = (document.getElementById('search-notulen')?.value || '').toLowerCase(); let container = document.getElementById('list-notulen-container');
+      let q = String(document.getElementById('search-notulen')?.value || '').toLowerCase(); let container = document.getElementById('list-notulen-container');
       if(!container) return;
-      let filtered = (APP_DATA.NOTULEN || []).filter(x => (x.agenda || '').toLowerCase().includes(q));
+      let filtered = (APP_DATA.NOTULEN || []).filter(x => String(x.agenda || '').toLowerCase().includes(q));
       if (filtered.length === 0) return container.innerHTML = `<div class="card p-4 text-center text-muted">Data kosong.</div>`;
       container.innerHTML = [...filtered].reverse().map(item => `
         <div class="card card-custom p-3 mb-2">
-          <h6 class="fw-bold mb-0 text-dark">${item.agenda}</h6><small class="text-muted mb-2 d-block">${formatTanggal(item.tgl_rapat)}</small>
+          <h6 class="fw-bold mb-0 text-dark">${item.agenda || '-'}</h6><small class="text-muted mb-2 d-block">${formatTanggal(item.tgl_rapat)}</small>
           <button class="btn btn-sm btn-info text-white fw-bold w-100 rounded-pill mb-2 shadow-sm" onclick="shareAutoScannerLink('NOTULEN', '${item.id}')"><i class="bi bi-qr-code-scan me-1"></i>Share Link Scanner</button>
           <div class="d-flex gap-2"><button class="btn btn-sm btn-light text-primary flex-fill fw-bold" onclick="shareWA('${item.id}')"><i class="bi bi-whatsapp"></i></button><button class="btn btn-sm btn-light text-secondary" onclick="editNotulen('${item.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-sm btn-light text-dark" onclick="openPrintModal('${item.id}')"><i class="bi bi-printer"></i></button><button class="btn btn-sm btn-light text-danger" onclick="deleteItem('NOTULEN', '${item.id}')"><i class="bi bi-trash"></i></button></div>
         </div>
@@ -474,9 +476,9 @@
     }
 
     function renderKegiatanList() {
-      let q = (document.getElementById('search-kegiatan')?.value || '').toLowerCase(); let container = document.getElementById('list-kegiatan-container');
+      let q = String(document.getElementById('search-kegiatan')?.value || '').toLowerCase(); let container = document.getElementById('list-kegiatan-container');
       if(!container) return;
-      let filtered = (APP_DATA.KEGIATAN || []).filter(x => (x.nama_kegiatan || '').toLowerCase().includes(q));
+      let filtered = (APP_DATA.KEGIATAN || []).filter(x => String(x.nama_kegiatan || '').toLowerCase().includes(q));
       if (filtered.length === 0) return container.innerHTML = `<div class="card p-4 text-center text-muted">Data kosong.</div>`;
       container.innerHTML = [...filtered].reverse().map(item => {
         let rabItems = (APP_DATA.ANGGARAN || []).filter(a => a && String(a.id_kegiatan) === String(item.id));
@@ -484,7 +486,7 @@
         let totalRab = rabItems.reduce((acc, curr) => acc + ((Number(curr.jumlah)||0) * (Number(curr.harga_satuan)||0)), 0);
         return `
           <div class="card card-custom p-3 mb-2">
-            <div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0">${item.nama_kegiatan}</h6><span class="badge bg-primary">${item.status}</span></div>
+            <div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0">${item.nama_kegiatan || '-'}</h6><span class="badge bg-primary">${item.status || 'Rencana'}</span></div>
             <small class="text-muted d-block mb-2">${formatTanggal(item.tgl)}</small>
             <div class="d-flex justify-content-between align-items-center bg-light rounded-3 p-2 mb-2">
               <small class="fw-bold text-success mb-0">RAB: Rp ${totalRab.toLocaleString('id-ID')}</small>
@@ -501,14 +503,14 @@
     }
 
     function renderWargaList() {
-      let q = (document.getElementById('search-warga')?.value || '').toLowerCase(); let container = document.getElementById('list-warga-container');
+      let q = String(document.getElementById('search-warga')?.value || '').toLowerCase(); let container = document.getElementById('list-warga-container');
       if(!container) return;
-      let filtered = (APP_DATA.WARGA || []).filter(x => (x.nama || '').toLowerCase().includes(q));
+      let filtered = (APP_DATA.WARGA || []).filter(x => String(x.nama || '').toLowerCase().includes(q));
       container.innerHTML = filtered.map(item => `<div class="card card-custom p-3 mb-2 d-flex flex-row justify-content-between align-items-center"><div><h6 class="fw-bold mb-0">${item.nama}</h6><small class="text-muted">Blok: ${item.no_rumah||'-'}</small></div><div class="d-flex gap-1"><button class="btn btn-sm btn-light text-secondary" onclick="editWarga('${item.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-sm btn-light text-danger" onclick="deleteItem('WARGA', '${item.id}')"><i class="bi bi-trash"></i></button></div></div>`).join('');
     }
 
     /* ========================================================================= */
-    /* LOGIKA FORM SUBMIT ADMIN (DENGAN BATAS WAKTU)                             */
+    /* LOGIKA FORM SUBMIT ADMIN                                                  */
     /* ========================================================================= */
     function openFormNotulen() { document.getElementById('form-notulen').reset(); document.getElementById('notulen-id').value = ''; document.getElementById('notulen-tgl').value = new Date().toISOString().split('T')[0]; new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
     function editNotulen(id) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('notulen-id').value = item.id; document.getElementById('notulen-agenda').value = item.agenda || ''; document.getElementById('notulen-tgl').value = item.tgl_rapat ? item.tgl_rapat.split('T')[0] : ''; document.getElementById('notulen-waktu').value = item.waktu || ''; document.getElementById('notulen-tempat').value = item.tempat || ''; document.getElementById('notulen-pimpinan').value = item.pimpinan || ''; document.getElementById('notulen-notulis').value = item.notulis || ''; document.getElementById('notulen-pembahasan').value = item.pembahasan || ''; document.getElementById('notulen-keputusan').value = item.keputusan || ''; document.getElementById('notulen-scan-start').value = item.scanner_start || ''; document.getElementById('notulen-scan-end').value = item.scanner_end || ''; new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
@@ -531,7 +533,7 @@
     function editReguItem(idRegu) { let item = APP_DATA.REGU.find(r => String(r.id) === String(idRegu)); if(!item) return; document.getElementById('regu-id').value = item.id; document.getElementById('regu-nama-input').value = item.nama_regu || ''; document.getElementById('regu-tgl-input').value = item.tgl ? item.tgl.split('T')[0] : ''; document.getElementById('regu-jam-input').value = item.jam || '08:00'; document.getElementById('regu-lokasi-input').value = item.lokasi || ''; document.getElementById('regu-pj-input').value = item.koordinator || ''; document.getElementById('btn-submit-regu').innerText = 'Update Regu'; }
     document.getElementById('form-regu-item').addEventListener('submit', function(e) { e.preventDefault(); let rId = document.getElementById('regu-id').value; let existingAnggota = []; if (rId) { let exItem = APP_DATA.REGU.find(r => String(r.id) === String(rId)); if (exItem) existingAnggota = getAnggotaArr(exItem); } let newItem = { id: rId, id_kegiatan: currentReguKegiatanId, nama_regu: document.getElementById('regu-nama-input').value, tgl: document.getElementById('regu-tgl-input').value, jam: document.getElementById('regu-jam-input').value || '08:00', lokasi: document.getElementById('regu-lokasi-input').value, koordinator: document.getElementById('regu-pj-input').value, anggota: existingAnggota }; saveLocalAndSync('REGU', newItem); resetFormReguBaru(); renderReguList(); showToast('Regu disimpan!'); });
     function openModalAnggotaRegu(idRegu) { currentAnggotaReguId = idRegu; let regu = APP_DATA.REGU.find(r => r.id === idRegu); let currArr = getAnggotaArr(regu); document.getElementById('anggota-regu-title').innerText = `Target: ${regu.nama_regu}`; document.getElementById('anggota-search-warga').value = ''; let container = document.getElementById('anggota-checklist-container'); if (!APP_DATA.WARGA || APP_DATA.WARGA.length === 0) { container.innerHTML = `<div class="text-center text-muted small py-2">Data warga kosong.</div>`; document.getElementById('anggota-count').innerText = '0'; } else { let allReguInAgenda = (APP_DATA.REGU || []).filter(r => r && String(r.id_kegiatan) === String(currentReguKegiatanId)); let html = '<div class="row g-1">'; APP_DATA.WARGA.forEach(w => { let isChecked = currArr.includes(w.nama); let inOtherRegu = false; let otherReguName = ''; allReguInAgenda.forEach(otherR => { if (otherR.id !== idRegu && getAnggotaArr(otherR).includes(w.nama)) { inOtherRegu = true; otherReguName = otherR.nama_regu; } }); if (inOtherRegu) { html += `<div class="col-6 anggota-item" data-search="${(w.nama).toLowerCase()}"><div class="form-check p-1 px-2 border rounded bg-light d-flex flex-column mb-1 shadow-sm opacity-50"><div class="d-flex align-items-center gap-1"><input class="form-check-input ms-0 me-1" type="checkbox" disabled><label class="form-check-label small text-truncate fw-semibold text-muted" style="font-size:0.75rem;">${w.nama}</label></div><small class="text-danger" style="font-size: 0.6rem;">Masuk ${otherReguName}</small></div></div>`; } else { html += `<div class="col-6 anggota-item" data-search="${(w.nama).toLowerCase()}"><div class="form-check p-1 px-2 border rounded bg-white d-flex align-items-center gap-1 mb-1 shadow-sm"><input class="form-check-input ms-0 me-1 valid-cb" type="checkbox" value="${w.nama}" id="cb-regu-${w.id}" ${isChecked ? 'checked' : ''} onchange="updateAnggotaCount()"><label class="form-check-label small text-truncate fw-semibold" for="cb-regu-${w.id}" style="font-size:0.75rem;">${w.nama}</label></div></div>`; } }); html += '</div>'; container.innerHTML = html; updateAnggotaCount(); } new bootstrap.Modal(document.getElementById('modalAnggotaRegu')).show(); }
-    function filterAnggotaRegu() { let q = (document.getElementById('anggota-search-warga').value || '').toLowerCase(); document.querySelectorAll('.anggota-item').forEach(item => { item.style.display = (item.getAttribute('data-search') || '').includes(q) ? 'block' : 'none'; }); }
+    function filterAnggotaRegu() { let q = String(document.getElementById('anggota-search-warga').value || '').toLowerCase(); document.querySelectorAll('.anggota-item').forEach(item => { item.style.display = (item.getAttribute('data-search') || '').includes(q) ? 'block' : 'none'; }); }
     function updateAnggotaCount() { document.getElementById('anggota-count').innerText = document.querySelectorAll('#anggota-checklist-container input[type="checkbox"]:checked').length; }
     function selectAllAnggota(status) { document.querySelectorAll('#anggota-checklist-container .anggota-item').forEach(item => { if (item.style.display !== 'none') { let chk = item.querySelector('input[type="checkbox"].valid-cb'); if (chk && !chk.disabled) chk.checked = status; } }); updateAnggotaCount(); }
     function saveAnggotaRegu() { let regu = APP_DATA.REGU.find(r => r.id === currentAnggotaReguId); if(!regu) return; regu.anggota = Array.from(document.querySelectorAll('#anggota-checklist-container input[type="checkbox"].valid-cb:checked')).map(cb => cb.value); saveLocalAndSync('REGU', regu); hideModalSafe('modalAnggotaRegu'); renderReguList(); showToast('Anggota disave!'); }
@@ -546,8 +548,8 @@
     function openPrintModal(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if (!item) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let kehadiran = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama); document.getElementById('print-area').innerHTML = `<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3"><div class="d-flex align-items-center gap-3"><img src="icon-192.png" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;" onerror="this.style.display='none'"><div><h4 class="fw-bold mb-0 text-dark">RUKUN TETANGGA (${rt})</h4><p class="mb-0 text-muted small fw-semibold">${desa.toUpperCase()}</p></div></div><div class="text-end"><span class="badge bg-light text-dark border px-2 py-1">Versi: ${APP_VERSION}</span></div></div><table class="table table-sm table-borderless mb-3 small"><tr><td width="130" class="fw-bold">Agenda</td><td>: ${item.agenda}</td></tr><tr><td class="fw-bold">Tanggal</td><td>: ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '| ' + item.waktu : ''}</td></tr><tr><td class="fw-bold">Tempat</td><td>: ${item.tempat || '-'}</td></tr><tr><td class="fw-bold">Pimpinan Rapat</td><td>: ${item.pimpinan || '-'}</td></tr><tr><td class="fw-bold">Notulis</td><td>: ${item.notulis || '-'}</td></tr></table><div class="mb-3"><h6 class="fw-bold border-bottom pb-1">I. PEMBAHASAN & URAIAN</h6><p class="small text-secondary" style="white-space: pre-line;">${item.pembahasan || '-'}</p></div><div class="mb-3"><h6 class="fw-bold border-bottom pb-1">II. KEPUTUSAN MUSYAWARAH</h6><p class="small text-secondary" style="white-space: pre-line;">${item.keputusan || '-'}</p></div><div class="mb-4"><h6 class="fw-bold border-bottom pb-1">III. DAFTAR HADIR (${kehadiran.length} Org)</h6><p class="small text-secondary">${kehadiran.length > 0 ? kehadiran.join(', ') : 'Belum ada presensi'}</p></div><div class="row text-center mt-5 small"><div class="col-6">Pimpinan Rapat,<br><br><br><b>(${item.pimpinan || 'Ketua RT'})</b></div><div class="col-6">Notulis,<br><br><br><b>(${item.notulis || 'Sekretaris'})</b></div></div>`; new bootstrap.Modal(document.getElementById('modalCetak')).show(); }
 
     function openModalPresensi() { let select = document.getElementById('presensi-agenda-select'); let notulenOpts = (APP_DATA.NOTULEN || []).map(n => `<option value="${n.id}">[Rapat] ${n.agenda}</option>`); let kegiatanOpts = (APP_DATA.KEGIATAN || []).map(k => `<option value="${k.id}">[Agenda] ${k.nama_kegiatan}</option>`); select.innerHTML = [...notulenOpts, ...kegiatanOpts].join(''); if ((APP_DATA.NOTULEN || []).length === 0 && (APP_DATA.KEGIATAN || []).length === 0) return showAlert('Perhatian', 'Buat agenda terlebih dahulu.', 'warning'); loadPresensiChecklist(); new bootstrap.Modal(document.getElementById('modalPresensi')).show(); }
-    function loadPresensiChecklist() { let selId = document.getElementById('presensi-agenda-select').value; let exist = (APP_DATA.KEHADIRAN || []).filter(k => k && String(k.id_kegiatan) === String(selId)).map(k => k.nama); let allReguInAgenda = (APP_DATA.REGU || []).filter(r => r && String(r.id_kegiatan) === String(selId)); let container = document.getElementById('presensi-checklist-container'); if (!APP_DATA.WARGA || APP_DATA.WARGA.length === 0) { container.innerHTML = `<div class="text-center small py-2">Data warga kosong.</div>`; return; } document.getElementById('presensi-total').innerText = APP_DATA.WARGA.length; document.getElementById('presensi-count').innerText = exist.length; let html = `<div class="row g-1">`; APP_DATA.WARGA.forEach(w => { let isCh = exist.includes(w.nama); let reguLabel = ""; let wargaRegu = allReguInAgenda.find(r => getAnggotaArr(r).includes(w.nama)); if(wargaRegu) reguLabel = `<span class="badge bg-info text-white ms-1 shadow-sm" style="font-size:0.6rem;">${wargaRegu.nama_regu}</span>`; html += `<div class="col-6 presensi-item" data-search="${(w.nama).toLowerCase()}"><div class="form-check p-1 px-2 border rounded bg-white d-flex align-items-center gap-1 mb-1"><input class="form-check-input ms-0 me-1" type="checkbox" value="${w.nama}" id="chk-${w.id}" ${isCh ? 'checked' : ''} onchange="updatePresensiCount()"><label class="form-check-label small text-truncate fw-semibold" for="chk-${w.id}" style="font-size:0.75rem;">${w.nama} ${reguLabel}</label></div></div>`; }); html += `</div>`; container.innerHTML = html; }
-    function filterPresensiWarga() { let q = (document.getElementById('presensi-search-warga').value || '').toLowerCase(); document.querySelectorAll('.presensi-item').forEach(item => { item.style.display = (item.getAttribute('data-search') || '').includes(q) ? 'block' : 'none'; }); }
+    function loadPresensiChecklist() { let selId = document.getElementById('presensi-agenda-select').value; let exist = (APP_DATA.KEHADIRAN || []).filter(k => k && String(k.id_kegiatan) === String(selId)).map(k => k.nama); let allReguInAgenda = (APP_DATA.REGU || []).filter(r => r && String(r.id_kegiatan) === String(selId)); let container = document.getElementById('presensi-checklist-container'); if (!APP_DATA.WARGA || APP_DATA.WARGA.length === 0) { container.innerHTML = `<div class="text-center small py-2">Data warga kosong.</div>`; return; } document.getElementById('presensi-total').innerText = APP_DATA.WARGA.length; document.getElementById('presensi-count').innerText = exist.length; let html = `<div class="row g-1">`; APP_DATA.WARGA.forEach(w => { let isCh = exist.includes(w.nama); let reguLabel = ""; let wargaRegu = allReguInAgenda.find(r => getAnggotaArr(r).includes(w.nama)); if(wargaRegu) reguLabel = `<span class="badge bg-info text-white ms-1 shadow-sm" style="font-size:0.6rem;">${wargaRegu.nama_regu}</span>`; html += `<div class="col-6 presensi-item" data-search="${String(w.nama).toLowerCase()}"><div class="form-check p-1 px-2 border rounded bg-white d-flex align-items-center gap-1 mb-1"><input class="form-check-input ms-0 me-1" type="checkbox" value="${w.nama}" id="chk-${w.id}" ${isCh ? 'checked' : ''} onchange="updatePresensiCount()"><label class="form-check-label small text-truncate fw-semibold" for="chk-${w.id}" style="font-size:0.75rem;">${w.nama} ${reguLabel}</label></div></div>`; }); html += `</div>`; container.innerHTML = html; }
+    function filterPresensiWarga() { let q = String(document.getElementById('presensi-search-warga').value || '').toLowerCase(); document.querySelectorAll('.presensi-item').forEach(item => { item.style.display = (item.getAttribute('data-search') || '').includes(q) ? 'block' : 'none'; }); }
     function updatePresensiCount() { document.getElementById('presensi-count').innerText = document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').length; }
     function selectAllPresensi(st) { document.querySelectorAll('#presensi-checklist-container .presensi-item').forEach(item => { if (item.style.display !== 'none') { let chk = item.querySelector('input[type="checkbox"]'); if (chk) chk.checked = st; } }); updatePresensiCount(); }
     async function savePresensi() { let selId = document.getElementById('presensi-agenda-select').value; let allReguInAgenda = (APP_DATA.REGU || []).filter(r => r && String(r.id_kegiatan) === String(selId)); APP_DATA.KEHADIRAN = (APP_DATA.KEHADIRAN || []).filter(k => k && String(k.id_kegiatan) !== String(selId)); document.querySelectorAll('#presensi-checklist-container input[type="checkbox"]:checked').forEach(chk => { let namaW = chk.value; let reguWargaIni = allReguInAgenda.find(r => getAnggotaArr(r).includes(namaW)); let statusHadirDynamic = reguWargaIni ? `Hadir (Regu: ${reguWargaIni.nama_regu})` : 'Hadir'; saveLocalAndSync('KEHADIRAN', { id_kegiatan: selId, nama: namaW, status_hadir: statusHadirDynamic, waktu: new Date().toLocaleTimeString('id-ID') }); }); localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); hideModalSafe('modalPresensi'); showToast('Daftar Hadir Disimpan!'); }
@@ -570,13 +572,10 @@
     let html5QrcodeScanner = null, scannerAppData = { NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], REGU: [] }, scannerApiUrl = ""; 
     
     async function initScannerWarga(forcedAgendaId) {
-      // 1. Cek Sesi Tersimpan (Anti Duplicate yang sekarang lebih spesifik)
       let sessionScanner = localStorage.getItem('rt_scanner_session');
       if (sessionScanner) {
          let sData = JSON.parse(sessionScanner);
          
-         // PERUBAHAN: Hanya kunci layar jika warga membuka LINK agenda yang sama.
-         // Jika warga membuka link agenda baru (contoh kemarin siskamling, sekarang kerjabakti) hapus sesi lama.
          if (!forcedAgendaId || String(sData.idAgenda) === String(forcedAgendaId)) {
              document.getElementById('scanner-warga-input').value = sData.namaWarga;
              document.getElementById('scanner-warga-input').disabled = true; 
@@ -586,12 +585,10 @@
              
              scannerApiUrl = API_URL; try { let res = await fetch(scannerApiUrl + '?action=sync'); let json = await res.json(); if (json.status === 'success') scannerAppData = json.data; } catch(e){} return; 
          } else {
-             // Jika beda agenda, warga diizinkan absen di agenda baru ini
              localStorage.removeItem('rt_scanner_session');
          }
       }
 
-      // 2. Load Data dari Server
       let dlWarga = document.getElementById('dl-scanner-warga'), dlAgenda = document.getElementById('dl-scanner-agenda'), inAgenda = document.getElementById('scanner-agenda-input'), hidAgendaId = document.getElementById('scanner-agenda-id-val');
       try {
         scannerApiUrl = API_URL; let res = await fetch(scannerApiUrl + '?action=sync'); let json = await res.json();
@@ -602,11 +599,9 @@
           
           let combined = [...(scannerAppData.NOTULEN || []).map(n => ({ id: n.id, title: n.agenda, date: n.tgl_rapat, start: n.scanner_start, end: n.scanner_end })), ...(scannerAppData.KEGIATAN || []).map(k => ({ id: k.id, title: k.nama_kegiatan, date: k.tgl, start: k.scanner_start, end: k.scanner_end }))].reverse();
           
-          // 3. Logika Jika Dibuka dari Link Khusus (Auto Lock)
           if (forcedAgendaId) {
             let activeAgenda = combined.find(i => i.id === forcedAgendaId);
             if (activeAgenda) {
-              // Cek Timer / Batas Waktu
               let now = new Date();
               let isLockedOut = false;
               let timeText = "Bebas Waktu (Manual)";
@@ -626,12 +621,12 @@
                  if (now > endDt) isLockedOut = true;
               }
 
-              document.getElementById('scanner-manual-select-group').style.display = 'none'; // Sembunyikan pilihan
-              hidAgendaId.value = activeAgenda.id; // Kunci ID
+              document.getElementById('scanner-manual-select-group').style.display = 'none'; 
+              hidAgendaId.value = activeAgenda.id; 
               
               let lockBox = document.getElementById('scanner-locked-info');
               lockBox.style.display = 'block';
-              document.getElementById('locked-agenda-name').innerText = activeAgenda.title.toUpperCase();
+              document.getElementById('locked-agenda-name').innerText = String(activeAgenda.title || '').toUpperCase();
               document.getElementById('locked-agenda-time').innerText = "Waktu Absen: " + timeText;
 
               if (isLockedOut) {
@@ -646,9 +641,8 @@
                showAlert('Error', 'Agenda tidak ditemukan di server.', 'error');
             }
           } else {
-             // Jika link umum, tampilkan pilihan manual
-             if (dlAgenda) dlAgenda.innerHTML = combined.map(i => `<option value="${(i.title||'').toUpperCase()} | ${formatTanggal(i.date)}"></option>`).join('');
-             if(inAgenda) { inAgenda.addEventListener('input', function() { let v = this.value; let m = combined.find(i => `${(i.title||'').toUpperCase()} | ${formatTanggal(i.date)}` === v) || combined.find(i => v.includes((i.title||'').toUpperCase())); if (m) hidAgendaId.value = m.id; }); }
+             if (dlAgenda) dlAgenda.innerHTML = combined.map(i => `<option value="${String(i.title||'').toUpperCase()} | ${formatTanggal(i.date)}"></option>`).join('');
+             if(inAgenda) { inAgenda.addEventListener('input', function() { let v = String(this.value || ''); let m = combined.find(i => `${String(i.title||'').toUpperCase()} | ${formatTanggal(i.date)}` === v) || combined.find(i => v.includes(String(i.title||'').toUpperCase())); if (m) hidAgendaId.value = m.id; }); }
           }
         }
       } catch(e) { document.getElementById('scanner-status').style.display = 'block'; document.getElementById('scanner-status').innerHTML = `<span class='text-danger small fw-bold'>❌ Error: Tidak dapat memuat data.</span>`; }
@@ -657,13 +651,13 @@
     function showDirectTaskView(idAgenda, namaWarga) { document.getElementById('scanner-status').style.display = 'none'; renderWargaTaskDetail(idAgenda, namaWarga); }
     
     async function startScanner() {
-      let inWargaVal = document.getElementById('scanner-warga-input').value.trim(); let namaWarga = inWargaVal.split('(')[0].trim();
+      let inWargaVal = String(document.getElementById('scanner-warga-input').value || '').trim(); let namaWarga = inWargaVal.split('(')[0].trim();
       let idAgenda = document.getElementById('scanner-agenda-id-val').value;
       if (!namaWarga || !idAgenda) return showAlert('Perhatian', 'Nama dan Agenda harus lengkap!', 'warning');
       
       document.getElementById('scanner-status').style.display = 'none'; document.getElementById('warga-task-view').style.display = 'none';
       document.getElementById('scanner-reader-container').style.display = 'block'; document.getElementById('btn-scan-container').style.display = 'none';
-      document.getElementById('scanner-main-card').style.display = 'none'; // Bersihkan UI saat scan
+      document.getElementById('scanner-main-card').style.display = 'none'; 
 
       if(!html5QrcodeScanner) html5QrcodeScanner = new Html5Qrcode("scanner-reader"); 
       try { await html5QrcodeScanner.start({ facingMode: "environment" }, { fps: 15, qrbox: { width: 250, height: 250 } }, (d) => { stopScannerNative(); processScanResult(d, namaWarga, idAgenda); }, (e) => {}); } catch(err) { try { await html5QrcodeScanner.start({ facingMode: "user" }, { fps: 15, qrbox: { width: 250, height: 250 } }, (d) => { stopScannerNative(); processScanResult(d, namaWarga, idAgenda); }, (e) => {}); } catch(e2) { showAlert('Error', 'Kamera tidak dapat diakses.', 'error'); stopScanner(); } }
