@@ -1,4 +1,4 @@
-const CACHE_NAME = "notulen-rt-v3.9.8";
+const CACHE_NAME = "notulen-rt-v3.9.9";
 
 // Daftar aset utama yang langsung disimpan saat aplikasi pertama kali diakses
 const ASSETS_TO_CACHE = [
@@ -46,7 +46,6 @@ self.addEventListener("activate", (event) => {
 // 3. FETCH EVENT: Strategi Network-First untuk HTML/Aset
 self.addEventListener("fetch", (event) => {
   // Abaikan request ke database Google Apps Script dan request selain GET (seperti POST save data)
-  // Request ini biar diselesaikan langsung oleh jaringan (atau dibatalkan jika offline)
   if (event.request.url.includes("script.google.com") || event.request.method !== "GET") {
     return;
   }
