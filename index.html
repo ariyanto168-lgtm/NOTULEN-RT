@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Perencanaan Kegiatan RT v3.9.14</title>
+  <title>Notulen & Perencanaan Kegiatan RT v3.9.15</title>
   
-  <link rel="manifest" href="manifest.json?v=3.9.14">
+  <link rel="manifest" href="manifest.json?v=3.9.15">
   <meta name="theme-color" content="#0ea5e9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -72,14 +72,13 @@
     <div id="error-log-display" class="text-danger small mt-3 px-4 fw-bold" style="word-break: break-all;"></div>
   </div>
   <script>
-    // Munculkan tombol darurat jika JS macet setelah 3 detik
     setTimeout(() => { let b = document.getElementById('btn-hard-reset'); if(b) b.style.display='inline-block'; }, 3000);
     async function hardResetApp() {
         document.getElementById('btn-hard-reset').innerHTML = "Mereset...";
         try {
             if ('serviceWorker' in navigator) { let regs = await navigator.serviceWorker.getRegistrations(); for (let r of regs) await r.unregister(); }
             if ('caches' in window) { let ks = await caches.keys(); for (let k of ks) await caches.delete(k); }
-            sessionStorage.clear(); // Bersihkan sesi tab, tapi biarkan localStorage (Data Warga/Notulen) tetap aman!
+            sessionStorage.clear();
             window.location.replace(window.location.href.split('?')[0] + "?refresh=" + new Date().getTime());
         } catch(e) { window.location.reload(true); }
     }
@@ -96,7 +95,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.14</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.15</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -223,7 +222,7 @@
       </div>
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.14</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.15</span></div>
       </div>
     </div>
 
@@ -287,7 +286,7 @@
       <div class="mt-4 pb-3">
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <!-- PINTU KELUAR RAHASIA ADMIN -->
-        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">Powered By Ari GPM • <span onclick="keluarModeScanner()" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;">v3.9.14</span></div>
+        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">Powered By Ari GPM • <span onclick="keluarModeScanner()" class="text-secondary fw-normal" style="cursor: pointer; padding: 5px;">v3.9.15</span></div>
       </div>
     </div>
   </div>
@@ -313,17 +312,17 @@
   <div class="modal fade" id="modalAnggotaRegu" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold">Pilih Anggota Warga</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body pt-2"><div class="mb-2 fw-bold text-info border-bottom pb-1" id="anggota-regu-title"></div><input type="text" id="anggota-search-warga" class="form-control form-control-sm mb-2 rounded-pill" placeholder="🔍 Cari nama..." onkeyup="filterAnggotaRegu()"><div class="d-flex justify-content-between align-items-center mb-2 px-1"><small class="fw-bold text-muted">Terpilih: <span id="anggota-count" class="text-info">0</span></small><button class="btn btn-xs btn-outline-secondary rounded-pill py-0 px-2" onclick="selectAllAnggota(false)">Reset Pilihan</button></div><div id="anggota-checklist-container" class="border rounded-3 p-2 bg-light" style="max-height: 280px; overflow-y: auto;"></div><button class="btn btn-info w-100 btn-rounded text-white fw-bold mt-3 shadow-sm" onclick="saveAnggotaRegu()">Simpan Data Anggota</button></div></div></div></div>
   <div class="modal fade" id="modalRab" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0 d-flex justify-content-between align-items-center"><div><h5 class="modal-title fw-bold">Rencana Anggaran Biaya (RAB)</h5><small class="text-muted" id="rab-kegiatan-title"></small></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="form-rab-item" class="card card-custom p-3 bg-light mb-3"><input type="hidden" id="rab-id"><div class="mb-2"><input type="text" id="rab-nama-kebutuhan" class="form-control form-control-sm" placeholder="Nama Kebutuhan" required></div><div class="row g-2 mb-2"><div class="col-4"><input type="number" id="rab-jumlah" class="form-control form-control-sm" placeholder="Jumlah" required value="1"></div><div class="col-4"><input type="text" id="rab-satuan" class="form-control form-control-sm" placeholder="Satuan"></div><div class="col-4"><input type="number" id="rab-harga" class="form-control form-control-sm" placeholder="Harga Satuan" required></div></div><button type="submit" id="btn-submit-rab" class="btn btn-success text-white btn-sm rounded-pill fw-bold w-100 py-2 shadow-sm">+ Tambah Ke Anggaran</button></form><div class="table-responsive"><table class="table table-sm align-middle table-hover border"><thead class="table-light small"><tr><th>Kebutuhan</th><th class="text-center">Vol/Sat</th><th class="text-end">Harga</th><th class="text-end">Subtotal</th><th class="text-center"><i class="bi bi-gear"></i></th></tr></thead><tbody id="rab-items-container"></tbody><tfoot class="table-light fw-bold"><tr><td colspan="3" class="text-end">Total RAB:</td><td class="text-end text-success" id="rab-grand-total">Rp 0</td><td></td></tr></tfoot></table></div></div></div></div></div>
 
-  <div class="modal fade" id="modalPresensi" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0 d-flex justify-content-between align-items-center"><h5 class="modal-title fw-bold">Presensi Kehadiran</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body pt-2"><div class="mb-2"><label class="form-label small fw-bold mb-1">Pilih Agenda</label><select id="presensi-agenda-select" class="form-select form-select-sm" onchange="loadPresensiChecklist()"></select></div><div class="d-flex justify-content-between align-items-center my-2"><small class="fw-bold text-muted">Hadir: <span id="presensi-count" class="text-primary-custom fw-bold">0</span> / <span id="presensi-total">0</span> KK</small><div class="d-flex gap-1"><button class="btn btn-xs btn-outline-primary rounded-pill py-0 px-2" style="font-size:0.72rem;" onclick="selectAllPresensi(true)">Pilih Semua</button><button class="btn btn-xs btn-outline-secondary rounded-pill py-0 px-2" style="font-size:0.72rem;" onclick="selectAllPresensi(false)">Reset</button></div></div><input type="text" id="presensi-search-warga" class="form-control form-control-sm mb-2 rounded-pill" placeholder="🔍 Cari nama atau blok..." onkeyup="filterPresensiWarga()"><div id="presensi-checklist-container" class="border rounded-3 p-2 bg-light" style="max-height: 280px; overflow-y: auto;"></div><button class="btn class="btn-warning w-100 btn-rounded text-dark fw-bold mt-3 shadow-sm" onclick="savePresensi()">Simpan Daftar Hadir Manual</button></div></div></div></div>
+  <div class="modal fade" id="modalPresensi" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0 d-flex justify-content-between align-items-center"><h5 class="modal-title fw-bold">Presensi Kehadiran</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body pt-2"><div class="mb-2"><label class="form-label small fw-bold mb-1">Pilih Agenda</label><select id="presensi-agenda-select" class="form-select form-select-sm" onchange="loadPresensiChecklist()"></select></div><div class="d-flex justify-content-between align-items-center my-2"><small class="fw-bold text-muted">Hadir: <span id="presensi-count" class="text-primary-custom fw-bold">0</span> / <span id="presensi-total">0</span> KK</small><div class="d-flex gap-1"><button class="btn btn-xs btn-outline-primary rounded-pill py-0 px-2" style="font-size:0.72rem;" onclick="selectAllPresensi(true)">Pilih Semua</button><button class="btn btn-xs btn-outline-secondary rounded-pill py-0 px-2" style="font-size:0.72rem;" onclick="selectAllPresensi(false)">Reset</button></div></div><input type="text" id="presensi-search-warga" class="form-control form-control-sm mb-2 rounded-pill" placeholder="🔍 Cari nama atau blok..." onkeyup="filterPresensiWarga()"><div id="presensi-checklist-container" class="border rounded-3 p-2 bg-light" style="max-height: 280px; overflow-y: auto;"></div><button class="btn btn-warning w-100 btn-rounded text-dark fw-bold mt-3 shadow-sm" onclick="savePresensi()">Simpan Daftar Hadir Manual</button></div></div></div></div>
   <div class="modal fade" id="modalCetak" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 no-print"><h5 class="modal-title fw-bold">Pratinjau Cetak Notulen</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body p-4" id="print-area"></div><div class="modal-footer border-0 no-print"><button class="btn btn-primary-custom text-white rounded-pill px-4 shadow-sm" onclick="window.print()"><i class="bi bi-printer me-2"></i>Cetak PDF</button></div></div></div></div>
 
   <!-- SCRIPT UTAMA -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const APP_VERSION = "v3.9.14";
+    const APP_VERSION = "v3.9.15";
     // ISI DENGAN URL GOOGLE APPS SCRIPT ANDA
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
     
-    // SAFE JSON PARSING: Mencegah Layar Putih karena data corrupt
+    // SAFE JSON PARSING
     let APP_DATA = { SETTINGS: { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju", pin: "kamu nanyak", email_admin: "" }, NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], ANGGARAN: [], REGU: [] };
     try {
         let rawLocal = localStorage.getItem('rt_app_data');
@@ -333,7 +332,6 @@
         }
     } catch(err) { console.error("Struktur JSON local corrupt, menggunakan struktur bawaan."); }
 
-    // Memastikan setiap Array/Objek penting TIDAK undefined (Penyebab utama JS crash)
     if (!APP_DATA.SETTINGS) APP_DATA.SETTINGS = { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju", pin: "kamu nanyak", email_admin: "" };
     if (!APP_DATA.NOTULEN) APP_DATA.NOTULEN = [];
     if (!APP_DATA.KEGIATAN) APP_DATA.KEGIATAN = [];
@@ -372,22 +370,19 @@
     function logoutApp() { customConfirm('Keluar dari aplikasi?', () => { sessionStorage.removeItem('rt_app_authenticated'); localStorage.removeItem('rt_active_tab'); switchTab('dashboard'); bootstrap.Modal.getOrCreateInstance(document.getElementById('modalPinLogin')).show(); }); }
 
     /* ========================================================================= */
-    /* LOGIKA INIT (ANTI LAYAR PUTIH - DENGAN TRY/CATCH BERLAPIS)                */
+    /* LOGIKA INIT & SAFE-BOOT LOADER                                            */
     /* ========================================================================= */
     document.addEventListener('DOMContentLoaded', () => {
       try {
-          // 1. Bersihkan SW Lama secara agresif
           if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(registrations => {
               for(let reg of registrations) { reg.unregister(); } 
             }).catch(()=>{});
           }
 
-          // 2. Persiapan URL
           const urlParams = new URLSearchParams(window.location.search);
           let isScannerMode = (urlParams.get('mode') === 'scanner') || (sessionStorage.getItem('rt_force_scanner_mode') === 'true');
 
-          // 3. Matikan layar Fallback (Tanda bahwa JS tidak macet saat inisialisasi)
           let fallbackLoader = document.getElementById('app-loading-fallback');
           if(fallbackLoader) fallbackLoader.style.display = 'none';
 
@@ -396,32 +391,26 @@
              document.getElementById('admin-app-container').style.display = 'none';
              document.body.style.backgroundColor = '#0f172a';
              document.getElementById('warga-scanner-app').style.display = 'block';
-             
              if (urlParams.get('agenda_id')) { sessionStorage.setItem('rt_scanner_saved_agenda', urlParams.get('agenda_id')); }
-             let safeAgendaId = sessionStorage.getItem('rt_scanner_saved_agenda');
-             
-             initScannerWarga(safeAgendaId);
+             initScannerWarga(sessionStorage.getItem('rt_scanner_saved_agenda'));
              return; 
           }
 
-          // 4. Render Mode Admin
           document.getElementById('admin-app-container').style.display = 'block'; 
           applyTheme(localStorage.getItem('rt_theme') || 'default');
           loadHeaderSettingsToUI();
           switchTab(localStorage.getItem('rt_active_tab') || 'dashboard', false);
-          
           renderUI();
           if (API_URL) syncData();
           if (!sessionStorage.getItem('rt_app_authenticated')) bootstrap.Modal.getOrCreateInstance(document.getElementById('modalPinLogin')).show();
           
       } catch (err) {
-          // TANGKAP SEMUA ERROR (JANGAN BIARKAN LAYAR PUTIH)
           console.error("FATAL ERROR (UI):", err);
           let fallbackLoader = document.getElementById('app-loading-fallback');
           if(fallbackLoader) {
               fallbackLoader.style.display = 'flex';
               document.getElementById('btn-hard-reset').style.display = 'inline-block';
-              document.getElementById('error-log-display').innerText = "FATAL ERROR (Harap klik tombol Reset): " + err.message;
+              document.getElementById('error-log-display').innerText = "FATAL ERROR: " + err.message;
           }
       }
     });
@@ -444,8 +433,8 @@
       renderNotulenList(); renderKegiatanList(); renderWargaList();
     }
 
-    function renderNotulenList() { let q = String(document.getElementById('search-notulen')?.value || '').toLowerCase(); let container = document.getElementById('list-notulen-container'); if(!container) return; let filtered = (APP_DATA.NOTULEN || []).filter(x => String(x.agenda || '').toLowerCase().includes(q)); if (filtered.length === 0) return container.innerHTML = `<div class="card p-4 text-center text-muted">Data kosong.</div>`; container.innerHTML = [...filtered].reverse().map(item => `<div class="card card-custom p-3 mb-2"><h6 class="fw-bold mb-0 text-dark">${item.agenda || '-'}</h6><small class="text-muted mb-2 d-block">${formatTanggal(item.tgl_rapat)}</small><button class="btn btn-sm btn-info text-white fw-bold w-100 rounded-pill mb-2 shadow-sm" onclick="shareAutoScannerLink('NOTULEN', '${item.id}')"><i class="bi bi-qr-code-scan me-1"></i>Share Link Scanner</button><div class="d-flex gap-2"><button class="btn btn-sm btn-light text-primary flex-fill fw-bold" onclick="shareWA('${item.id}')"><i class="bi bi-whatsapp"></i></button><button class="btn btn-sm btn-light text-secondary" onclick="editNotulen('${item.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-sm btn-light text-dark" onclick="openPrintModal('${item.id}')"><i class="bi bi-printer"></i></button><button class="btn btn-sm btn-light text-danger" onclick="deleteItem('NOTULEN', '${item.id}')"><i class="bi bi-trash"></i></button></div></div>`).join(''); }
-    function renderKegiatanList() { let q = String(document.getElementById('search-kegiatan')?.value || '').toLowerCase(); let container = document.getElementById('list-kegiatan-container'); if(!container) return; let filtered = (APP_DATA.KEGIATAN || []).filter(x => String(x.nama_kegiatan || '').toLowerCase().includes(q)); if (filtered.length === 0) return container.innerHTML = `<div class="card p-4 text-center text-muted">Data kosong.</div>`; container.innerHTML = [...filtered].reverse().map(item => { let rabItems = (APP_DATA.ANGGARAN || []).filter(a => a && String(a.id_kegiatan) === String(item.id)); let reguItems = (APP_DATA.REGU || []).filter(r => r && String(r.id_kegiatan) === String(item.id)); let totalRab = rabItems.reduce((acc, curr) => acc + ((Number(curr.jumlah)||0) * (Number(curr.harga_satuan)||0)), 0); return `<div class="card card-custom p-3 mb-2"><div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0">${item.nama_kegiatan || '-'}</h6><span class="badge bg-primary">${item.status || 'Rencana'}</span></div><small class="text-muted d-block mb-2">${formatTanggal(item.tgl)}</small><div class="d-flex justify-content-between align-items-center bg-light rounded-3 p-2 mb-2"><small class="fw-bold text-success mb-0">RAB: Rp ${totalRab.toLocaleString('id-ID')}</small><div class="d-flex gap-1"><button class="btn btn-xs btn-outline-success fw-bold py-0 px-2 rounded-pill" onclick="openModalRab('${item.id}')"><i class="bi bi-calculator me-1"></i>(${rabItems.length})</button><button class="btn btn-xs btn-outline-info fw-bold py-0 px-2 rounded-pill" onclick="openModalRegu('${item.id}')"><i class="bi bi-diagram-3-fill me-1"></i>Regu (${reguItems.length})</button></div></div><button class="btn btn-sm btn-info text-white fw-bold w-100 rounded-pill mb-2 shadow-sm" onclick="shareAutoScannerLink('KEGIATAN', '${item.id}')"><i class="bi bi-qr-code-scan me-1"></i>Share Link Scanner</button><div class="d-flex gap-2"><button class="btn btn-sm btn-success flex-fill fw-bold rounded-pill" onclick="shareAgendaWA('${item.id}')"><i class="bi bi-whatsapp"></i> Info Info</button><button class="btn btn-sm btn-light border text-secondary" onclick="editKegiatan('${item.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-sm btn-light border text-danger" onclick="deleteItem('KEGIATAN', '${item.id}')"><i class="bi bi-trash"></i></button></div></div>`; }).join(''); }
+    function renderNotulenList() { let q = String(document.getElementById('search-notulen')?.value || '').toLowerCase(); let container = document.getElementById('list-notulen-container'); if(!container) return; let filtered = (APP_DATA.NOTULEN || []).filter(x => String(x.agenda || '').toLowerCase().includes(q)); if (filtered.length === 0) return container.innerHTML = `<div class="card p-4 text-center text-muted">Data kosong.</div>`; container.innerHTML = [...filtered].reverse().map(item => `<div class="card card-custom p-3 mb-2"><h6 class="fw-bold mb-0 text-dark">${item.agenda || '-'}</h6><small class="text-muted mb-2 d-block">${formatTanggal(item.tgl_rapat)}</small><button class="btn btn-sm btn-info text-white fw-bold w-100 rounded-pill mb-2 shadow-sm" onclick="shareAutoScannerLink('NOTULEN', '${item.id}')"><i class="bi bi-qr-code-scan me-1"></i>Share Link Scanner</button><div class="row g-2 mb-2"><div class="col-6"><button class="btn btn-sm btn-success w-100 fw-bold rounded-pill shadow-sm" onclick="shareWA('${item.id}')"><i class="bi bi-whatsapp me-1"></i>Rangkuman</button></div><div class="col-6"><button class="btn btn-sm btn-primary-custom text-white w-100 fw-bold rounded-pill shadow-sm" onclick="shareAbsensiWA('NOTULEN', '${item.id}')"><i class="bi bi-person-lines-fill me-1"></i>Lap. Absen</button></div></div><div class="d-flex gap-2"><button class="btn btn-sm btn-light border text-secondary flex-fill rounded-pill" onclick="editNotulen('${item.id}')"><i class="bi bi-pencil"></i> Edit</button><button class="btn btn-sm btn-light border text-dark flex-fill rounded-pill" onclick="openPrintModal('${item.id}')"><i class="bi bi-printer"></i> Cetak</button><button class="btn btn-sm btn-light border text-danger flex-fill rounded-pill" onclick="deleteItem('NOTULEN', '${item.id}')"><i class="bi bi-trash"></i> Hapus</button></div></div>`).join(''); }
+    function renderKegiatanList() { let q = String(document.getElementById('search-kegiatan')?.value || '').toLowerCase(); let container = document.getElementById('list-kegiatan-container'); if(!container) return; let filtered = (APP_DATA.KEGIATAN || []).filter(x => String(x.nama_kegiatan || '').toLowerCase().includes(q)); if (filtered.length === 0) return container.innerHTML = `<div class="card p-4 text-center text-muted">Data kosong.</div>`; container.innerHTML = [...filtered].reverse().map(item => { let rabItems = (APP_DATA.ANGGARAN || []).filter(a => a && String(a.id_kegiatan) === String(item.id)); let reguItems = (APP_DATA.REGU || []).filter(r => r && String(r.id_kegiatan) === String(item.id)); let totalRab = rabItems.reduce((acc, curr) => acc + ((Number(curr.jumlah)||0) * (Number(curr.harga_satuan)||0)), 0); return `<div class="card card-custom p-3 mb-2"><div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0">${item.nama_kegiatan || '-'}</h6><span class="badge bg-primary">${item.status || 'Rencana'}</span></div><small class="text-muted d-block mb-2">${formatTanggal(item.tgl)}</small><div class="d-flex justify-content-between align-items-center bg-light rounded-3 p-2 mb-2"><small class="fw-bold text-success mb-0">RAB: Rp ${totalRab.toLocaleString('id-ID')}</small><div class="d-flex gap-1"><button class="btn btn-xs btn-outline-success fw-bold py-0 px-2 rounded-pill" onclick="openModalRab('${item.id}')"><i class="bi bi-calculator me-1"></i>(${rabItems.length})</button><button class="btn btn-xs btn-outline-info fw-bold py-0 px-2 rounded-pill" onclick="openModalRegu('${item.id}')"><i class="bi bi-diagram-3-fill me-1"></i>Regu (${reguItems.length})</button></div></div><button class="btn btn-sm btn-info text-white fw-bold w-100 rounded-pill mb-2 shadow-sm" onclick="shareAutoScannerLink('KEGIATAN', '${item.id}')"><i class="bi bi-qr-code-scan me-1"></i>Share Link Scanner</button><div class="row g-2 mb-2"><div class="col-6"><button class="btn btn-sm btn-success w-100 fw-bold rounded-pill shadow-sm" onclick="shareAgendaWA('${item.id}')"><i class="bi bi-whatsapp me-1"></i>Info Info</button></div><div class="col-6"><button class="btn btn-sm btn-primary-custom text-white w-100 fw-bold rounded-pill shadow-sm" onclick="shareAbsensiWA('KEGIATAN', '${item.id}')"><i class="bi bi-person-lines-fill me-1"></i>Lap. Absen</button></div></div><div class="d-flex gap-2"><button class="btn btn-sm btn-light border text-secondary flex-fill rounded-pill" onclick="editKegiatan('${item.id}')"><i class="bi bi-pencil"></i> Edit</button><button class="btn btn-sm btn-light border text-danger flex-fill rounded-pill" onclick="deleteItem('KEGIATAN', '${item.id}')"><i class="bi bi-trash"></i> Hapus</button></div></div>`; }).join(''); }
     function renderWargaList() { let q = String(document.getElementById('search-warga')?.value || '').toLowerCase(); let container = document.getElementById('list-warga-container'); if(!container) return; let filtered = (APP_DATA.WARGA || []).filter(x => String(x.nama || '').toLowerCase().includes(q)); container.innerHTML = filtered.map(item => `<div class="card card-custom p-3 mb-2 d-flex flex-row justify-content-between align-items-center"><div><h6 class="fw-bold mb-0">${item.nama}</h6><small class="text-muted">Blok: ${item.no_rumah||'-'}</small></div><div class="d-flex gap-1"><button class="btn btn-sm btn-light text-secondary" onclick="editWarga('${item.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-sm btn-light text-danger" onclick="deleteItem('WARGA', '${item.id}')"><i class="bi bi-trash"></i></button></div></div>`).join(''); }
 
     /* ========================================================================= */
@@ -482,8 +471,14 @@
     function editRabItem(idItem) { let item = APP_DATA.ANGGARAN.find(a => String(a.id) === String(idItem)); if(!item) return; document.getElementById('rab-id').value = item.id; document.getElementById('rab-nama-kebutuhan').value = item.nama_kebutuhan || ''; document.getElementById('rab-jumlah').value = item.jumlah || ''; document.getElementById('rab-satuan').value = item.satuan || ''; document.getElementById('rab-harga').value = item.harga_satuan || ''; document.getElementById('btn-submit-rab').innerText = 'Update Anggaran'; }
     document.getElementById('form-rab-item').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('ANGGARAN', { id: document.getElementById('rab-id').value, id_kegiatan: currentRabKegiatanId, nama_kebutuhan: document.getElementById('rab-nama-kebutuhan').value, jumlah: document.getElementById('rab-jumlah').value, satuan: document.getElementById('rab-satuan').value, harga_satuan: document.getElementById('rab-harga').value }); document.getElementById('form-rab-item').reset(); renderRabList(); showToast('RAB Disimpan'); });
 
+    /* ========================================================================= */
+    /* LOGIKA SHARE WA (RANGKUMAN & LAPORAN ABSENSI)                             */
+    /* ========================================================================= */
     function shareWA(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if(!item) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let kehadiran = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama); let txt = `📢 *HASIL MUSYAWARAH RT*\n🏛️ *${rt} - ${desa}*\n━━━━━━━━━━━━━━━━━━━━━\n📌 *Agenda:* ${item.agenda}\n📅 *Tgl:* ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '(' + item.waktu + ')' : ''}\n📍 *Tempat:* ${item.tempat || '-'}\n👤 *Pimpinan:* ${item.pimpinan || '-'}\n✍️ *Notulis:* ${item.notulis || '-'}\n━━━━━━━━━━━━━━━━━━━━━\n\n👥 *DAFTAR HADIR (${kehadiran.length} KK):*\n`; if (kehadiran.length > 0) txt += `${kehadiran.map((n, i) => `  ${i+1}. ${n}`).join('\n')}\n\n`; else txt += `_Belum ada presensi_\n\n`; txt += `💡 *PEMBAHASAN:*\n${item.pembahasan || '-'}\n\n✅ *KEPUTUSAN FINAL:* \n${item.keputusan || '-'}\n\n_Dibuat via Aplikasi Notulen RT (${APP_VERSION}) | Powered By Ari GPM_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
     function shareAgendaWA(idKegiatan) { let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan)); if (!keg) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let txt = `📋 *PERENCANAAN AGENDA & REGU KERJA*\n🏛️ *${rt} - ${desa}*\n━━━━━━━━━━━━━━━━━━━━━\n📌 *Agenda Utama:* ${keg.nama_kegiatan}\n📅 *Tanggal:* ${formatTanggal(keg.tgl)}\n📍 *Lokasi:* ${keg.lokasi || '-'}\n👤 *PJ Utama:* ${keg.penanggung_jawab || '-'}\n━━━━━━━━━━━━━━━━━━━━━\n\n👥 *PEMBAGIAN KELOMPOK KERJA:*\n\n`; let reguItems = (APP_DATA.REGU || []).filter(r => r && String(r.id_kegiatan) === String(idKegiatan)); if (reguItems.length > 0) { reguItems.forEach((r, idx) => { let arrAnggota = getAnggotaArr(r); txt += `*${idx+1}. ${r.nama_regu}*\n   • Waktu: ${formatTanggal(r.tgl)} (Jam ${r.jam})\n   • Target Lokasi: ${r.lokasi}\n   • Koordinator Regu: ${r.koordinator}\n   • Anggota Warga (${arrAnggota.length} Orang):\n`; if (arrAnggota.length > 0) { arrAnggota.forEach((a, i) => { txt += `      ${i+1}) ${a}\n`; }); } else { txt += `      _(Belum ada anggota)_\n`; } txt += `\n`; }); } else { txt += `_Belum ada pembagian kelompok kerja._\n\n`; } txt += `━━━━━━━━━━━━━━━━━━━━━\n\n`; let rabItems = (APP_DATA.ANGGARAN || []).filter(a => a && String(a.id_kegiatan) === String(idKegiatan)); if (rabItems.length > 0) { let grandTotal = 0; txt += `💰 *RENCANA ANGGARAN BIAYA (RAB):*\n\n`; rabItems.forEach((item, idx) => { let qty = Number(item.jumlah) || 0; let harga = Number(item.harga_satuan) || 0; let tot = qty * harga; grandTotal += tot; let satuanTxt = item.satuan ? ` ${item.satuan}` : ''; txt += `🔹 *${idx+1}. ${item.nama_kebutuhan}*\n   ${qty}${satuanTxt} x Rp ${harga.toLocaleString('id-ID')} = *Rp ${tot.toLocaleString('id-ID')}*\n`; }); txt += `\n💸 *TOTAL RAB: Rp ${grandTotal.toLocaleString('id-ID')}*\n\n━━━━━━━━━━━━━━━━━━━━━\n`; } txt += `_Aplikasi Notulen RT ${APP_VERSION} | Powered By Ari GPM_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
+    
+    function shareAbsensiWA(tipe, idItem) { let itemTitle = ""; let itemDate = ""; if(tipe === 'NOTULEN') { let dt = APP_DATA.NOTULEN.find(x => x.id === idItem); if(!dt) return; itemTitle = "Rapat: " + (dt.agenda || ''); itemDate = formatTanggal(dt.tgl_rapat); } else if(tipe === 'KEGIATAN') { let dt = APP_DATA.KEGIATAN.find(x => x.id === idItem); if(!dt) return; itemTitle = "Kegiatan: " + (dt.nama_kegiatan || ''); itemDate = formatTanggal(dt.tgl); } let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa"; let totalWarga = APP_DATA.WARGA ? APP_DATA.WARGA.length : 0; let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(k => k && String(k.id_kegiatan) === String(idItem)); let hadirCount = kehadiranList.length; let persentase = totalWarga > 0 ? Math.round((hadirCount / totalWarga) * 100) : 0; let txt = `📊 *LAPORAN ABSENSI KEHADIRAN*\n🏛️ *${rt} - ${desa}*\n━━━━━━━━━━━━━━━━━━━━━\n📌 *Agenda:* ${itemTitle}\n📅 *Tanggal:* ${itemDate}\n📈 *Tingkat Kehadiran:* ${hadirCount} dari ${totalWarga} KK (${persentase}%)\n━━━━━━━━━━━━━━━━━━━━━\n\n👥 *RINCIAN WARGA HADIR:*\n\n`; if (hadirCount > 0) { kehadiranList.forEach((k, idx) => { let st = k.status_hadir || 'Hadir'; txt += `  ${idx + 1}. ${k.nama} - _${st}_\n`; }); } else { txt += `_Belum ada data absensi masuk._\n`; } txt += `\n━━━━━━━━━━━━━━━━━━━━━\n_Aplikasi Notulen RT ${APP_VERSION} | Powered By Ari GPM_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
+
     function openPrintModal(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if (!item) return; let rt = APP_DATA.SETTINGS.nama_rt || "RT 01 / RW 01"; let desa = APP_DATA.SETTINGS.desa_alamat || "Desa Sukamaju"; let kehadiran = (APP_DATA.KEHADIRAN || []).filter(k => String(k.id_kegiatan) === String(idNotulen)).map(k => k.nama); document.getElementById('print-area').innerHTML = `<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3"><div class="d-flex align-items-center gap-3"><img src="icon-192.png" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;" onerror="this.style.display='none'"><div><h4 class="fw-bold mb-0 text-dark">RUKUN TETANGGA (${rt})</h4><p class="mb-0 text-muted small fw-semibold">${desa.toUpperCase()}</p></div></div><div class="text-end"><span class="badge bg-light text-dark border px-2 py-1">Versi: ${APP_VERSION}</span></div></div><table class="table table-sm table-borderless mb-3 small"><tr><td width="130" class="fw-bold">Agenda</td><td>: ${item.agenda}</td></tr><tr><td class="fw-bold">Tanggal</td><td>: ${formatTanggal(item.tgl_rapat)} ${item.waktu ? '| ' + item.waktu : ''}</td></tr><tr><td class="fw-bold">Tempat</td><td>: ${item.tempat || '-'}</td></tr><tr><td class="fw-bold">Pimpinan Rapat</td><td>: ${item.pimpinan || '-'}</td></tr><tr><td class="fw-bold">Notulis</td><td>: ${item.notulis || '-'}</td></tr></table><div class="mb-3"><h6 class="fw-bold border-bottom pb-1">I. PEMBAHASAN & URAIAN</h6><p class="small text-secondary" style="white-space: pre-line;">${item.pembahasan || '-'}</p></div><div class="mb-3"><h6 class="fw-bold border-bottom pb-1">II. KEPUTUSAN MUSYAWARAH</h6><p class="small text-secondary" style="white-space: pre-line;">${item.keputusan || '-'}</p></div><div class="mb-4"><h6 class="fw-bold border-bottom pb-1">III. DAFTAR HADIR (${kehadiran.length} Org)</h6><p class="small text-secondary">${kehadiran.length > 0 ? kehadiran.join(', ') : 'Belum ada presensi'}</p></div><div class="row text-center mt-5 small"><div class="col-6">Pimpinan Rapat,<br><br><br><b>(${item.pimpinan || 'Ketua RT'})</b></div><div class="col-6">Notulis,<br><br><br><b>(${item.notulis || 'Sekretaris'})</b></div></div>`; new bootstrap.Modal(document.getElementById('modalCetak')).show(); }
 
     function openModalPresensi() { let select = document.getElementById('presensi-agenda-select'); let notulenOpts = (APP_DATA.NOTULEN || []).map(n => `<option value="${n.id}">[Rapat] ${n.agenda}</option>`); let kegiatanOpts = (APP_DATA.KEGIATAN || []).map(k => `<option value="${k.id}">[Agenda] ${k.nama_kegiatan}</option>`); select.innerHTML = [...notulenOpts, ...kegiatanOpts].join(''); if ((APP_DATA.NOTULEN || []).length === 0 && (APP_DATA.KEGIATAN || []).length === 0) return showAlert('Perhatian', 'Buat agenda terlebih dahulu.', 'warning'); loadPresensiChecklist(); new bootstrap.Modal(document.getElementById('modalPresensi')).show(); }
@@ -508,193 +503,4 @@
     /* ========================================================================= */
     /* LOGIKA SCANNER WARGA (ANTI-KECURANGAN & PERMANENT DEVICE LOCK)            */
     /* ========================================================================= */
-    let html5QrcodeScanner = null, scannerAppData = { NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], REGU: [] }, scannerApiUrl = ""; 
-    
-    function keluarModeScanner() {
-        sessionStorage.removeItem('rt_force_scanner_mode');
-        sessionStorage.removeItem('rt_scanner_saved_agenda');
-        localStorage.removeItem('rt_scanner_session');
-        window.location.href = window.location.href.split('?')[0];
-    }
-
-    function resetScannerSession() {
-        Swal.fire({
-            title: 'Akses Ditolak!',
-            text: 'Demi keamanan dan mencegah kecurangan (numpang absen), perangkat ini sudah dikunci atas nama warga yang telah melakukan absensi. Anda tidak diizinkan mengganti nama.',
-            icon: 'error',
-            confirmButtonColor: '#d33'
-        });
-    }
-
-    async function initScannerWarga(forcedAgendaId) {
-      let sessionScanner = localStorage.getItem('rt_scanner_session');
-      if (sessionScanner) {
-         let sData = JSON.parse(sessionScanner);
-         
-         if (!forcedAgendaId || String(sData.idAgenda) === String(forcedAgendaId)) {
-             document.getElementById('scanner-warga-input').value = sData.namaWarga;
-             document.getElementById('scanner-warga-input').disabled = true; 
-             document.getElementById('scanner-manual-select-group').style.display = 'none';
-             document.getElementById('label-step-3').innerText = "3. Sesi Absen Selesai";
-             document.getElementById('btn-scan-container').innerHTML = `
-                <div class="alert alert-dark border-success bg-black text-center mb-0">
-                    <i class="bi bi-check-circle-fill text-success fs-2 mb-2 d-block"></i>
-                    <h6 class="text-white fw-bold">Sesi Perangkat Terkunci</h6>
-                    <small class="text-muted d-block mb-3">Absen atas nama <b>${sData.namaWarga}</b> telah sukses tercatat di perangkat ini.</small>
-                    <button class="btn btn-outline-info w-100 rounded-pill fw-bold mb-2" onclick="showDirectTaskView('${sData.idAgenda}', '${sData.namaWarga}')">Lihat Detail Penugasan</button>
-                    <button class="btn btn-outline-danger w-100 rounded-pill fw-bold" onclick="resetScannerSession()"><i class="bi bi-shield-lock-fill me-1"></i> Ganti Nama (Terkunci)</button>
-                </div>`;
-             
-             scannerApiUrl = API_URL; try { let res = await fetch(scannerApiUrl + '?action=sync'); let json = await res.json(); if (json.status === 'success') scannerAppData = json.data; } catch(e){} return; 
-         } else {
-             localStorage.removeItem('rt_scanner_session');
-         }
-      }
-
-      let dlWarga = document.getElementById('dl-scanner-warga'), dlAgenda = document.getElementById('dl-scanner-agenda'), inAgenda = document.getElementById('scanner-agenda-input'), hidAgendaId = document.getElementById('scanner-agenda-id-val');
-      try {
-        scannerApiUrl = API_URL; let res = await fetch(scannerApiUrl + '?action=sync'); let json = await res.json();
-        if (json.status === 'success') {
-          scannerAppData = json.data;
-          document.getElementById('scanner-rt-header').innerText = `${scannerAppData.SETTINGS?.nama_rt || "RT"} - ${scannerAppData.SETTINGS?.desa_alamat || ""}`;
-          if (dlWarga) dlWarga.innerHTML = (scannerAppData.WARGA || []).map(x => `<option value="${x.nama} (${x.no_rumah || '-'})"></option>`).join('');
-          
-          let combined = [...(scannerAppData.NOTULEN || []).map(n => ({ id: n.id, title: n.agenda, date: n.tgl_rapat, start: n.scanner_start, end: n.scanner_end })), ...(scannerAppData.KEGIATAN || []).map(k => ({ id: k.id, title: k.nama_kegiatan, date: k.tgl, start: k.scanner_start, end: k.scanner_end }))].reverse();
-          
-          if (forcedAgendaId) {
-            let activeAgenda = combined.find(i => i.id === forcedAgendaId);
-            if (activeAgenda) {
-              let now = new Date();
-              let isLockedOut = false;
-              let timeText = "Bebas Waktu (Manual)";
-              
-              if (activeAgenda.start && activeAgenda.end) {
-                let startDt = new Date(activeAgenda.start); let endDt = new Date(activeAgenda.end);
-                timeText = `${startDt.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})} s/d ${endDt.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}`;
-                if (now < startDt || now > endDt) isLockedOut = true;
-              } else if (activeAgenda.start) {
-                 let startDt = new Date(activeAgenda.start);
-                 timeText = `Mulai: ${startDt.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}`;
-                 if (now < startDt) isLockedOut = true;
-              } else if (activeAgenda.end) {
-                 let endDt = new Date(activeAgenda.end);
-                 timeText = `Tutup: ${endDt.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}`;
-                 if (now > endDt) isLockedOut = true;
-              }
-
-              document.getElementById('scanner-manual-select-group').style.display = 'none'; 
-              hidAgendaId.value = activeAgenda.id; 
-              
-              let lockBox = document.getElementById('scanner-locked-info');
-              lockBox.style.display = 'block';
-              document.getElementById('locked-agenda-name').innerText = String(activeAgenda.title || '').toUpperCase();
-              document.getElementById('locked-agenda-time').innerText = "Waktu Absen: " + timeText;
-
-              if (isLockedOut) {
-                 lockBox.className = "mb-3 p-3 bg-danger bg-opacity-10 border border-danger rounded-3 text-center";
-                 lockBox.innerHTML += `<div class="mt-2 text-danger fw-bold"><i class="bi bi-x-circle-fill"></i> WAKTU ABSEN DITUTUP / BELUM DIMULAI</div>`;
-                 document.getElementById('scanner-warga-input').disabled = true;
-                 document.getElementById('btn-start-scan').disabled = true;
-                 document.getElementById('btn-start-scan').className = "btn btn-secondary w-100 rounded-pill fw-bold text-white py-3 shadow";
-                 return;
-              }
-            } else {
-               showAlert('Error', 'Agenda tidak ditemukan di server.', 'error');
-            }
-          } else {
-             if (dlAgenda) dlAgenda.innerHTML = combined.map(i => `<option value="${String(i.title||'').toUpperCase()} | ${formatTanggal(i.date)}"></option>`).join('');
-             if(inAgenda) { inAgenda.addEventListener('input', function() { let v = String(this.value || ''); let m = combined.find(i => `${String(i.title||'').toUpperCase()} | ${formatTanggal(i.date)}` === v) || combined.find(i => v.includes(String(i.title||'').toUpperCase())); if (m) hidAgendaId.value = m.id; }); }
-          }
-        }
-      } catch(e) { document.getElementById('scanner-status').style.display = 'block'; document.getElementById('scanner-status').innerHTML = `<span class='text-danger small fw-bold'>❌ Error: Tidak dapat memuat data.</span>`; }
-    }
-
-    function showDirectTaskView(idAgenda, namaWarga) { document.getElementById('scanner-status').style.display = 'none'; renderWargaTaskDetail(idAgenda, namaWarga); }
-    
-    async function startScanner() {
-      let btnScan = document.getElementById('btn-start-scan');
-      let inWargaVal = String(document.getElementById('scanner-warga-input').value || '').trim(); 
-      let namaWarga = inWargaVal.split('(')[0].trim();
-      let idAgenda = document.getElementById('scanner-agenda-id-val').value;
-      if (!namaWarga || !idAgenda) {
-          return showAlert('Perhatian', 'Nama dan Agenda harus lengkap!', 'warning');
-      }
-
-      btnScan.disabled = true;
-      btnScan.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Membuka Kamera...';
-      
-      document.getElementById('scanner-status').style.display = 'none'; 
-      document.getElementById('warga-task-view').style.display = 'none';
-      document.getElementById('scanner-reader-container').style.display = 'block'; 
-      document.getElementById('btn-scan-container').style.display = 'none';
-      document.getElementById('scanner-main-card').style.display = 'none'; 
-
-      if(!html5QrcodeScanner) html5QrcodeScanner = new Html5Qrcode("scanner-reader"); 
-      try { 
-          await html5QrcodeScanner.start({ facingMode: "environment" }, { fps: 15, qrbox: { width: 250, height: 250 } }, (d) => { processScanResult(d, namaWarga, idAgenda); }, (e) => {}); 
-          btnScan.disabled = false; btnScan.innerHTML = '<i class="bi bi-camera-fill me-2 fs-5"></i>Buka Kamera & Scan QR';
-      } catch(err) { 
-          try { 
-              await html5QrcodeScanner.start({ facingMode: "user" }, { fps: 15, qrbox: { width: 250, height: 250 } }, (d) => { processScanResult(d, namaWarga, idAgenda); }, (e) => {}); 
-              btnScan.disabled = false; btnScan.innerHTML = '<i class="bi bi-camera-fill me-2 fs-5"></i>Buka Kamera & Scan QR';
-          } catch(e2) { 
-              showAlert('Error', 'Kamera tidak dapat diakses.', 'error'); 
-              stopScanner(); 
-              btnScan.disabled = false; btnScan.innerHTML = '<i class="bi bi-camera-fill me-2 fs-5"></i>Buka Kamera & Scan QR';
-          } 
-      }
-    }
-    
-    function stopScannerNative() { try { if(html5QrcodeScanner) html5QrcodeScanner.stop().catch(e=>{}); } catch(e){} }
-    function stopScanner() { stopScannerNative(); document.getElementById('scanner-reader-container').style.display = 'none'; document.getElementById('btn-scan-container').style.display = 'block'; document.getElementById('scanner-main-card').style.display = 'block'; }
-
-    async function processScanResult(qrText, namaWarga, idAgenda) {
-      stopScanner();
-      let parts = qrText.split('|'); let statusBox = document.getElementById('scanner-status'); statusBox.style.display = 'block';
-      if (parts.length !== 2 || parts[0] !== 'NOTULENRT_MASTER') { statusBox.innerHTML = "<span class='text-danger fw-bold'>❌ QR Tidak Valid! Harus QR Posko.</span>"; return; }
-      
-      statusBox.innerHTML = "<div class='spinner-border spinner-border-sm text-info me-2'></div> Memeriksa dan Menyimpan Data...";
-      try {
-        let checkRes = await fetch(scannerApiUrl + '?action=sync'); let checkJson = await checkRes.json();
-        if(checkJson.status === 'success') scannerAppData = checkJson.data;
-        let existingHadir = (scannerAppData.KEHADIRAN || []).find(h => h && String(h.id_kegiatan) === String(idAgenda) && String(h.nama).toLowerCase() === String(namaWarga).toLowerCase());
-        
-        if (existingHadir) {
-          statusBox.className = "alert alert-dark border-warning mx-auto text-center py-3 bg-black text-white"; 
-          statusBox.innerHTML = `
-            <h6 class='fw-bold text-warning mb-1'><i class='bi bi-exclamation-triangle-fill'></i> Warga Sudah Absen!</h6>
-            <small class='d-block text-white mb-3'>Nama <b>${namaWarga}</b> telah tercatat hadir sebelumnya.</small>
-            <button class='btn btn-sm btn-outline-danger w-100 rounded-pill fw-bold mb-2' onclick='resetScannerSession()'><i class='bi bi-shield-lock-fill'></i> Ganti Nama (Terkunci)</button>
-            <button class='btn btn-sm btn-outline-light w-100 rounded-pill' onclick='location.reload()'>Tutup & Coba Lagi</button>`;
-          return;
-        }
-        
-        let allRegu = (scannerAppData.REGU || []);
-        let reguWargaIni = allRegu.find(r => r && String(r.id_kegiatan) === String(idAgenda) && getAnggotaArr(r).includes(namaWarga));
-        let statusHadirDynamic = reguWargaIni ? `Hadir Scan QR (Regu: ${reguWargaIni.nama_regu})` : 'Hadir Scan QR';
-        
-        await fetch(scannerApiUrl, { method: 'POST', body: JSON.stringify({ action: 'save', table: 'KEHADIRAN', data: { id_kegiatan: idAgenda, nama: namaWarga, status_hadir: statusHadirDynamic, waktu: new Date().toLocaleTimeString('id-ID') } }) });
-        statusBox.className = "alert alert-dark border-success mx-auto text-center py-3 bg-black text-white"; statusBox.innerHTML = `<h5 class='fw-bold mb-1 text-success'><i class='bi bi-check-circle-fill'></i> Presensi Berhasil Disimpan!</h5>`;
-        
-        localStorage.setItem('rt_scanner_session', JSON.stringify({namaWarga: namaWarga, idAgenda: idAgenda})); 
-        renderWargaTaskDetail(idAgenda, namaWarga);
-      } catch(e) { statusBox.innerHTML = "<span class='text-danger fw-bold'>❌ Gagal mengirim. Cek Sinyal Internet.</span>"; }
-    }
-
-    function renderWargaTaskDetail(idAgenda, namaWarga) {
-      let aItem = (scannerAppData.NOTULEN || []).find(n => n && String(n.id) === String(idAgenda)) || (scannerAppData.KEGIATAN || []).find(k => k && String(k.id) === String(idAgenda));
-      let myRegu = (scannerAppData.REGU || []).find(r => r && String(r.id_kegiatan) === String(idAgenda) && getAnggotaArr(r).includes(namaWarga));
-      let taskBox = document.getElementById('warga-task-view'); taskBox.style.display = 'block';
-      let html = `<h6 class='fw-bold text-info border-bottom border-secondary pb-2 mb-2'><i class='bi bi-clipboard2-check-fill me-1'></i> Bukti Kehadiran & Tugas</h6>`;
-      if(aItem) { html += `<p class='small mb-1'><b>Agenda:</b> ${aItem.agenda || aItem.nama_kegiatan}</p><p class='small mb-1'><b>Tanggal:</b> ${formatTanggal(aItem.tgl_rapat || aItem.tgl)}</p>`; }
-      html += `<div class='bg-dark p-2 rounded-3 mt-2 mb-3 border border-secondary'><small class='text-warning fw-bold d-block mb-1'>📌 Penugasan Kelompok/Regu:</small>`;
-      if(myRegu) { html += `<p class='small mb-1 text-white'><b>Nama Regu:</b> ${myRegu.nama_regu}</p><p class='small mb-1 text-white'><b>Koordinator:</b> ${myRegu.koordinator}</p><p class='small mb-0 text-white'><b>Kumpul/Target:</b> Pukul ${myRegu.jam} di ${myRegu.lokasi}</p>`; } 
-      else { html += `<p class='small mb-0 text-muted'>Tidak ada pembagian grup khusus. Ikuti arahan pengurus pusat.</p>`; }
-      html += `</div>
-      <button class='btn btn-outline-light btn-sm w-100 rounded-pill mb-2 fw-bold' onclick='location.reload()'>Selesai</button>
-      <button class='btn btn-outline-danger btn-sm w-100 rounded-pill fw-bold' onclick='resetScannerSession()'><i class='bi bi-shield-lock-fill me-1'></i> Ganti Nama (Terkunci)</button>`; 
-      taskBox.innerHTML = html;
-    }
-  </script>
-</body>
-</html>
+    let html5QrcodeScanner = null, scannerAppData = { NOTULEN: [], KEGIATAN: [],
