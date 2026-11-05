@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Presensi Mandiri RT v3.9.21</title>
+  <title>Notulen & Presensi Mandiri RT v3.9.22</title>
   
-  <link rel="manifest" href="manifest.json?v=3.9.21">
+  <link rel="manifest" href="manifest.json?v=3.9.22">
   <meta name="theme-color" content="#0ea5e9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -48,9 +48,6 @@
     #scanner-reader-container { width: 100%; max-width: 380px; margin: 0 auto; background: #000; border-radius: 16px; overflow: hidden; border: 2px solid var(--primary-color); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
     #scanner-reader { width: 100% !important; min-height: 280px !important; background: #000 !important; }
     #scanner-reader video { width: 100% !important; height: auto !important; object-fit: cover !important; }
-    
-    /* Perbaikan Layer untuk Mode Kamuflase Admin */
-    .admin-kamuflase-btn { position: relative; z-index: 9999; cursor: pointer; padding: 10px; color: #64748b; font-weight: normal; font-size: 0.75rem; user-select: none; }
     
     @media print {
       .bottom-nav, .navbar, .btn, .no-print, .install-banner, .footer-branding, .modal-header button { display: none !important; }
@@ -111,10 +108,11 @@
       
       <div class="mt-4 pb-3">
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
-        <!-- PINTU MASUK KAMUFLASE ADMIN: KLIK VERSI DI SINI -->
-        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
-            Powered By Ari GPM • 
-            <span class="admin-kamuflase-btn" onclick="masukModeAdmin()">v3.9.21</span>
+        <!-- PINTU MASUK KAMUFLASE ADMIN DIPERBESAR AREA KLIKNYA (HITBOX BESAR) -->
+        <div onclick="masukModeAdmin()" style="padding: 15px; margin: -10px; cursor: pointer; position: relative; z-index: 9999; display: inline-block;">
+          <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
+              Powered By Ari GPM • <span style="color: #64748b; font-weight: normal;">v3.9.22</span>
+          </div>
         </div>
       </div>
     </div>
@@ -132,7 +130,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.21</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.22</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -269,4 +267,4 @@
         </div>
       </div>
       <div class="footer-branding no-print">
-        <div class="
+        <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</di
