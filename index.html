@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Presensi Mandiri RT v3.9.20</title>
+  <title>Notulen & Presensi Mandiri RT v3.9.21</title>
   
-  <link rel="manifest" href="manifest.json?v=3.9.20">
+  <link rel="manifest" href="manifest.json?v=3.9.21">
   <meta name="theme-color" content="#0ea5e9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -48,6 +48,10 @@
     #scanner-reader-container { width: 100%; max-width: 380px; margin: 0 auto; background: #000; border-radius: 16px; overflow: hidden; border: 2px solid var(--primary-color); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
     #scanner-reader { width: 100% !important; min-height: 280px !important; background: #000 !important; }
     #scanner-reader video { width: 100% !important; height: auto !important; object-fit: cover !important; }
+    
+    /* Perbaikan Layer untuk Mode Kamuflase Admin */
+    .admin-kamuflase-btn { position: relative; z-index: 9999; cursor: pointer; padding: 10px; color: #64748b; font-weight: normal; font-size: 0.75rem; user-select: none; }
+    
     @media print {
       .bottom-nav, .navbar, .btn, .no-print, .install-banner, .footer-branding, .modal-header button { display: none !important; }
       body { background: #fff !important; color: #000 !important; padding: 0 !important; }
@@ -61,15 +65,10 @@
 <body>
 
   <!-- ================= WADAH MODE SCANNER WARGA (DEFAULT) ================= -->
-  <div id="warga-scanner-app" style="background: #0f172a; min-height: 100vh; color: #fff; position: absolute; top:0; left:0; width:100%; z-index:9999;">
-    <div class="container py-4 text-center">
-      
-      <!-- TOMBOL DARURAT MASUK ADMIN DI ATAS AGAR TIDAK STUCK -->
-      <div class="d-flex justify-content-end mb-2">
-        <button class="btn btn-sm btn-outline-info rounded-pill px-3 fw-bold" onclick="masukModeAdmin()" style="font-size: 0.75rem;"><i class="bi bi-shield-lock-fill me-1"></i>🔑 Masuk Admin</button>
-      </div>
+  <div id="warga-scanner-app" style="background: #0f172a; min-height: 100vh; color: #fff; position: absolute; top:0; left:0; width:100%; z-index:9000;">
+    <div class="container py-5 text-center">
 
-      <img src="icon-192.png" alt="Logo" style="width: 60px; border-radius: 15px; background: #fff; padding: 5px; margin-bottom: 10px;" onerror="this.style.display='none'">
+      <img src="icon-192.png" alt="Logo" style="width: 65px; border-radius: 15px; background: #fff; padding: 5px; margin-bottom: 15px;" onerror="this.style.display='none'">
       <h4 class="fw-bold mb-1 text-info">Presensi Mandiri Warga</h4>
       <p class="small text-light opacity-75 mb-3" id="scanner-rt-header">RT 01 / RW 01 • Desa Sukamaju</p>
 
@@ -112,8 +111,11 @@
       
       <div class="mt-4 pb-3">
         <div class="fw-semibold small text-light opacity-75" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
-        <!-- KLIK VERSI INI JUGA BISA MASUK ADMIN -->
-        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">Powered By Ari GPM • <span onclick="masukModeAdmin()" class="text-warning fw-bold text-decoration-underline" style="cursor: pointer; padding: 5px;">v3.9.20 (Klik Disini Admin)</span></div>
+        <!-- PINTU MASUK KAMUFLASE ADMIN: KLIK VERSI DI SINI -->
+        <div class="text-info fw-bold mt-1" style="font-size: 0.75rem;">
+            Powered By Ari GPM • 
+            <span class="admin-kamuflase-btn" onclick="masukModeAdmin()">v3.9.21</span>
+        </div>
       </div>
     </div>
   </div>
@@ -130,7 +132,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.20</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.21</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -262,4 +264,9 @@
         <div class="card card-custom p-3 mb-3 border-danger-subtle bg-danger-subtle">
           <div class="d-flex justify-content-between align-items-center">
             <div><h6 class="fw-bold text-danger mb-0"><i class="bi bi-box-arrow-right me-2"></i>Sesi Admin</h6><small class="text-danger opacity-75">Keluar ke Mode Warga</small></div>
-            <button class="btn btn-sm btn-danger rounded-pill fw-bold px-3" onclick="lo
+            <button class="btn btn-sm btn-danger rounded-pill fw-bold px-3" onclick="logoutKeScanner()">Log Out</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-branding no-print">
+        <div class="
