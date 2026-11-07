@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Presensi Mandiri RT v3.9.27</title>
+  <title>Notulen & Presensi Mandiri RT v3.9.28</title>
   
-  <link rel="manifest" href="manifest.json?v=3.9.27">
+  <link rel="manifest" href="manifest.json?v=3.9.28">
   <meta name="theme-color" content="#0ea5e9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -62,7 +62,7 @@
 </head>
 <body>
 
-  <!-- ================= WADAH MODE SCANNER WARGA (LAYOUT STANDAR RAPI) ================= -->
+  <!-- ================= WADAH MODE SCANNER WARGA ================= -->
   <div id="warga-scanner-app" style="background: #0f172a; min-height: 100vh; color: #fff; width:100%; position: absolute; top:0; left:0; z-index:9000; padding-bottom: 60px;">
     <div class="container py-5 text-center">
 
@@ -106,13 +106,12 @@
         <button class="btn btn-danger btn-sm w-100 rounded-0 py-2 fw-bold" onclick="stopScanner()">Batalkan Scan</button>
       </div>
       <div id="scanner-status" class="alert alert-dark border-secondary mx-auto text-center py-3 mb-3 bg-black text-white w-100" style="max-width: 400px; display:none; border-radius: 14px;"></div>
-      <div id="warga-task-view" style="display:none; max-width: 400px; text-align: left;" class="mx-auto card bg-black border-info p-3 shadow-lg text-white rounded-4 mb-4 w-100"></div>
       
       <!-- PINTU MASUK ADMIN -->
       <div class="mt-5 mb-3">
         <div class="fw-semibold small text-light opacity-50 mb-2" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <button class="btn btn-dark border-secondary rounded-pill px-4 py-2 shadow-sm text-info fw-bold" onclick="masukModeAdmin()" style="font-size: 0.8rem; letter-spacing: 0.5px;">
-           <i class="bi bi-shield-lock-fill me-1"></i> Powered By Ari GPM • <span class="text-light fw-normal opacity-75">v3.9.27</span>
+           <i class="bi bi-shield-lock-fill me-1"></i> Powered By Ari GPM • <span class="text-light fw-normal opacity-75">v3.9.28</span>
         </button>
       </div>
       
@@ -131,7 +130,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.27</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.28</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -149,7 +148,7 @@
       <div id="install-banner-app" class="install-banner align-items-center justify-content-between shadow-sm mb-3">
         <div>
           <h6 class="fw-bold mb-1"><i class="bi bi-download me-2"></i>Install Aplikasi RT</h6>
-          <small class="opacity-90" style="font-size: 0.75rem;">Tambahkan ke Layar Utama (Home Screen).</small>
+          <small class="opacity-90" style="font-size: 0.75rem;">Tambahkan ke Layar Utama.</small>
         </div>
         <button class="btn btn-light btn-sm fw-bold rounded-pill text-primary-custom px-3 shadow-sm" onclick="installAppPWA()">Install</button>
       </div>
@@ -221,7 +220,6 @@
       <div id="sec-pengaturan" class="page-section" style="display:none;">
         <h5 class="fw-bold mb-3">Pengaturan & Data</h5>
         
-        <!-- FITUR SHARE LINK PUBLIK KE WARGA -->
         <div class="card card-custom p-3 mb-3 border-info-subtle bg-info-subtle bg-opacity-10">
           <h6 class="fw-bold mb-2 text-info"><i class="bi bi-share-fill me-2"></i>Bagikan Aplikasi ke Warga</h6>
           <p class="small text-dark opacity-75 mb-2" style="font-size:0.75rem;">Kirim link otomatis ke WhatsApp agar warga bisa <b>Membuka / Menginstal</b> aplikasi scanner mandiri di HP mereka.</p>
@@ -276,7 +274,7 @@
       </div>
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.27</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.28</span></div>
       </div>
     </div>
 
@@ -353,7 +351,7 @@
 
   <!-- SCRIPT UTAMA -->
   <script>
-    const APP_VERSION = "v3.9.27";
+    const APP_VERSION = "v3.9.28";
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
     
     let APP_DATA = { SETTINGS: { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju", pin: "kamu nanyak", email_admin: "" }, NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], ANGGARAN: [], REGU: [] };
@@ -403,9 +401,6 @@
     function showPermanentMasterQR() { if(typeof QRCode === 'undefined') return showAlert('Tunggu', 'Modul QR sedang dimuat...', 'warning'); let container = document.getElementById('qrcode-box'); container.innerHTML = ''; new QRCode(container, { text: `NOTULENRT_MASTER|RT_PERMANEN_QR`, width: 250, height: 250, colorDark : "#0284c7", colorLight : "#ffffff" }); new bootstrap.Modal(document.getElementById('modalPermanentQR')).show(); }
     function shareAutoScannerLink(tipe, idItem) { let itemTitle = ""; if(tipe === 'NOTULEN') { let dt = APP_DATA.NOTULEN.find(x => x.id === idItem); if(dt) itemTitle = "Rapat: " + (dt.agenda || ''); } else if(tipe === 'KEGIATAN') { let dt = APP_DATA.KEGIATAN.find(x => x.id === idItem); if(dt) itemTitle = "Kegiatan: " + (dt.nama_kegiatan || ''); } let publicUrl = window.location.href.split('?')[0] + `?mode=scanner&agenda_id=${idItem}`; let txt = `📢 *LINK ABSEN OTOMATIS:*\n*${itemTitle}*\n\nKlik link untuk absen:\n🌐 ${publicUrl}\n\n_Aplikasi Notulen RT ${APP_VERSION}_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
 
-    /* ========================================================================= */
-    /* LOGIKA LOGIN ADMIN (MENGGUNAKAN BOOTSTRAP STANDAR)                        */
-    /* ========================================================================= */
     function masukModeAdmin() {
         let myModalEl = document.getElementById('modalPinLogin');
         if(!myModalEl) return;
@@ -469,9 +464,6 @@
     function saveEmailPemulihan() { let v = String(document.getElementById('setting-email-admin').value || '').trim(); if(!v || !v.includes('@')) return showAlert('Perhatian', 'Email tidak valid', 'warning'); APP_DATA.SETTINGS.email_admin = v; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); showToast('Email disimpan!'); }
     function saveHeaderSettings() { APP_DATA.SETTINGS.nama_rt = document.getElementById('setting-nama-rt').value.trim() || "RT 01"; APP_DATA.SETTINGS.desa_alamat = document.getElementById('setting-desa-alamat').value.trim() || "Desa"; localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA)); loadHeaderSettingsToUI(); showToast('Identitas disimpan!'); }
 
-    /* ========================================================================= */
-    /* LOGIKA BOOT INSTAN                                                       */
-    /* ========================================================================= */
     function bootAppInstantly() {
       try {
           const urlParams = new URLSearchParams(window.location.search);
@@ -507,9 +499,6 @@
     function updateDatalistWarga() { let dl = document.getElementById('dl-warga-list'); if (dl) dl.innerHTML = (APP_DATA.WARGA || []).map(w => `<option value="${w.nama}">${w.nama} (${w.no_rumah || '-'})</option>`).join(''); }
     function loadHeaderSettingsToUI() { let rt = APP_DATA.SETTINGS.nama_rt || "RT 01"; let ds = APP_DATA.SETTINGS.desa_alamat || "Desa"; document.getElementById('nav-header-subtext').innerText = `${rt} • ${ds}`; document.getElementById('setting-nama-rt').value = rt; document.getElementById('setting-desa-alamat').value = ds; document.getElementById('setting-email-admin').value = APP_DATA.SETTINGS.email_admin || ""; }
 
-    /* ========================================================================= */
-    /* LOGIKA MENU HASIL ABSEN (DASHBOARD WIDGET & MODAL)                        */
-    /* ========================================================================= */
     function updatePresensiAgendaSelect() {
         let sel = document.getElementById('presensi-agenda-select');
         if(!sel) return;
@@ -631,12 +620,12 @@
     function renderWargaList() { let q = String(document.getElementById('search-warga')?.value || '').toLowerCase(); let container = document.getElementById('list-warga-container'); if(!container) return; let filtered = (APP_DATA.WARGA||[]).filter(x => x && String(x.nama || '').toLowerCase().includes(q)); container.innerHTML = filtered.map(item => `<div class="card card-custom p-3 mb-2 d-flex flex-row justify-content-between align-items-center"><div><h6 class="fw-bold mb-0">${item.nama}</h6><small class="text-muted">Blok: ${item.no_rumah||'-'}</small></div><div class="d-flex gap-1"><button class="btn btn-sm btn-light text-secondary" onclick="editWarga('${item.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-sm btn-light text-danger" onclick="deleteItem('WARGA', '${item.id}')"><i class="bi bi-trash"></i></button></div></div>`).join(''); }
 
     function openFormNotulen() { document.getElementById('form-notulen').reset(); document.getElementById('notulen-id').value = ''; document.getElementById('notulen-tgl').value = new Date().toISOString().split('T')[0]; document.getElementById('notulen-tampil-scanner').checked = true; new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
-    function editNotulen(id) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('notulen-id').value = item.id; document.getElementById('notulen-agenda').value = item.agenda || ''; document.getElementById('notulen-tgl').value = item.tgl_rapat ? item.tgl_rapat.split('T')[0] : ''; document.getElementById('notulen-waktu').value = item.waktu || ''; document.getElementById('notulen-tempat').value = item.tempat || ''; document.getElementById('notulen-pimpinan').value = item.pimpinan || ''; document.getElementById('notulen-notulis').value = item.notulis || ''; document.getElementById('notulen-pembahasan').value = item.pembahasan || ''; document.getElementById('notulen-keputusan').value = item.keputusan || ''; document.getElementById('notulen-scan-start').value = item.scanner_start || ''; document.getElementById('notulen-scan-end').value = item.scanner_end || ''; document.getElementById('notulen-tampil-scanner').checked = (item.tampil_scanner === true || item.tampil_scanner === 'true'); new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
-    document.getElementById('form-notulen').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('NOTULEN', { id: document.getElementById('notulen-id').value, agenda: document.getElementById('notulen-agenda').value, tgl_rapat: document.getElementById('notulen-tgl').value, waktu: document.getElementById('notulen-waktu').value, tempat: document.getElementById('notulen-tempat').value, pimpinan: document.getElementById('notulen-pimpinan').value, notulis: document.getElementById('notulen-notulis').value, pembahasan: document.getElementById('notulen-pembahasan').value, keputusan: document.getElementById('notulen-keputusan').value, scanner_start: document.getElementById('notulen-scan-start').value, scanner_end: document.getElementById('notulen-scan-end').value, tampil_scanner: document.getElementById('notulen-tampil-scanner').checked }); hideModalSafe('modalNotulen'); showToast('Notulen Disimpan'); });
+    function editNotulen(id) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('notulen-id').value = item.id; document.getElementById('notulen-agenda').value = item.agenda || ''; document.getElementById('notulen-tgl').value = item.tgl_rapat ? item.tgl_rapat.split('T')[0] : ''; document.getElementById('notulen-waktu').value = item.waktu || ''; document.getElementById('notulen-tempat').value = item.tempat || ''; document.getElementById('notulen-pimpinan').value = item.pimpinan || ''; document.getElementById('notulen-notulis').value = item.notulis || ''; document.getElementById('notulen-pembahasan').value = item.pembahasan || ''; document.getElementById('notulen-keputusan').value = item.keputusan || ''; document.getElementById('notulen-scan-start').value = item.scanner_start || ''; document.getElementById('notulen-scan-end').value = item.scanner_end || ''; document.getElementById('notulen-tampil-scanner').checked = (String(item.tampil_scanner) === 'true'); new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
+    document.getElementById('form-notulen').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('NOTULEN', { id: document.getElementById('notulen-id').value, agenda: document.getElementById('notulen-agenda').value, tgl_rapat: document.getElementById('notulen-tgl').value, waktu: document.getElementById('notulen-waktu').value, tempat: document.getElementById('notulen-tempat').value, pimpinan: document.getElementById('notulen-pimpinan').value, notulis: document.getElementById('notulen-notulis').value, pembahasan: document.getElementById('notulen-pembahasan').value, keputusan: document.getElementById('notulen-keputusan').value, scanner_start: document.getElementById('notulen-scan-start').value, scanner_end: document.getElementById('notulen-scan-end').value, tampil_scanner: String(document.getElementById('notulen-tampil-scanner').checked) }); hideModalSafe('modalNotulen'); showToast('Notulen Disimpan'); });
 
     function openFormKegiatan() { document.getElementById('form-kegiatan').reset(); document.getElementById('kegiatan-id').value = ''; document.getElementById('kegiatan-tgl').value = new Date().toISOString().split('T')[0]; document.getElementById('kegiatan-tampil-scanner').checked = true; new bootstrap.Modal(document.getElementById('modalKegiatan')).show(); }
-    function editKegiatan(id) { let item = APP_DATA.KEGIATAN.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('kegiatan-id').value = item.id; document.getElementById('kegiatan-nama').value = item.nama_kegiatan || ''; document.getElementById('kegiatan-tgl').value = item.tgl ? item.tgl.split('T')[0] : ''; document.getElementById('kegiatan-status').value = item.status || 'Rencana'; document.getElementById('kegiatan-lokasi').value = item.lokasi || ''; document.getElementById('kegiatan-pj').value = item.penanggung_jawab || ''; document.getElementById('kegiatan-scan-start').value = item.scanner_start || ''; document.getElementById('kegiatan-scan-end').value = item.scanner_end || ''; document.getElementById('kegiatan-tampil-scanner').checked = (item.tampil_scanner === true || item.tampil_scanner === 'true'); new bootstrap.Modal(document.getElementById('modalKegiatan')).show(); }
-    document.getElementById('form-kegiatan').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('KEGIATAN', { id: document.getElementById('kegiatan-id').value, nama_kegiatan: document.getElementById('kegiatan-nama').value, tgl: document.getElementById('kegiatan-tgl').value, status: document.getElementById('kegiatan-status').value, lokasi: document.getElementById('kegiatan-lokasi').value, penanggung_jawab: document.getElementById('kegiatan-pj').value, scanner_start: document.getElementById('kegiatan-scan-start').value, scanner_end: document.getElementById('kegiatan-scan-end').value, tampil_scanner: document.getElementById('kegiatan-tampil-scanner').checked }); hideModalSafe('modalKegiatan'); showToast('Agenda Disimpan'); });
+    function editKegiatan(id) { let item = APP_DATA.KEGIATAN.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('kegiatan-id').value = item.id; document.getElementById('kegiatan-nama').value = item.nama_kegiatan || ''; document.getElementById('kegiatan-tgl').value = item.tgl ? item.tgl.split('T')[0] : ''; document.getElementById('kegiatan-status').value = item.status || 'Rencana'; document.getElementById('kegiatan-lokasi').value = item.lokasi || ''; document.getElementById('kegiatan-pj').value = item.penanggung_jawab || ''; document.getElementById('kegiatan-scan-start').value = item.scanner_start || ''; document.getElementById('kegiatan-scan-end').value = item.scanner_end || ''; document.getElementById('kegiatan-tampil-scanner').checked = (String(item.tampil_scanner) === 'true'); new bootstrap.Modal(document.getElementById('modalKegiatan')).show(); }
+    document.getElementById('form-kegiatan').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('KEGIATAN', { id: document.getElementById('kegiatan-id').value, nama_kegiatan: document.getElementById('kegiatan-nama').value, tgl: document.getElementById('kegiatan-tgl').value, status: document.getElementById('kegiatan-status').value, lokasi: document.getElementById('kegiatan-lokasi').value, penanggung_jawab: document.getElementById('kegiatan-pj').value, scanner_start: document.getElementById('kegiatan-scan-start').value, scanner_end: document.getElementById('kegiatan-scan-end').value, tampil_scanner: String(document.getElementById('kegiatan-tampil-scanner').checked) }); hideModalSafe('modalKegiatan'); showToast('Agenda Disimpan'); });
 
     function openFormWarga() { document.getElementById('form-warga').reset(); document.getElementById('warga-id').value = ''; new bootstrap.Modal(document.getElementById('modalWarga')).show(); }
     function editWarga(id) { let item = APP_DATA.WARGA.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('warga-id').value = item.id; document.getElementById('warga-nama').value = item.nama || ''; document.getElementById('warga-rumah').value = item.no_rumah || ''; document.getElementById('warga-wa').value = item.no_wa || ''; new bootstrap.Modal(document.getElementById('modalWarga')).show(); }
@@ -704,7 +693,7 @@
     function syncData() { syncDataSafe(); showToast('Sinkronisasi selesai'); }
 
     /* ========================================================================= */
-    /* SCANNER WARGA                                                             */
+    /* SCANNER WARGA (LOGIKA FILTER DROPDOWN DILURUSKAN)                         */
     /* ========================================================================= */
     let html5QrcodeScanner = null, scannerAppData = { NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], REGU: [] }, scannerApiUrl = ""; 
     
@@ -740,7 +729,7 @@
              document.getElementById('scanner-warga-input').disabled = true; 
              document.getElementById('scanner-manual-select-group').style.display = 'none';
              document.getElementById('label-step-3').innerText = "Sesi Absen Selesai";
-             document.getElementById('btn-scan-container').innerHTML = `<div class="alert alert-dark border-success bg-black text-center mb-0"><h6 class="text-white fw-bold">Sesi Perangkat Terkunci</h6><small class="text-muted d-block mb-3">Absen atas nama <b>${sData.namaWarga}</b> tercatat.</small><button class="btn btn-outline-info w-100 rounded-pill fw-bold mb-2" onclick="showDirectTaskView('${sData.idAgenda}', '${sData.namaWarga}')">Lihat Tugas</button><button class="btn btn-outline-danger w-100 rounded-pill fw-bold" onclick="resetScannerSession()">Ganti Nama</button></div>`;
+             document.getElementById('btn-scan-container').innerHTML = `<div class="alert alert-dark border-success bg-black text-center mb-0"><h6 class="text-white fw-bold">Sesi Perangkat Terkunci</h6><small class="text-muted d-block mb-3">Absen atas nama <b>${sData.namaWarga}</b> tercatat.</small><button class="btn btn-outline-danger w-100 rounded-pill fw-bold" onclick="resetScannerSession()">Ganti Nama</button></div>`;
              return; 
          }
       }
@@ -751,24 +740,32 @@
       document.getElementById('scanner-rt-header').innerText = `${scannerAppData.SETTINGS?.nama_rt || "RT 01"} - ${scannerAppData.SETTINGS?.desa_alamat || "Desa"}`;
       if (dlWarga) dlWarga.innerHTML = (scannerAppData.WARGA || []).map(x => `<option value="${x.nama} (${x.no_rumah || '-'})"></option>`).join('');
       
-      // LOGIKA SAKLAR: HANYA MENAMPILKAN AGENDA YANG "tampil_scanner == true"
+      // LOGIKA FILTER: Hanya ambil data yang 'tampil_scanner' bernilai string "true" atau boolean true
       let combined = [
-          ...(scannerAppData.NOTULEN || []).filter(n => n.tampil_scanner === true || n.tampil_scanner === 'true').map(n => ({ id: n.id, title: n.agenda, date: n.tgl_rapat, start: n.scanner_start, end: n.scanner_end })),
-          ...(scannerAppData.KEGIATAN || []).filter(k => k.tampil_scanner === true || k.tampil_scanner === 'true').map(k => ({ id: k.id, title: k.nama_kegiatan, date: k.tgl, start: k.scanner_start, end: k.scanner_end }))
+          ...(scannerAppData.NOTULEN || []).filter(n => String(n.tampil_scanner) === 'true').map(n => ({ id: n.id, title: n.agenda, date: n.tgl_rapat, start: n.scanner_start, end: n.scanner_end })),
+          ...(scannerAppData.KEGIATAN || []).filter(k => String(k.tampil_scanner) === 'true').map(k => ({ id: k.id, title: k.nama_kegiatan, date: k.tgl, start: k.scanner_start, end: k.scanner_end }))
       ].reverse();
       
       if (dlAgenda) dlAgenda.innerHTML = combined.map(i => `<option value="${String(i.title||'').toUpperCase()} | ${formatTanggal(i.date)}"></option>`).join('');
+      
       if(inAgenda) { 
         inAgenda.addEventListener('input', function() { 
             let v = String(this.value || ''); 
             let m = combined.find(i => `${String(i.title||'').toUpperCase()} | ${formatTanggal(i.date)}` === v) || combined.find(i => v.includes(String(i.title||'').toUpperCase())); 
-            if (m) { hidAgendaId.value = m.id; validateAgendaTime(m); } 
-            else { document.getElementById('scanner-locked-info').style.display = 'none'; let b = document.getElementById('btn-start-scan'); b.disabled = true; b.className = "btn btn-secondary w-100 rounded-pill fw-bold text-white py-3 shadow"; hidAgendaId.value = ""; }
+            
+            if (m) { 
+                hidAgendaId.value = m.id; 
+                validateAgendaTime(m); 
+            } else { 
+                document.getElementById('scanner-locked-info').style.display = 'none'; 
+                let b = document.getElementById('btn-start-scan'); 
+                b.disabled = true; b.className = "btn btn-secondary w-100 rounded-pill fw-bold text-white py-3 shadow"; 
+                hidAgendaId.value = ""; 
+            }
         }); 
       }
     }
 
-    function showDirectTaskView(idAgenda, namaWarga) { document.getElementById('scanner-status').style.display = 'none'; }
     async function startScanner() {
       let btnScan = document.getElementById('btn-start-scan');
       let namaWarga = String(document.getElementById('scanner-warga-input').value || '').split('(')[0].trim(); 
