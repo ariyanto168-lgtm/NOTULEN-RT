@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Presensi Mandiri RT v3.9.25</title>
+  <title>Notulen & Presensi Mandiri RT v3.9.26</title>
   
-  <link rel="manifest" href="manifest.json?v=3.9.25">
+  <link rel="manifest" href="manifest.json?v=3.9.26">
   <meta name="theme-color" content="#0ea5e9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -27,7 +27,6 @@
     [data-theme="sunset"] { --primary-color: #f97316; --primary-dark: #ea580c; }
     [data-theme="dark"] { --primary-color: #38bdf8; --primary-dark: #0284c7; --bg-light: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --border-color: #334155; }
     
-    /* Perbaikan global: jangan berikan padding bawah di body, atur per container */
     body { background-color: var(--bg-light); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; transition: background-color 0.2s, color 0.2s; margin: 0; padding: 0; }
     
     #admin-app-container { display: none; padding-bottom: 95px; } 
@@ -63,13 +62,13 @@
 </head>
 <body>
 
-  <!-- ================= WADAH MODE SCANNER WARGA (LAYOUT FLEXBOX BARU - ANTI DEAD ZONE) ================= -->
-  <div id="warga-scanner-app" style="background: #0f172a; min-height: 100vh; color: #fff; width:100%; display:flex; flex-direction:column;">
-    <div class="container py-4 text-center flex-grow-1 d-flex flex-column">
+  <!-- ================= WADAH MODE SCANNER WARGA (LAYOUT STANDAR RAPI) ================= -->
+  <div id="warga-scanner-app" style="background: #0f172a; min-height: 100vh; color: #fff; width:100%; position: absolute; top:0; left:0; z-index:9000; padding-bottom: 60px;">
+    <div class="container py-5 text-center">
 
-      <img src="icon-192.png" alt="Logo" style="width: 65px; border-radius: 15px; background: #fff; padding: 5px; margin: 0 auto 15px auto;" onerror="this.style.display='none'">
+      <img src="icon-192.png" alt="Logo" style="width: 65px; border-radius: 15px; background: #fff; padding: 5px; margin: 0 auto 15px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3);" onerror="this.style.display='none'">
       <h4 class="fw-bold mb-1 text-info">Presensi Mandiri Warga</h4>
-      <p class="small text-light opacity-75 mb-3" id="scanner-rt-header">RT 01 / RW 01 • Desa Sukamaju</p>
+      <p class="small text-light opacity-75 mb-4" id="scanner-rt-header">RT 01 / RW 01 • Desa Sukamaju</p>
 
       <div class="card bg-dark border-secondary p-3 mb-3 shadow-lg text-start mx-auto w-100" style="max-width: 400px; border-radius: 16px;" id="scanner-main-card">
         
@@ -108,15 +107,12 @@
       <div id="scanner-status" class="alert alert-dark border-secondary mx-auto text-center py-3 mb-3 bg-black text-white w-100" style="max-width: 400px; display:none; border-radius: 14px;"></div>
       <div id="warga-task-view" style="display:none; max-width: 400px; text-align: left;" class="mx-auto card bg-black border-info p-3 shadow-lg text-white rounded-4 mb-4 w-100"></div>
       
-      <!-- PINTU MASUK KAMUFLASE ADMIN TERDORONG KE BAWAH SECARA NATURAL -->
-      <div class="mt-auto pt-4 pb-2">
-        <div class="fw-semibold small text-light opacity-75 mb-1" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
-        <!-- Event sentuh langsung ke native JS tanpa delay -->
-        <div ontouchstart="this.style.opacity='0.5'" ontouchend="this.style.opacity='1'; masukModeAdmin();" onmousedown="this.style.opacity='0.5'" onmouseup="this.style.opacity='1'; masukModeAdmin();" style="padding: 15px 20px; display: inline-block; cursor: pointer; user-select: none;">
-          <span class="text-info fw-bold" style="font-size: 0.75rem;">
-              Powered By Ari GPM • <span style="color: #64748b; font-weight: normal;">v3.9.25</span>
-          </span>
-        </div>
+      <!-- PINTU MASUK ADMIN (TOMBOL ELEGAN & RAPI) -->
+      <div class="mt-5 mb-3">
+        <div class="fw-semibold small text-light opacity-50 mb-2" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
+        <button class="btn btn-dark border-secondary rounded-pill px-4 py-2 shadow-sm text-info fw-bold" onclick="masukModeAdmin()" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+           <i class="bi bi-shield-lock-fill me-1"></i> Powered By Ari GPM • <span class="text-light fw-normal opacity-75">v3.9.26</span>
+        </button>
       </div>
       
     </div>
@@ -134,7 +130,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.25</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.26</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -272,7 +268,7 @@
       </div>
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.25</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.26</span></div>
       </div>
     </div>
 
@@ -290,8 +286,8 @@
   <!-- Modals -->
   <div class="modal fade" id="modalPermanentQR" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content rounded-4 border-0 text-center shadow-lg bg-dark text-white"><div class="modal-header border-0 pb-0 justify-content-center pt-4 relative"><button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 mt-3 me-3" data-bs-dismiss="modal"></button><h5 class="modal-title fw-bold text-info"><i class="bi bi-qr-code-scan me-2"></i>Master QR Permanen RT</h5></div><div class="modal-body p-4 pt-2"><p class="small text-light opacity-75 mb-3">Cetak QR ini dan tempel di pos ronda.</p><div id="qrcode-box" class="d-flex justify-content-center bg-white p-2 rounded-4 mx-auto" style="width: fit-content;"></div><h6 class="fw-bold mt-3 text-warning" id="qr-master-title">RT 01 / RW 01 - POSKO UTAMA</h6><button class="btn btn-sm btn-light text-primary w-100 rounded-pill fw-bold mt-3" onclick="window.print()"><i class="bi bi-printer me-1"></i>Cetak QR Ini</button></div></div></div></div>
   
-  <!-- JENDELA PIN DIBUAT DENGAN STYLE NATIVE DOM TANPA TERGANTUNG BOOTSTRAP INIT -->
-  <div class="modal fade" id="modalPinLogin" tabindex="-1" style="z-index: 99999; background: rgba(0,0,0,0.85);" onclick="if(event.target.id==='modalPinLogin') tutupModalPin();">
+  <!-- JENDELA PIN (MENGGUNAKAN STANDAR BOOTSTRAP) -->
+  <div class="modal fade" id="modalPinLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" style="z-index: 99999;">
       <div class="modal-dialog modal-dialog-centered modal-sm">
           <div class="modal-content rounded-4 border-0 text-center p-3 shadow-lg">
               <div class="modal-body p-2">
@@ -316,7 +312,7 @@
       </div>
   </div>
   
-  <div class="modal fade" id="modalLupaPin" tabindex="-1" style="z-index: 99999; background: rgba(0,0,0,0.85);" onclick="if(event.target.id==='modalLupaPin') closeModalLupaPin();"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content rounded-4 border-0 p-3 shadow-lg"><div class="modal-body p-2"><div class="d-flex justify-content-between align-items-center mb-2"><h5 class="fw-bold text-dark mb-0">Reset PIN</h5><button type="button" class="btn-close shadow-none" onclick="closeModalLupaPin()"></button></div><form id="form-otp-step1" onsubmit="sendOtpEmail(event)"><p class="small text-muted mb-3" style="font-size: 0.8rem;">Masukkan email pemulihan terdaftar.</p><div class="mb-3"><input type="email" id="input-otp-email" class="form-control form-control-sm rounded-pill py-2 text-center" placeholder="contoh@gmail.com" required></div><button type="submit" id="btn-send-otp" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm">Kirim OTP</button></form><form id="form-otp-step2" onsubmit="verifyOtpCode(event)" style="display:none;"><p class="small text-success mb-2 fw-semibold">Kode OTP telah dikirim.</p><div class="mb-3"><input type="text" id="input-otp-code" class="form-control form-control-sm rounded-pill text-center fw-bold fs-5" placeholder="123456" maxlength="6" autocomplete="off" required></div><button type="submit" class="btn btn-success w-100 rounded-pill fw-bold py-2 shadow-sm">Verifikasi OTP</button></form><form id="form-otp-step3" onsubmit="resetPinWithOtp(event)" style="display:none;"><div class="mb-2"><input type="password" id="input-new-pin-otp" class="form-control form-control-sm rounded-pill text-center" placeholder="PIN Baru" required></div><div class="mb-3"><input type="password" id="input-confirm-pin-otp" class="form-control form-control-sm rounded-pill text-center" placeholder="Konfirmasi PIN Baru" required></div><button type="submit" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm">Simpan PIN Baru</button></form></div></div></div></div>
+  <div class="modal fade" id="modalLupaPin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content rounded-4 border-0 p-3 shadow-lg"><div class="modal-body p-2"><div class="d-flex justify-content-between align-items-center mb-2"><h5 class="fw-bold text-dark mb-0">Reset PIN</h5><button type="button" class="btn-close shadow-none" onclick="closeModalLupaPin()"></button></div><form id="form-otp-step1" onsubmit="sendOtpEmail(event)"><p class="small text-muted mb-3" style="font-size: 0.8rem;">Masukkan email pemulihan terdaftar.</p><div class="mb-3"><input type="email" id="input-otp-email" class="form-control form-control-sm rounded-pill py-2 text-center" placeholder="contoh@gmail.com" required></div><button type="submit" id="btn-send-otp" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm">Kirim OTP</button></form><form id="form-otp-step2" onsubmit="verifyOtpCode(event)" style="display:none;"><p class="small text-success mb-2 fw-semibold">Kode OTP telah dikirim.</p><div class="mb-3"><input type="text" id="input-otp-code" class="form-control form-control-sm rounded-pill text-center fw-bold fs-5" placeholder="123456" maxlength="6" autocomplete="off" required></div><button type="submit" class="btn btn-success w-100 rounded-pill fw-bold py-2 shadow-sm">Verifikasi OTP</button></form><form id="form-otp-step3" onsubmit="resetPinWithOtp(event)" style="display:none;"><div class="mb-2"><input type="password" id="input-new-pin-otp" class="form-control form-control-sm rounded-pill text-center" placeholder="PIN Baru" required></div><div class="mb-3"><input type="password" id="input-confirm-pin-otp" class="form-control form-control-sm rounded-pill text-center" placeholder="Konfirmasi PIN Baru" required></div><button type="submit" class="btn btn-primary-custom text-white w-100 rounded-pill fw-bold py-2 shadow-sm">Simpan PIN Baru</button></form></div></div></div></div>
 
   <!-- Form Modals Data (Standar) -->
   <div class="modal fade" id="modalNotulen" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow-lg"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold" id="modalNotulenTitle">Notulen Musyawarah</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="form-notulen"><input type="hidden" id="notulen-id"><div class="mb-2"><label class="form-label small fw-bold">Agenda</label><input type="text" id="notulen-agenda" class="form-control" required></div><div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Tanggal</label><input type="date" id="notulen-tgl" class="form-control" required></div><div class="col-6"><label class="form-label small fw-bold">Waktu Rapat</label><input type="time" id="notulen-waktu" class="form-control"></div></div><div class="mb-2"><label class="form-label small fw-bold">Tempat</label><input type="text" id="notulen-tempat" class="form-control" list="dl-warga-list"></div><div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Pimpinan</label><input type="text" id="notulen-pimpinan" class="form-control" list="dl-warga-list"></div><div class="col-6"><label class="form-label small fw-bold">Notulis</label><input type="text" id="notulen-notulis" class="form-control" list="dl-warga-list"></div></div><div class="mb-2"><label class="form-label small fw-bold">Uraian</label><textarea id="notulen-pembahasan" class="form-control" rows="3"></textarea></div><div class="mb-3"><label class="form-label small fw-bold">Keputusan</label><textarea id="notulen-keputusan" class="form-control" rows="2"></textarea></div><div class="border rounded p-2 mb-3 bg-light"><h6 class="small fw-bold text-info mb-2"><i class="bi bi-qr-code-scan"></i> Pengaturan Waktu Akses Scanner QR</h6><div class="row g-2"><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Mulai Buka</label><input type="datetime-local" id="notulen-scan-start" class="form-control form-control-sm"></div><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Tutup Otomatis</label><input type="datetime-local" id="notulen-scan-end" class="form-control form-control-sm"></div></div></div><button type="submit" class="btn btn-primary-custom text-white w-100 btn-rounded shadow-sm">Simpan Notulen</button></form></div></div></div></div>
@@ -332,7 +328,7 @@
 
   <!-- SCRIPT UTAMA -->
   <script>
-    const APP_VERSION = "v3.9.25";
+    const APP_VERSION = "v3.9.26";
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
     
     let APP_DATA = { SETTINGS: { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju", pin: "kamu nanyak", email_admin: "" }, NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], ANGGARAN: [], REGU: [] };
@@ -357,30 +353,44 @@
     function shareAutoScannerLink(tipe, idItem) { let itemTitle = ""; if(tipe === 'NOTULEN') { let dt = APP_DATA.NOTULEN.find(x => x.id === idItem); if(dt) itemTitle = "Rapat: " + (dt.agenda || ''); } else if(tipe === 'KEGIATAN') { let dt = APP_DATA.KEGIATAN.find(x => x.id === idItem); if(dt) itemTitle = "Kegiatan: " + (dt.nama_kegiatan || ''); } let publicUrl = window.location.href.split('?')[0] + `?mode=scanner&agenda_id=${idItem}`; let txt = `📢 *LINK ABSEN OTOMATIS:*\n*${itemTitle}*\n\nKlik link untuk absen:\n🌐 ${publicUrl}\n\n_Aplikasi Notulen RT ${APP_VERSION}_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
 
     /* ========================================================================= */
-    /* LOGIKA KAMUFLASE ADMIN (NATIVE DOM BYPASS BOOTSTRAP 100%)                 */
+    /* LOGIKA LOGIN ADMIN (MENGGUNAKAN BOOTSTRAP STANDAR)                        */
     /* ========================================================================= */
     function masukModeAdmin() {
         let myModalEl = document.getElementById('modalPinLogin');
-        if(myModalEl) {
-            // Tampilkan paksa secara manual menggunakan DOM murni (bukan JS Bootstrap)
+        if(!myModalEl) return;
+        
+        try {
+            // Gunakan metode resmi Bootstrap
+            let bsModal = bootstrap.Modal.getOrCreateInstance(myModalEl);
+            bsModal.show();
+            
+            // Hapus pesan error jika ada & fokus ke input
+            setTimeout(() => {
+                let err = document.getElementById('pin-login-error');
+                if(err) err.style.display = 'none';
+                
+                let inputPin = document.getElementById('input-pin-login');
+                if(inputPin) { 
+                    inputPin.value = ''; 
+                    inputPin.focus();
+                }
+            }, 500);
+        } catch(e) {
+            // Mode darurat jika Bootstrap JS gagal dimuat
             myModalEl.style.display = 'block';
             myModalEl.classList.add('show');
-            
-            let inputPin = document.getElementById('input-pin-login');
-            let errorPin = document.getElementById('pin-login-error');
-            if(inputPin) { 
-                inputPin.value = ''; 
-                setTimeout(() => inputPin.focus(), 200);
-            }
-            if(errorPin) { 
-                errorPin.style.display = 'none'; 
-            }
+            myModalEl.style.backgroundColor = 'rgba(0,0,0,0.85)';
         }
     }
     
     function tutupModalPin() {
         let myModalEl = document.getElementById('modalPinLogin');
-        if(myModalEl) {
+        if(!myModalEl) return;
+        
+        try {
+            let bsModal = bootstrap.Modal.getInstance(myModalEl);
+            if(bsModal) bsModal.hide();
+        } catch(e) {
             myModalEl.style.display = 'none';
             myModalEl.classList.remove('show');
         }
@@ -417,15 +427,15 @@
         
         let lupaEl = document.getElementById('modalLupaPin');
         if(lupaEl) {
-            lupaEl.style.display = 'block';
-            lupaEl.classList.add('show');
+            try { bootstrap.Modal.getOrCreateInstance(lupaEl).show(); } 
+            catch(e) { lupaEl.style.display = 'block'; lupaEl.classList.add('show'); lupaEl.style.backgroundColor = 'rgba(0,0,0,0.85)'; }
         }
     }
     function closeModalLupaPin() { 
         let lupaEl = document.getElementById('modalLupaPin');
         if(lupaEl) {
-            lupaEl.style.display = 'none';
-            lupaEl.classList.remove('show');
+            try { bootstrap.Modal.getInstance(lupaEl).hide(); } 
+            catch(e) { lupaEl.style.display = 'none'; lupaEl.classList.remove('show'); }
         }
         masukModeAdmin();
     }
@@ -458,7 +468,7 @@
           } else {
              document.getElementById('admin-app-container').style.display = 'none';
              document.body.style.backgroundColor = '#0f172a';
-             document.getElementById('warga-scanner-app').style.display = 'flex';
+             document.getElementById('warga-scanner-app').style.display = 'block'; // Diubah kembali ke block
              if (urlParams.get('agenda_id')) sessionStorage.setItem('rt_scanner_saved_agenda', urlParams.get('agenda_id'));
              initScannerWarga(sessionStorage.getItem('rt_scanner_saved_agenda'));
           }
