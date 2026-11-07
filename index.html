@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Presensi Mandiri RT v3.9.31</title>
+  <title>Notulen & Presensi Mandiri RT v3.9.33</title>
   
-  <link rel="manifest" href="manifest.json?v=3.9.31">
+  <link rel="manifest" href="manifest.json?v=3.9.33">
   <meta name="theme-color" content="#0ea5e9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -51,14 +51,35 @@
     #scanner-reader video { width: 100% !important; height: auto !important; object-fit: cover !important; }
     
     /* Tombol Pilihan Agenda di Scanner Warga */
-    .btn-agenda-scanner {
-        background-color: #1e293b; color: #94a3b8; border: 2px solid #334155; border-radius: 12px;
-        padding: 12px; margin-bottom: 8px; text-align: left; transition: all 0.2s ease; cursor: pointer;
+    .btn-agenda-scanner { background-color: #1e293b; color: #94a3b8; border: 2px solid #334155; border-radius: 12px; padding: 12px; margin-bottom: 8px; text-align: left; transition: all 0.2s ease; cursor: pointer; }
+    .btn-agenda-scanner.active { background-color: rgba(14, 165, 233, 0.15); color: #fff; border-color: #0ea5e9; box-shadow: 0 0 15px rgba(14, 165, 233, 0.3); }
+
+    /* Custom Autocomplete List untuk Warga */
+    .autocomplete-list {
+        position: absolute;
+        z-index: 1000;
+        width: 100%;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        max-height: 200px;
+        overflow-y: auto;
+        display: none;
+        padding: 5px 0;
+        margin-top: 5px;
+        border: 1px solid var(--border-color);
     }
-    .btn-agenda-scanner.active {
-        background-color: rgba(14, 165, 233, 0.15); color: #fff; border-color: #0ea5e9;
-        box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+    .autocomplete-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        color: #0f172a;
+        font-weight: 600;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.9rem;
     }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover, .autocomplete-item:active { background-color: #e0f2fe; color: #0284c7; }
+    .autocomplete-item small { display: block; color: #64748b; font-size: 0.7rem; font-weight: normal; }
     
     @media print {
       .bottom-nav, .navbar, .btn, .no-print, .install-banner, .footer-branding, .modal-header button { display: none !important; }
@@ -88,18 +109,16 @@
           <small class="text-light opacity-75 d-block" id="locked-agenda-time">Batas Waktu: -</small>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 position-relative">
           <label class="form-label small fw-bold text-info mb-1"><i class="bi bi-person-badge-fill me-1"></i> 1. Ketik Nama / No. Rumah</label>
-          <input type="text" id="scanner-warga-input" class="form-control rounded-pill bg-light text-dark fw-bold" list="dl-scanner-warga" placeholder="Ketik nama Anda...">
-          <datalist id="dl-scanner-warga"></datalist>
+          <input type="text" id="scanner-warga-input" class="form-control rounded-pill bg-light text-dark fw-bold" placeholder="Ketik nama Anda di sini..." autocomplete="off">
+          <!-- WADAH CUSTOM DROPDOWN AUTOCOMPLETE -->
+          <div id="scanner-warga-autocomplete" class="autocomplete-list"></div>
         </div>
         
-        <!-- PEMILIHAN AGENDA DENGAN TOMBOL OTOMATIS -->
         <div class="mb-4" id="scanner-manual-select-group">
           <label class="form-label small fw-bold text-info mb-2"><i class="bi bi-journal-text me-1"></i> 2. Klik Agenda / Rapat</label>
-          <div id="scanner-agenda-buttons-container">
-             <!-- Tombol-tombol agenda akan di-render di sini oleh JavaScript -->
-          </div>
+          <div id="scanner-agenda-buttons-container"></div>
           <input type="hidden" id="scanner-agenda-id-val">
         </div>
         
@@ -119,14 +138,12 @@
       <div id="scanner-status" class="alert alert-dark border-secondary mx-auto text-center py-3 mb-3 bg-black text-white w-100" style="max-width: 400px; display:none; border-radius: 14px;"></div>
       <div id="warga-task-view" style="display:none; max-width: 400px; text-align: left;" class="mx-auto card bg-black border-info p-3 shadow-lg text-white rounded-4 mb-4 w-100"></div>
 
-      <!-- PINTU MASUK ADMIN -->
       <div class="mt-5 mb-3">
         <div class="fw-semibold small text-light opacity-50 mb-2" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <button class="btn btn-dark border-secondary rounded-pill px-4 py-2 shadow-sm text-info fw-bold" onclick="masukModeAdmin()" style="font-size: 0.8rem; letter-spacing: 0.5px;">
-           <i class="bi bi-shield-lock-fill me-1"></i> Powered By Ari GPM • <span class="text-light fw-normal opacity-75">v3.9.31</span>
+           <i class="bi bi-shield-lock-fill me-1"></i> Powered By Ari GPM • <span class="text-light fw-normal opacity-75">v3.9.33</span>
         </button>
       </div>
-      
     </div>
   </div>
   <!-- ================= END WADAH SCANNER ================= -->
@@ -142,7 +159,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.31</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.33</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -155,8 +172,6 @@
     </nav>
 
     <div class="container py-3">
-      
-      <!-- BANNER INSTALL APLIKASI -->
       <div id="install-banner-app" class="install-banner align-items-center justify-content-between shadow-sm mb-3">
         <div>
           <h6 class="fw-bold mb-1"><i class="bi bi-download me-2"></i>Install Aplikasi RT</h6>
@@ -286,7 +301,7 @@
       </div>
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.31</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.33</span></div>
       </div>
     </div>
 
@@ -350,7 +365,20 @@
       <input class="form-check-input fs-4 ms-0 me-2 mt-0" type="checkbox" role="switch" id="kegiatan-tampil-scanner">
       <label class="form-check-label fw-bold text-success flex-grow-1" for="kegiatan-tampil-scanner" style="font-size: 0.8rem;">Tampilkan ke Warga</label>
     </div>
-    <div class="row g-2"><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Mulai Buka</label><input type="datetime-local" id="kegiatan-scan-start" class="form-control form-control-sm"></div><div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Tutup Otomatis</label><input type="datetime-local" id="kegiatan-scan-end" class="form-control form-control-sm"></div></div>
+    
+    <div class="form-check form-switch mb-2 bg-white p-2 border rounded shadow-sm d-flex align-items-center">
+      <input class="form-check-input fs-4 ms-0 me-2 mt-0" type="checkbox" role="switch" id="kegiatan-is-daily" onchange="toggleDailyScanner()">
+      <label class="form-check-label fw-bold text-primary flex-grow-1" for="kegiatan-is-daily" style="font-size: 0.8rem;">Auto Buka Tiap Hari (Siskamling)</label>
+    </div>
+
+    <div class="row g-2" id="wrap-scan-datetime">
+        <div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Mulai Buka</label><input type="datetime-local" id="kegiatan-scan-start" class="form-control form-control-sm"></div>
+        <div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Tutup Otomatis</label><input type="datetime-local" id="kegiatan-scan-end" class="form-control form-control-sm"></div>
+    </div>
+    <div class="row g-2" id="wrap-scan-time" style="display:none;">
+        <div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Jam Buka</label><input type="time" id="kegiatan-scan-time-start" class="form-control form-control-sm"></div>
+        <div class="col-6"><label class="form-label text-muted mb-0" style="font-size:0.7rem;">Jam Tutup</label><input type="time" id="kegiatan-scan-time-end" class="form-control form-control-sm"></div>
+    </div>
   </div>
   <button type="submit" class="btn btn-success w-100 btn-rounded shadow-sm">Simpan Agenda</button></form></div></div></div></div>
   
@@ -368,7 +396,7 @@
 
   <!-- SCRIPT UTAMA -->
   <script>
-    const APP_VERSION = "v3.9.31";
+    const APP_VERSION = "v3.9.33";
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
     
     let APP_DATA = { SETTINGS: { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju", pin: "kamu nanyak", email_admin: "" }, NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], ANGGARAN: [], REGU: [] };
@@ -380,99 +408,27 @@
 
     if (!APP_DATA.SETTINGS) APP_DATA.SETTINGS = { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju", pin: "kamu nanyak", email_admin: "" };
 
-    let currentRabKegiatanId = null, currentReguKegiatanId = null, currentAnggotaReguId = null, deferredPrompt = null, generatedOtpCode = null, qrcodeObj = null;
+    let currentRabKegiatanId = null, currentReguKegiatanId = null, currentAnggotaReguId = null, deferredPrompt = null, generatedOtpCode = null;
 
-    // FUNGSI INSTALL PWA & SHARE LINK
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      let banner = document.getElementById('install-banner-app');
-      if(banner) banner.style.display = 'flex';
-    });
-    
-    function installAppPWA() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            document.getElementById('install-banner-app').style.display = 'none';
-          }
-          deferredPrompt = null;
-        });
-      }
-    }
-
-    function shareAppPublic() {
-        let publicUrl = window.location.href.split('?')[0];
-        let appName = APP_DATA.SETTINGS.nama_rt || "Aplikasi RT";
-        let txt = `📢 *APLIKASI PRESENSI MANDIRI*\n${appName}\n\nSilakan klik link di bawah ini lalu pilih menu *Install* atau *Tambahkan ke Layar Utama* di HP Anda:\n\n🌐 ${publicUrl}\n\n_Powered By Ari GPM_`;
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
-    }
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; let banner = document.getElementById('install-banner-app'); if(banner) banner.style.display = 'flex'; });
+    function installAppPWA() { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then((choiceResult) => { if (choiceResult.outcome === 'accepted') { document.getElementById('install-banner-app').style.display = 'none'; } deferredPrompt = null; }); } }
+    function shareAppPublic() { let publicUrl = window.location.href.split('?')[0]; let appName = APP_DATA.SETTINGS.nama_rt || "Aplikasi RT"; let txt = `📢 *APLIKASI PRESENSI MANDIRI*\n${appName}\n\nSilakan klik link di bawah ini lalu pilih menu *Install* atau *Tambahkan ke Layar Utama* di HP Anda:\n\n🌐 ${publicUrl}\n\n_Powered By Ari GPM_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
 
     function getAnggotaArr(reguObj) { if (!reguObj || !reguObj.anggota) return []; if (Array.isArray(reguObj.anggota)) return reguObj.anggota; let str = String(reguObj.anggota).trim(); if (str === '') return []; if (str.startsWith('[')) { try { return JSON.parse(str); } catch (e) {} } return str.split(',').map(x => x.trim()).filter(x => x !== ''); }
     function showAlert(title, text, icon = 'info') { if(typeof Swal !== 'undefined') Swal.fire({ title: title, text: text, icon: icon, confirmButtonColor: '#0ea5e9' }); else alert(title + "\n" + text); }
     function showToast(title, icon = 'success') { if(typeof Swal !== 'undefined') Swal.fire({ toast: true, position: 'top-end', icon: icon, title: title, showConfirmButton: false, timer: 2000 }); else console.log(title); }
     function customConfirm(message, callback) { if(typeof Swal !== 'undefined') Swal.fire({ title: 'Konfirmasi', text: message, icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Ya' }).then((r) => { if(r.isConfirmed) callback(); }); else if(confirm(message)) callback(); }
-    
     function hideModalSafe(modalId) { const el = document.getElementById(modalId); if (!el) return; if(typeof bootstrap !== 'undefined') { const m = bootstrap.Modal.getInstance(el) || bootstrap.Modal.getOrCreateInstance(el); m.hide(); } else { el.style.display = 'none'; } setTimeout(() => { document.querySelectorAll('.modal-backdrop').forEach(b => b.remove()); document.body.classList.remove('modal-open'); document.body.style = ''; }, 300); }
 
     function showPermanentMasterQR() { if(typeof QRCode === 'undefined') return showAlert('Tunggu', 'Modul QR sedang dimuat...', 'warning'); let container = document.getElementById('qrcode-box'); container.innerHTML = ''; new QRCode(container, { text: `NOTULENRT_MASTER|RT_PERMANEN_QR`, width: 250, height: 250, colorDark : "#0284c7", colorLight : "#ffffff" }); new bootstrap.Modal(document.getElementById('modalPermanentQR')).show(); }
     function shareAutoScannerLink(tipe, idItem) { let itemTitle = ""; if(tipe === 'NOTULEN') { let dt = APP_DATA.NOTULEN.find(x => x.id === idItem); if(dt) itemTitle = "Rapat: " + (dt.agenda || ''); } else if(tipe === 'KEGIATAN') { let dt = APP_DATA.KEGIATAN.find(x => x.id === idItem); if(dt) itemTitle = "Kegiatan: " + (dt.nama_kegiatan || ''); } let publicUrl = window.location.href.split('?')[0] + `?mode=scanner&agenda_id=${idItem}`; let txt = `📢 *LINK ABSEN OTOMATIS:*\n*${itemTitle}*\n\nKlik link untuk absen:\n🌐 ${publicUrl}\n\n_Aplikasi Notulen RT ${APP_VERSION}_`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
 
-    function masukModeAdmin() {
-        let myModalEl = document.getElementById('modalPinLogin');
-        if(!myModalEl) return;
-        try {
-            let bsModal = bootstrap.Modal.getOrCreateInstance(myModalEl);
-            bsModal.show();
-            setTimeout(() => {
-                let err = document.getElementById('pin-login-error');
-                if(err) err.style.display = 'none';
-                let inputPin = document.getElementById('input-pin-login');
-                if(inputPin) { inputPin.value = ''; inputPin.focus(); }
-            }, 500);
-        } catch(e) {
-            myModalEl.style.display = 'block';
-            myModalEl.classList.add('show');
-            myModalEl.style.backgroundColor = 'rgba(0,0,0,0.85)';
-        }
-    }
-    
-    function tutupModalPin() {
-        let myModalEl = document.getElementById('modalPinLogin');
-        if(!myModalEl) return;
-        try { let bsModal = bootstrap.Modal.getInstance(myModalEl); if(bsModal) bsModal.hide(); } 
-        catch(e) { myModalEl.style.display = 'none'; myModalEl.classList.remove('show'); }
-    }
-    
-    function verifyPin(e) { 
-        e.preventDefault(); 
-        let inputEl = document.getElementById('input-pin-login'); 
-        let currentPin = (APP_DATA.SETTINGS && APP_DATA.SETTINGS.pin) ? String(APP_DATA.SETTINGS.pin).trim().toLowerCase() : "kamu nanyak"; 
-        
-        if (String(inputEl.value || '').trim().toLowerCase() === currentPin) { 
-            sessionStorage.setItem('rt_admin_mode', 'true'); 
-            window.location.reload(); 
-        } else { 
-            let err = document.getElementById('pin-login-error');
-            if(err) err.style.display = 'block'; 
-            inputEl.value = ''; inputEl.focus();
-        } 
-    }
-    
+    function masukModeAdmin() { let myModalEl = document.getElementById('modalPinLogin'); if(!myModalEl) return; try { bootstrap.Modal.getOrCreateInstance(myModalEl).show(); setTimeout(() => { let err = document.getElementById('pin-login-error'); if(err) err.style.display = 'none'; let inputPin = document.getElementById('input-pin-login'); if(inputPin) { inputPin.value = ''; inputPin.focus(); } }, 500); } catch(e) { myModalEl.style.display = 'block'; myModalEl.classList.add('show'); myModalEl.style.backgroundColor = 'rgba(0,0,0,0.85)'; } }
+    function tutupModalPin() { let myModalEl = document.getElementById('modalPinLogin'); if(!myModalEl) return; try { bootstrap.Modal.getInstance(myModalEl).hide(); } catch(e) { myModalEl.style.display = 'none'; myModalEl.classList.remove('show'); } }
+    function verifyPin(e) { e.preventDefault(); let inputEl = document.getElementById('input-pin-login'); let currentPin = (APP_DATA.SETTINGS && APP_DATA.SETTINGS.pin) ? String(APP_DATA.SETTINGS.pin).trim().toLowerCase() : "kamu nanyak"; if (String(inputEl.value || '').trim().toLowerCase() === currentPin) { sessionStorage.setItem('rt_admin_mode', 'true'); window.location.reload(); } else { let err = document.getElementById('pin-login-error'); if(err) err.style.display = 'block'; inputEl.value = ''; inputEl.focus(); } }
     function logoutKeScanner() { customConfirm('Keluar ke Mode Warga?', () => { sessionStorage.removeItem('rt_admin_mode'); window.location.reload(); }); }
-
-    function openModalLupaPin() { 
-        tutupModalPin();
-        document.getElementById('form-otp-step1').style.display = 'block'; document.getElementById('form-otp-step2').style.display = 'none'; document.getElementById('form-otp-step3').style.display = 'none'; 
-        let lupaEl = document.getElementById('modalLupaPin');
-        if(lupaEl) { try { bootstrap.Modal.getOrCreateInstance(lupaEl).show(); } catch(e) { lupaEl.style.display = 'block'; lupaEl.classList.add('show'); lupaEl.style.backgroundColor = 'rgba(0,0,0,0.85)'; } }
-    }
-    function closeModalLupaPin() { 
-        let lupaEl = document.getElementById('modalLupaPin');
-        if(lupaEl) { try { bootstrap.Modal.getInstance(lupaEl).hide(); } catch(e) { lupaEl.style.display = 'none'; lupaEl.classList.remove('show'); } }
-        masukModeAdmin();
-    }
+    function openModalLupaPin() { tutupModalPin(); document.getElementById('form-otp-step1').style.display = 'block'; document.getElementById('form-otp-step2').style.display = 'none'; document.getElementById('form-otp-step3').style.display = 'none'; let lupaEl = document.getElementById('modalLupaPin'); if(lupaEl) { try { bootstrap.Modal.getOrCreateInstance(lupaEl).show(); } catch(e) { lupaEl.style.display = 'block'; lupaEl.classList.add('show'); lupaEl.style.backgroundColor = 'rgba(0,0,0,0.85)'; } } }
+    function closeModalLupaPin() { let lupaEl = document.getElementById('modalLupaPin'); if(lupaEl) { try { bootstrap.Modal.getInstance(lupaEl).hide(); } catch(e) { lupaEl.style.display = 'none'; lupaEl.classList.remove('show'); } } masukModeAdmin(); }
     
     async function sendOtpEmail(e) { e.preventDefault(); let emailInput = String(document.getElementById('input-otp-email').value || '').trim(); let registeredEmail = String(APP_DATA.SETTINGS.email_admin || '').trim(); if (!registeredEmail) return showAlert('Error', 'Email pemulihan belum diatur!', 'error'); if (emailInput.toLowerCase() !== registeredEmail.toLowerCase()) return showAlert('Error', 'Email tidak sesuai!', 'error'); generatedOtpCode = Math.floor(100000 + Math.random() * 900000).toString(); let btn = document.getElementById('btn-send-otp'); btn.disabled = true; btn.innerHTML = 'Mengirim...'; try { let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'sendOtp', email: registeredEmail, otp: generatedOtpCode, nama_rt: APP_DATA.SETTINGS.nama_rt }) }); document.getElementById('form-otp-step1').style.display = 'none'; document.getElementById('form-otp-step2').style.display = 'block'; showToast('OTP terkirim!'); } catch(err) { showAlert('Gagal', 'Koneksi bermasalah.', 'error'); } finally { btn.disabled = false; btn.innerHTML = 'Kirim OTP'; } }
     function verifyOtpCode(e) { e.preventDefault(); if (String(document.getElementById('input-otp-code').value || '').trim() === generatedOtpCode) { document.getElementById('form-otp-step2').style.display = 'none'; document.getElementById('form-otp-step3').style.display = 'block'; } else { showAlert('Error', 'OTP Salah!', 'error'); } }
@@ -503,9 +459,7 @@
              if (urlParams.get('agenda_id')) sessionStorage.setItem('rt_scanner_saved_agenda', urlParams.get('agenda_id'));
              initScannerWarga(sessionStorage.getItem('rt_scanner_saved_agenda'));
           }
-      } catch (err) {
-          console.error("Boot error:", err);
-      }
+      } catch (err) { console.error("Boot error:", err); }
     }
     
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', bootAppInstantly); } else { bootAppInstantly(); }
@@ -523,14 +477,17 @@
         if(!sel) return;
         let combined = [
             ...(APP_DATA.NOTULEN || []).map(n => ({ id: n.id, title: "Rapat: " + n.agenda, date: n.tgl_rapat })),
-            ...(APP_DATA.KEGIATAN || []).map(k => ({ id: k.id, title: "Kegiatan: " + k.nama_kegiatan, date: k.tgl }))
+            ...(APP_DATA.KEGIATAN || []).map(k => ({ id: k.id, title: "Kegiatan: " + k.nama_kegiatan, date: k.tgl, daily: k.is_daily }))
         ].reverse();
-        sel.innerHTML = '<option value="">-- Silakan Pilih Agenda --</option>' + combined.map(i => `<option value="${i.id}">${i.title} (${formatTanggal(i.date)})</option>`).join('');
+        sel.innerHTML = '<option value="">-- Silakan Pilih Agenda --</option>' + combined.map(i => `<option value="${i.id}">${i.title} (${String(i.daily)==='true' ? 'Harian' : formatTanggal(i.date)})</option>`).join('');
     }
 
-    // FUNGSI SHARE LAPORAN ABSEN KE WHATSAPP
+    // FUNGSI SHARE LAPORAN
     function shareLaporanAbsen(id, tipe) {
         let item, title, date;
+        let todayDate = new Date().toISOString().split('T')[0];
+        let isDaily = false;
+        
         if(tipe === 'rapat') {
             item = APP_DATA.NOTULEN.find(x => x.id === id);
             title = item ? item.agenda : '';
@@ -539,50 +496,107 @@
             item = APP_DATA.KEGIATAN.find(x => x.id === id);
             title = item ? item.nama_kegiatan : '';
             date = item ? item.tgl : '';
+            isDaily = item && String(item.is_daily) === 'true';
         }
         if(!item) return;
 
+        let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(x => x.id_kegiatan === id && (!isDaily || x.tanggal === todayDate));
+        let reguList = (APP_DATA.REGU || []).filter(x => x.id_kegiatan === id);
+        
         let totalWarga = (APP_DATA.WARGA || []).length || 1;
-        let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(x => x.id_kegiatan === id);
+        let activeReguNames = [];
+        let hariIniStr = ['minggu','senin','selasa','rabu','kamis','jumat','sabtu'][new Date().getDay()];
+
+        if (isDaily && reguList.length > 0) {
+            let activeRegus = reguList.filter(r => r.nama_regu.toLowerCase().includes(hariIniStr) || r.tgl === todayDate);
+            if (activeRegus.length > 0) {
+                let targetAnggota = [];
+                activeRegus.forEach(r => {
+                    activeReguNames.push(r.nama_regu);
+                    let arr = getAnggotaArr(r);
+                    arr.forEach(a => { if(!targetAnggota.includes(a)) targetAnggota.push(a); });
+                });
+                totalWarga = targetAnggota.length || 1;
+            }
+        }
+
         let hadirCount = kehadiranList.length;
         let percentage = Math.round((hadirCount / totalWarga) * 100) || 0;
+        if(percentage > 100) percentage = 100;
 
         let txt = `📋 *LAPORAN PRESENSI RT*\n`;
         txt += `Agenda: *${title}*\n`;
-        txt += `Tanggal: ${formatTanggal(date)}\n\n`;
-        txt += `📊 Tingkat Kehadiran: *${percentage}%*\n`;
+        txt += `Tanggal: ${formatTanggal(isDaily ? todayDate : date)}\n`;
+        if (activeReguNames.length > 0) txt += `Jadwal Regu: *${activeReguNames.join(', ')}*\n`;
+        txt += `\n📊 Tingkat Kehadiran: *${percentage}%*\n`;
         txt += `👥 Total Hadir: *${hadirCount}* dari *${totalWarga}* KK\n\n`;
         txt += `*Daftar Hadir:*\n`;
         
         if(hadirCount > 0) {
-            kehadiranList.forEach((k, i) => { txt += `${i+1}. ${k.nama}\n`; });
+            kehadiranList.forEach((k, i) => { 
+                let personReguName = "";
+                let pRegu = reguList.find(r => getAnggotaArr(r).includes(k.nama));
+                if (pRegu) personReguName = ` (${pRegu.nama_regu.toUpperCase()})`;
+                txt += `${i+1}. ${k.nama}${personReguName}\n`; 
+            });
         } else {
             txt += `- Belum ada yang hadir -`;
         }
-
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
     }
 
-    // DASHBOARD DIKEMBALIKAN KE MODEL KARTU DETAIL (SEPERTI V3.9.17)
+    // DASHBOARD DETAIL DENGAN LOGIKA REGU DAN HARIAN
     function renderDashboardKehadiran() {
         let cRapat = document.getElementById('dashboard-recent-presensi-rapat');
         let cKegiatan = document.getElementById('dashboard-recent-presensi-kegiatan');
         
-        // Cek total warga untuk hitung persen
-        let totalWarga = (APP_DATA.WARGA || []).length;
-        if (totalWarga === 0) totalWarga = 1; // hindari pembagian nol
+        let globalTotalWarga = (APP_DATA.WARGA || []).length || 1;
+        let todayDate = new Date().toISOString().split('T')[0];
+        let hariIniStr = ['minggu','senin','selasa','rabu','kamis','jumat','sabtu'][new Date().getDay()];
 
         function buildDetailCard(item, tipe) {
+            let isDaily = tipe === 'kegiatan' && String(item.is_daily) === 'true';
             let title = tipe === 'rapat' ? item.agenda : item.nama_kegiatan;
-            let date = tipe === 'rapat' ? item.tgl_rapat : item.tgl;
-            let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(x => x.id_kegiatan === item.id);
-            let hadirCount = kehadiranList.length;
-            let percentage = Math.round((hadirCount / totalWarga) * 100) || 0;
+            
+            // Filter kehadiran (jika daily, ambil hari ini saja)
+            let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(x => x.id_kegiatan === item.id && (!isDaily || x.tanggal === todayDate));
+            
+            let totalTarget = globalTotalWarga;
+            let reguList = (APP_DATA.REGU || []).filter(x => x.id_kegiatan === item.id);
+            let subtitleHtml = "";
+            
+            if (isDaily && reguList.length > 0) {
+                // Cari regu yang bertugas hari ini
+                let activeRegus = reguList.filter(r => r.nama_regu.toLowerCase().includes(hariIniStr) || r.tgl === todayDate);
+                if (activeRegus.length > 0) {
+                    let targetAnggota = [];
+                    let activeReguNames = [];
+                    activeRegus.forEach(r => {
+                        activeReguNames.push(r.nama_regu);
+                        let arr = getAnggotaArr(r);
+                        arr.forEach(a => { if(!targetAnggota.includes(a)) targetAnggota.push(a); });
+                    });
+                    totalTarget = targetAnggota.length || 1;
+                    subtitleHtml = `<div class="small text-info fw-bold mb-1"><i class="bi bi-calendar-check me-1"></i>Jadwal Hari Ini: ${activeReguNames.join(', ')}</div>`;
+                } else {
+                    subtitleHtml = `<div class="small text-muted fw-bold mb-1"><i class="bi bi-calendar-check me-1"></i>Absen Harian (${formatTanggal(todayDate)})</div>`;
+                }
+            } else if (isDaily) {
+                subtitleHtml = `<div class="small text-muted fw-bold mb-1"><i class="bi bi-calendar-check me-1"></i>Absen Harian (${formatTanggal(todayDate)})</div>`;
+            }
 
-            // Generate label/badge warga yang hadir
+            let hadirCount = kehadiranList.length;
+            let percentage = Math.round((hadirCount / totalTarget) * 100) || 0;
+            if(percentage > 100) percentage = 100;
+
             let badgesHtml = kehadiranList.length > 0
-                ? kehadiranList.map(k => `<span class="badge bg-success rounded-pill me-1 mb-1 px-2 py-1">${k.nama}</span>`).join('')
-                : '<small class="text-muted fst-italic">Belum ada yang absen</small>';
+                ? kehadiranList.map(k => {
+                    let personReguName = "";
+                    let pRegu = reguList.find(r => getAnggotaArr(r).includes(k.nama));
+                    if (pRegu) personReguName = ` (${pRegu.nama_regu.toUpperCase()})`;
+                    return `<span class="badge bg-success rounded-pill me-1 mb-1 px-2 py-1">${k.nama}${personReguName}</span>`;
+                }).join('')
+                : '<small class="text-muted fst-italic">Belum ada yang absen hari ini</small>';
 
             let themeColor = tipe === 'rapat' ? 'primary' : 'success';
             let bgSoft = tipe === 'rapat' ? 'bg-primary-subtle bg-opacity-10' : 'bg-success-subtle bg-opacity-10';
@@ -594,22 +608,17 @@
                     <h6 class="fw-bold text-dark mb-0 text-uppercase" style="font-size: 0.9rem;">${title || '-'}</h6>
                     <span class="badge bg-${themeColor} rounded-pill">${percentage}% Hadir</span>
                 </div>
-                
+                ${subtitleHtml}
                 <div class="progress mb-2" style="height: 8px; border-radius: 4px;">
-                    <div class="progress-bar bg-${themeColor}" role="progressbar" style="width: ${percentage}%" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-${themeColor}" role="progressbar" style="width: ${percentage}%"></div>
                 </div>
-                
                 <div class="small text-dark fw-bold mb-3 border-bottom pb-2">
-                    ${hadirCount} dari ${totalWarga} KK hadir.
+                    ${hadirCount} dari ${totalTarget} KK hadir.
                 </div>
-                
                 <div class="mb-3">
                     <div class="small fw-bold text-dark mb-2">Sudah Absen:</div>
-                    <div class="d-flex flex-wrap">
-                        ${badgesHtml}
-                    </div>
+                    <div class="d-flex flex-wrap">${badgesHtml}</div>
                 </div>
-                
                 <button class="btn btn-outline-${themeColor} btn-sm w-100 rounded-pill fw-bold" onclick="shareLaporanAbsen('${item.id}', '${tipe}')">
                     <i class="bi bi-whatsapp me-1"></i> Share Laporan Absen
                 </button>
@@ -620,7 +629,6 @@
             let htmlR = (APP_DATA.NOTULEN || []).slice(-3).reverse().map(n => buildDetailCard(n, 'rapat')).join('');
             cRapat.innerHTML = htmlR || `<small class="text-muted d-block mb-3">Belum ada data rapat tersimpan.</small>`;
         }
-        
         if (cKegiatan) {
             let htmlK = (APP_DATA.KEGIATAN || []).slice(-3).reverse().map(k => buildDetailCard(k, 'kegiatan')).join('');
             cKegiatan.innerHTML = htmlK || `<small class="text-muted d-block mb-3">Belum ada data kegiatan tersimpan.</small>`;
@@ -638,13 +646,18 @@
         let container = document.getElementById('presensi-checklist-container');
         if (!agendaId) { container.innerHTML = '<div class="text-center text-muted small p-2 fw-bold">Silakan pilih agenda di atas.</div>'; return; }
         
+        let itemAgenda = [...APP_DATA.NOTULEN, ...APP_DATA.KEGIATAN].find(x => x.id === agendaId);
+        let isDaily = itemAgenda && String(itemAgenda.is_daily) === 'true';
+        let todayDate = new Date().toISOString().split('T')[0];
+
         let html = '';
         let hadirCount = 0;
         let wargaList = APP_DATA.WARGA || [];
         document.getElementById('presensi-total').innerText = wargaList.length;
 
         wargaList.forEach(w => {
-            let isHadir = (APP_DATA.KEHADIRAN || []).find(k => k.id_kegiatan === agendaId && k.nama === w.nama);
+            // Cek kehadiran berdasarkan apakah ini event harian atau bukan
+            let isHadir = (APP_DATA.KEHADIRAN || []).find(k => k.id_kegiatan === agendaId && k.nama === w.nama && (!isDaily || k.tanggal === todayDate));
             if(isHadir) hadirCount++;
             let checked = isHadir ? 'checked' : '';
             let badgeInfo = isHadir && isHadir.status_hadir === 'Hadir Scan QR' ? '<span class="badge bg-success ms-2" style="font-size:0.6rem;">Scan QR</span>' : '';
@@ -660,52 +673,40 @@
         document.getElementById('presensi-count').innerText = hadirCount;
     }
 
-    function filterPresensiWarga() {
-        let q = document.getElementById('presensi-search-warga').value.toLowerCase();
-        document.querySelectorAll('.presensi-item').forEach(el => {
-            let txt = el.innerText.toLowerCase();
-            el.style.display = txt.includes(q) ? 'flex' : 'none';
-        });
-    }
-
-    function selectAllPresensi(check) {
-        document.querySelectorAll('.presensi-cb').forEach(cb => cb.checked = check);
-        updatePresensiCountLocal();
-    }
-
-    function updatePresensiCountLocal() {
-        let checked = document.querySelectorAll('.presensi-cb:checked').length;
-        document.getElementById('presensi-count').innerText = checked;
-    }
-
+    function filterPresensiWarga() { let q = document.getElementById('presensi-search-warga').value.toLowerCase(); document.querySelectorAll('.presensi-item').forEach(el => { let txt = el.innerText.toLowerCase(); el.style.display = txt.includes(q) ? 'flex' : 'none'; }); }
+    function selectAllPresensi(check) { document.querySelectorAll('.presensi-cb').forEach(cb => cb.checked = check); updatePresensiCountLocal(); }
+    function updatePresensiCountLocal() { let checked = document.querySelectorAll('.presensi-cb:checked').length; document.getElementById('presensi-count').innerText = checked; }
     document.addEventListener('change', function(e){ if(e.target && e.target.classList.contains('presensi-cb')){ updatePresensiCountLocal(); } });
 
     async function savePresensi() {
         let agendaId = document.getElementById('presensi-agenda-select').value;
         if(!agendaId) return showAlert('Error', 'Pilih agenda terlebih dahulu', 'warning');
         
-        let oldKehadiran = (APP_DATA.KEHADIRAN || []).filter(k => k.id_kegiatan !== agendaId);
-        let newKehadiran = [];
+        let itemAgenda = [...APP_DATA.NOTULEN, ...APP_DATA.KEGIATAN].find(x => x.id === agendaId);
+        let isDaily = itemAgenda && String(itemAgenda.is_daily) === 'true';
+        let todayDate = new Date().toISOString().split('T')[0];
+
+        // Hapus record lama HANYA untuk hari ini jika agenda harian
+        let oldKehadiran = (APP_DATA.KEHADIRAN || []).filter(k => {
+            if (k.id_kegiatan !== agendaId) return true;
+            if (isDaily && k.tanggal !== todayDate) return true;
+            return false;
+        });
         
+        let newKehadiran = [];
         document.querySelectorAll('.presensi-cb:checked').forEach(cb => {
-            let existing = (APP_DATA.KEHADIRAN || []).find(k => k.id_kegiatan === agendaId && k.nama === cb.value);
+            let existing = (APP_DATA.KEHADIRAN || []).find(k => k.id_kegiatan === agendaId && k.nama === cb.value && (!isDaily || k.tanggal === todayDate));
             let stat = existing ? existing.status_hadir : 'Hadir Manual';
-            newKehadiran.push({ id_kegiatan: agendaId, nama: cb.value, status_hadir: stat, waktu: new Date().toLocaleTimeString('id-ID') });
+            newKehadiran.push({ id_kegiatan: agendaId, nama: cb.value, status_hadir: stat, waktu: new Date().toLocaleTimeString('id-ID'), tanggal: todayDate });
         });
         
         APP_DATA.KEHADIRAN = [...oldKehadiran, ...newKehadiran];
         localStorage.setItem('rt_app_data', JSON.stringify(APP_DATA));
-        renderUI();
-        hideModalSafe('modalPresensi');
-        showToast('Presensi Disimpan');
+        renderUI(); hideModalSafe('modalPresensi'); showToast('Presensi Disimpan');
     }
 
     function renderUI() {
-      updateDatalistWarga(); 
-      loadHeaderSettingsToUI();
-      updatePresensiAgendaSelect();
-      renderDashboardKehadiran();
-
+      updateDatalistWarga(); loadHeaderSettingsToUI(); updatePresensiAgendaSelect(); renderDashboardKehadiran();
       let elNot = document.getElementById('stat-notulen'); if(elNot) elNot.innerText = (APP_DATA.NOTULEN||[]).length; 
       let elKeg = document.getElementById('stat-kegiatan'); if(elKeg) elKeg.innerText = (APP_DATA.KEGIATAN||[]).length; 
       let elWar = document.getElementById('stat-warga'); if(elWar) elWar.innerText = (APP_DATA.WARGA||[]).length;
@@ -728,7 +729,7 @@
                     <h6 class="fw-bold mb-0 text-success">${item.nama_kegiatan || '-'}</h6>
                     <span class="badge bg-primary">${item.status || 'Rencana'}</span>
                 </div>
-                <small class="text-muted d-block mb-3">${formatTanggal(item.tgl)}</small>
+                <small class="text-muted d-block mb-3">${String(item.is_daily)==='true' ? 'Agenda Harian' : formatTanggal(item.tgl)}</small>
                 
                 <button class="btn btn-sm btn-info text-white fw-bold w-100 rounded-pill mb-2 shadow-sm" onclick="shareAutoScannerLink('KEGIATAN', '${item.id}')">
                     <i class="bi bi-qr-code-scan me-1"></i>Share Link Scanner
@@ -754,16 +755,68 @@
     function editNotulen(id) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('notulen-id').value = item.id; document.getElementById('notulen-agenda').value = item.agenda || ''; document.getElementById('notulen-tgl').value = item.tgl_rapat ? item.tgl_rapat.split('T')[0] : ''; document.getElementById('notulen-waktu').value = item.waktu || ''; document.getElementById('notulen-tempat').value = item.tempat || ''; document.getElementById('notulen-pimpinan').value = item.pimpinan || ''; document.getElementById('notulen-notulis').value = item.notulis || ''; document.getElementById('notulen-pembahasan').value = item.pembahasan || ''; document.getElementById('notulen-keputusan').value = item.keputusan || ''; document.getElementById('notulen-scan-start').value = item.scanner_start || ''; document.getElementById('notulen-scan-end').value = item.scanner_end || ''; document.getElementById('notulen-tampil-scanner').checked = (String(item.tampil_scanner) === 'true'); new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
     document.getElementById('form-notulen').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('NOTULEN', { id: document.getElementById('notulen-id').value, agenda: document.getElementById('notulen-agenda').value, tgl_rapat: document.getElementById('notulen-tgl').value, waktu: document.getElementById('notulen-waktu').value, tempat: document.getElementById('notulen-tempat').value, pimpinan: document.getElementById('notulen-pimpinan').value, notulis: document.getElementById('notulen-notulis').value, pembahasan: document.getElementById('notulen-pembahasan').value, keputusan: document.getElementById('notulen-keputusan').value, scanner_start: document.getElementById('notulen-scan-start').value, scanner_end: document.getElementById('notulen-scan-end').value, tampil_scanner: String(document.getElementById('notulen-tampil-scanner').checked) }); hideModalSafe('modalNotulen'); showToast('Notulen Disimpan'); });
 
-    function openFormKegiatan() { document.getElementById('form-kegiatan').reset(); document.getElementById('kegiatan-id').value = ''; document.getElementById('kegiatan-tgl').value = new Date().toISOString().split('T')[0]; document.getElementById('kegiatan-tampil-scanner').checked = true; new bootstrap.Modal(document.getElementById('modalKegiatan')).show(); }
-    function editKegiatan(id) { let item = APP_DATA.KEGIATAN.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('kegiatan-id').value = item.id; document.getElementById('kegiatan-nama').value = item.nama_kegiatan || ''; document.getElementById('kegiatan-tgl').value = item.tgl ? item.tgl.split('T')[0] : ''; document.getElementById('kegiatan-status').value = item.status || 'Rencana'; document.getElementById('kegiatan-lokasi').value = item.lokasi || ''; document.getElementById('kegiatan-pj').value = item.penanggung_jawab || ''; document.getElementById('kegiatan-scan-start').value = item.scanner_start || ''; document.getElementById('kegiatan-scan-end').value = item.scanner_end || ''; document.getElementById('kegiatan-tampil-scanner').checked = (String(item.tampil_scanner) === 'true'); new bootstrap.Modal(document.getElementById('modalKegiatan')).show(); }
-    document.getElementById('form-kegiatan').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('KEGIATAN', { id: document.getElementById('kegiatan-id').value, nama_kegiatan: document.getElementById('kegiatan-nama').value, tgl: document.getElementById('kegiatan-tgl').value, status: document.getElementById('kegiatan-status').value, lokasi: document.getElementById('kegiatan-lokasi').value, penanggung_jawab: document.getElementById('kegiatan-pj').value, scanner_start: document.getElementById('kegiatan-scan-start').value, scanner_end: document.getElementById('kegiatan-scan-end').value, tampil_scanner: String(document.getElementById('kegiatan-tampil-scanner').checked) }); hideModalSafe('modalKegiatan'); showToast('Agenda Disimpan'); });
+    function toggleDailyScanner() {
+        let isDaily = document.getElementById('kegiatan-is-daily').checked;
+        document.getElementById('wrap-scan-datetime').style.display = isDaily ? 'none' : 'flex';
+        document.getElementById('wrap-scan-time').style.display = isDaily ? 'flex' : 'none';
+    }
+
+    function openFormKegiatan() { 
+        document.getElementById('form-kegiatan').reset(); 
+        document.getElementById('kegiatan-id').value = ''; 
+        document.getElementById('kegiatan-tgl').value = new Date().toISOString().split('T')[0]; 
+        document.getElementById('kegiatan-tampil-scanner').checked = true;
+        document.getElementById('kegiatan-is-daily').checked = false;
+        toggleDailyScanner();
+        new bootstrap.Modal(document.getElementById('modalKegiatan')).show(); 
+    }
+    
+    function editKegiatan(id) { 
+        let item = APP_DATA.KEGIATAN.find(x => String(x.id) === String(id)); 
+        if (!item) return; 
+        document.getElementById('kegiatan-id').value = item.id; 
+        document.getElementById('kegiatan-nama').value = item.nama_kegiatan || ''; 
+        document.getElementById('kegiatan-tgl').value = item.tgl ? item.tgl.split('T')[0] : ''; 
+        document.getElementById('kegiatan-status').value = item.status || 'Rencana'; 
+        document.getElementById('kegiatan-lokasi').value = item.lokasi || ''; 
+        document.getElementById('kegiatan-pj').value = item.penanggung_jawab || ''; 
+        document.getElementById('kegiatan-scan-start').value = item.scanner_start || ''; 
+        document.getElementById('kegiatan-scan-end').value = item.scanner_end || ''; 
+        document.getElementById('kegiatan-tampil-scanner').checked = (String(item.tampil_scanner) === 'true'); 
+        
+        document.getElementById('kegiatan-is-daily').checked = (String(item.is_daily) === 'true');
+        document.getElementById('kegiatan-scan-time-start').value = item.time_start || '';
+        document.getElementById('kegiatan-scan-time-end').value = item.time_end || '';
+        toggleDailyScanner();
+        
+        new bootstrap.Modal(document.getElementById('modalKegiatan')).show(); 
+    }
+    
+    document.getElementById('form-kegiatan').addEventListener('submit', function(e) { 
+        e.preventDefault(); 
+        saveLocalAndSync('KEGIATAN', { 
+            id: document.getElementById('kegiatan-id').value, 
+            nama_kegiatan: document.getElementById('kegiatan-nama').value, 
+            tgl: document.getElementById('kegiatan-tgl').value, 
+            status: document.getElementById('kegiatan-status').value, 
+            lokasi: document.getElementById('kegiatan-lokasi').value, 
+            penanggung_jawab: document.getElementById('kegiatan-pj').value, 
+            scanner_start: document.getElementById('kegiatan-scan-start').value, 
+            scanner_end: document.getElementById('kegiatan-scan-end').value, 
+            tampil_scanner: String(document.getElementById('kegiatan-tampil-scanner').checked),
+            is_daily: String(document.getElementById('kegiatan-is-daily').checked),
+            time_start: document.getElementById('kegiatan-scan-time-start').value,
+            time_end: document.getElementById('kegiatan-scan-time-end').value
+        }); 
+        hideModalSafe('modalKegiatan'); showToast('Agenda Disimpan'); 
+    });
 
     function openFormWarga() { document.getElementById('form-warga').reset(); document.getElementById('warga-id').value = ''; new bootstrap.Modal(document.getElementById('modalWarga')).show(); }
     function editWarga(id) { let item = APP_DATA.WARGA.find(x => String(x.id) === String(id)); if (!item) return; document.getElementById('warga-id').value = item.id; document.getElementById('warga-nama').value = item.nama || ''; document.getElementById('warga-rumah').value = item.no_rumah || ''; document.getElementById('warga-wa').value = item.no_wa || ''; new bootstrap.Modal(document.getElementById('modalWarga')).show(); }
     document.getElementById('form-warga').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('WARGA', { id: document.getElementById('warga-id').value, nama: document.getElementById('warga-nama').value, no_rumah: document.getElementById('warga-rumah').value, no_wa: document.getElementById('warga-wa').value }); hideModalSafe('modalWarga'); showToast('Warga Disimpan'); });
 
     function shareWA(idNotulen) { let item = APP_DATA.NOTULEN.find(x => String(x.id) === String(idNotulen)); if(!item) return; let txt = `📢 *HASIL MUSYAWARAH RT*\nAgenda: ${item.agenda}\nKeputusan: ${item.keputusan || '-'}`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
-    function shareAgendaWA(idKegiatan) { let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan)); if (!keg) return; let txt = `📋 *AGENDA RT*\nNama: ${keg.nama_kegiatan}\nTgl: ${formatTanggal(keg.tgl)}`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
+    function shareAgendaWA(idKegiatan) { let keg = APP_DATA.KEGIATAN.find(x => String(x.id) === String(idKegiatan)); if (!keg) return; let txt = `📋 *AGENDA RT*\nNama: ${keg.nama_kegiatan}\nTgl: ${String(keg.is_daily)==='true' ? 'Harian' : formatTanggal(keg.tgl)}`; window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank'); }
     
     function openPrintModal(idNotulen) { 
         let item = APP_DATA.NOTULEN.find(x => x.id === idNotulen);
@@ -881,63 +934,93 @@
     }
 
     /* ========================================================================= */
-    /* SCANNER WARGA (TOMBOL KARTU AGENDA OTOMATIS)                              */
+    /* SCANNER WARGA & KUSTOM AUTOCOMPLETE NAMA                                  */
     /* ========================================================================= */
-    let html5QrcodeScanner = null, scannerAppData = { NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], REGU: [] }, scannerApiUrl = ""; 
+    let html5QrcodeScanner = null, scannerAppData = { NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], REGU: [] }; 
     
     function resetScannerSession() { showAlert('Akses Ditolak!', 'Perangkat sudah dikunci atas nama warga lain.', 'error'); }
 
-    // Fungsi klik tombol agenda di layar scanner
     function selectScannerAgenda(btnElement, idAgenda, title, timeText) {
-        // Reset warna semua tombol
-        document.querySelectorAll('.btn-agenda-scanner').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        
-        // Aktifkan tombol yang diklik
+        document.querySelectorAll('.btn-agenda-scanner').forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
-        
-        // Simpan ID
         document.getElementById('scanner-agenda-id-val').value = idAgenda;
-        
-        // Buka gembok scan
         let lockBox = document.getElementById('scanner-locked-info'); 
         lockBox.style.display = 'block'; 
         lockBox.className = "mb-3 p-3 bg-info bg-opacity-10 border border-info rounded-3 text-center";
-        
         document.getElementById('locked-agenda-name').innerText = title; 
         document.getElementById('locked-agenda-time').innerText = "Waktu Absen: " + timeText;
-        
         let btnScan = document.getElementById('btn-start-scan');
         btnScan.disabled = false; 
         btnScan.className = "btn btn-info w-100 rounded-pill fw-bold text-white py-3 shadow";
     }
 
+    // Fungsi Logika Dropdown Autocomplete Kustom
+    function setupCustomAutocomplete() {
+        const inputEl = document.getElementById('scanner-warga-input');
+        const listEl = document.getElementById('scanner-warga-autocomplete');
+        if(!inputEl || !listEl) return;
+
+        inputEl.addEventListener('input', function() {
+            let val = this.value.toLowerCase().trim();
+            listEl.innerHTML = '';
+            if (!val) { listEl.style.display = 'none'; return; }
+
+            let matches = (scannerAppData.WARGA || []).filter(w => w.nama.toLowerCase().includes(val) || String(w.no_rumah || '').toLowerCase().includes(val));
+            
+            if (matches.length > 0) {
+                matches.forEach(m => {
+                    let div = document.createElement('div');
+                    div.className = 'autocomplete-item';
+                    div.innerHTML = `${m.nama} <small>Blok/No: ${m.no_rumah || '-'}</small>`;
+                    div.onclick = function() {
+                        inputEl.value = m.nama;
+                        listEl.style.display = 'none';
+                        listEl.innerHTML = '';
+                    };
+                    listEl.appendChild(div);
+                });
+                listEl.style.display = 'block';
+            } else {
+                listEl.style.display = 'none';
+            }
+        });
+
+        // Tutup dropdown jika klik di luar
+        document.addEventListener('click', function (e) {
+            if (e.target !== inputEl && e.target !== listEl) {
+                listEl.style.display = 'none';
+            }
+        });
+    }
+
     async function initScannerWarga(forcedAgendaId) {
       let sessionScanner = localStorage.getItem('rt_scanner_session');
+      let todayDateStr = new Date().toISOString().split('T')[0];
+      
+      scannerAppData = APP_DATA;
+
       if (sessionScanner) {
          let sData = JSON.parse(sessionScanner);
-         if (!forcedAgendaId || String(sData.idAgenda) === String(forcedAgendaId)) {
+         if (sData.tanggal && sData.tanggal !== todayDateStr) {
+             localStorage.removeItem('rt_scanner_session');
+         } else if (!forcedAgendaId || String(sData.idAgenda) === String(forcedAgendaId)) {
              document.getElementById('scanner-warga-input').value = sData.namaWarga;
              document.getElementById('scanner-warga-input').disabled = true; 
              document.getElementById('scanner-manual-select-group').style.display = 'none';
              document.getElementById('label-step-3').innerText = "Sesi Absen Selesai";
-             document.getElementById('btn-scan-container').innerHTML = `<div class="alert alert-dark border-success bg-black text-center mb-0"><h6 class="text-white fw-bold">Sesi Perangkat Terkunci</h6><small class="text-muted d-block mb-3">Absen atas nama <b>${sData.namaWarga}</b> tercatat.</small><button class="btn btn-outline-danger w-100 rounded-pill fw-bold" onclick="resetScannerSession()">Ganti Nama</button></div>`;
+             document.getElementById('btn-scan-container').innerHTML = `<div class="alert alert-dark border-success bg-black text-center mb-0"><h6 class="text-white fw-bold">Sesi Perangkat Terkunci</h6><small class="text-muted d-block mb-3">Absen atas nama <b>${sData.namaWarga}</b> hari ini tercatat.</small><button class="btn btn-outline-danger w-100 rounded-pill fw-bold" onclick="resetScannerSession()">Ganti Nama</button></div>`;
              return; 
          }
       }
 
-      scannerAppData = APP_DATA;
-      let dlWarga = document.getElementById('dl-scanner-warga');
+      setupCustomAutocomplete(); // Panggil inisiasi Autocomplete
+      
       let btnContainer = document.getElementById('scanner-agenda-buttons-container');
-      
       document.getElementById('scanner-rt-header').innerText = `${scannerAppData.SETTINGS?.nama_rt || "RT 01"} - ${scannerAppData.SETTINGS?.desa_alamat || "Desa"}`;
-      if (dlWarga) dlWarga.innerHTML = (scannerAppData.WARGA || []).map(x => `<option value="${x.nama} (${x.no_rumah || '-'})"></option>`).join('');
       
-      // LOGIKA FILTER DAN GENERATE TOMBOL
       let combined = [
-          ...(scannerAppData.NOTULEN || []).filter(n => String(n.tampil_scanner) === 'true').map(n => ({ id: n.id, title: n.agenda, date: n.tgl_rapat, start: n.scanner_start, end: n.scanner_end, tipe: 'Rapat' })),
-          ...(scannerAppData.KEGIATAN || []).filter(k => String(k.tampil_scanner) === 'true').map(k => ({ id: k.id, title: k.nama_kegiatan, date: k.tgl, start: k.scanner_start, end: k.scanner_end, tipe: 'Kegiatan' }))
+          ...(scannerAppData.NOTULEN || []).filter(n => String(n.tampil_scanner) === 'true').map(n => ({ id: n.id, title: n.agenda, date: n.tgl_rapat, start: n.scanner_start, end: n.scanner_end, is_daily: 'false', tipe: 'Rapat' })),
+          ...(scannerAppData.KEGIATAN || []).filter(k => String(k.tampil_scanner) === 'true').map(k => ({ id: k.id, title: k.nama_kegiatan, date: k.tgl, start: k.scanner_start, end: k.scanner_end, is_daily: k.is_daily, time_start: k.time_start, time_end: k.time_end, tipe: 'Kegiatan' }))
       ].reverse();
       
       if (btnContainer) {
@@ -949,58 +1032,4 @@
                   let isLockedOut = false;
                   let now = new Date();
                   
-                  if (m.start && m.end) { 
-                      let startDt = new Date(m.start); let endDt = new Date(m.end); 
-                      timeText = `${startDt.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})} s/d ${endDt.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}`; 
-                      if (now < startDt || now > endDt) isLockedOut = true;
-                  }
-                  
-                  if (isLockedOut) {
-                      return `<div class="btn-agenda-scanner" style="opacity:0.5; cursor:not-allowed;">
-                          <div class="d-flex justify-content-between mb-1">
-                              <span class="fw-bold text-secondary text-uppercase" style="font-size: 0.85rem;">${m.title}</span>
-                              <i class="bi bi-lock-fill text-danger"></i>
-                          </div>
-                          <div style="font-size: 0.7rem;"><i class="bi bi-calendar me-1"></i>${formatTanggal(m.date)}</div>
-                      </div>`;
-                  } else {
-                      let titleStr = String(m.title).toUpperCase();
-                      return `<div class="btn-agenda-scanner" onclick="selectScannerAgenda(this, '${m.id}', '${titleStr}', '${timeText}')">
-                          <div class="d-flex justify-content-between align-items-center mb-1">
-                              <span class="fw-bold text-light text-uppercase" style="font-size: 0.85rem;">${m.title}</span>
-                              <span class="badge bg-secondary" style="font-size: 0.6rem;">${m.tipe}</span>
-                          </div>
-                          <div style="font-size: 0.7rem;"><i class="bi bi-calendar me-1"></i>${formatTanggal(m.date)}</div>
-                      </div>`;
-                  }
-              }).join('');
-          }
-      }
-    }
-
-    async function startScanner() {
-      let btnScan = document.getElementById('btn-start-scan');
-      let namaWarga = String(document.getElementById('scanner-warga-input').value || '').split('(')[0].trim(); 
-      let idAgenda = document.getElementById('scanner-agenda-id-val').value;
-      if (!namaWarga || !idAgenda) return showAlert('Perhatian', 'Nama warga dan klik Agenda di atas wajib diisi!', 'warning');
-      
-      document.getElementById('scanner-reader-container').style.display = 'block'; document.getElementById('btn-scan-container').style.display = 'none'; document.getElementById('scanner-main-card').style.display = 'none'; 
-      if(!html5QrcodeScanner) html5QrcodeScanner = new Html5Qrcode("scanner-reader"); 
-      try { await html5QrcodeScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, (d) => { processScanResult(d, namaWarga, idAgenda); }, (e) => {}); } 
-      catch(e) { showAlert('Error', 'Kamera gagal dibuka.', 'error'); stopScanner(); }
-    }
-    function stopScanner() { try { if(html5QrcodeScanner) html5QrcodeScanner.stop().catch(e=>{}); } catch(e){} document.getElementById('scanner-reader-container').style.display = 'none'; document.getElementById('btn-scan-container').style.display = 'block'; document.getElementById('scanner-main-card').style.display = 'block'; }
-    
-    async function processScanResult(qrText, namaWarga, idAgenda) {
-      stopScanner(); let parts = qrText.split('|'); let statusBox = document.getElementById('scanner-status'); statusBox.style.display = 'block';
-      if (parts.length !== 2 || parts[0] !== 'NOTULENRT_MASTER') { statusBox.innerHTML = "<span class='text-danger fw-bold'>❌ QR Tidak Valid!</span>"; return; }
-      statusBox.innerHTML = "Menyimpan Presensi...";
-      try {
-        await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'save', table: 'KEHADIRAN', data: { id_kegiatan: idAgenda, nama: namaWarga, status_hadir: 'Hadir Scan QR', waktu: new Date().toLocaleTimeString('id-ID') } }) });
-        statusBox.innerHTML = "<h5 class='text-success fw-bold'>Presensi Berhasil Disimpan!</h5>";
-        localStorage.setItem('rt_scanner_session', JSON.stringify({namaWarga: namaWarga, idAgenda: idAgenda}));
-      } catch(e) { statusBox.innerHTML = "<span class='text-danger'>Gagal menyimpan.</span>"; }
-    }
-  </script>
-</body>
-</html>
+                  if (String(m.is_daily) === 'true' && m.time
