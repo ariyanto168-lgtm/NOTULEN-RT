@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Presensi Mandiri RT v3.9.30</title>
+  <title>Notulen & Presensi Mandiri RT v3.9.31</title>
   
-  <link rel="manifest" href="manifest.json?v=3.9.30">
+  <link rel="manifest" href="manifest.json?v=3.9.31">
   <meta name="theme-color" content="#0ea5e9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -72,7 +72,7 @@
 </head>
 <body>
 
-  <!-- ================= WADAH MODE SCANNER WARGA (BARU) ================= -->
+  <!-- ================= WADAH MODE SCANNER WARGA ================= -->
   <div id="warga-scanner-app" style="background: #0f172a; min-height: 100vh; color: #fff; width:100%; position: absolute; top:0; left:0; z-index:9000; padding-bottom: 60px;">
     <div class="container py-5 text-center">
 
@@ -123,7 +123,7 @@
       <div class="mt-5 mb-3">
         <div class="fw-semibold small text-light opacity-50 mb-2" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <button class="btn btn-dark border-secondary rounded-pill px-4 py-2 shadow-sm text-info fw-bold" onclick="masukModeAdmin()" style="font-size: 0.8rem; letter-spacing: 0.5px;">
-           <i class="bi bi-shield-lock-fill me-1"></i> Powered By Ari GPM • <span class="text-light fw-normal opacity-75">v3.9.30</span>
+           <i class="bi bi-shield-lock-fill me-1"></i> Powered By Ari GPM • <span class="text-light fw-normal opacity-75">v3.9.31</span>
         </button>
       </div>
       
@@ -142,7 +142,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.30</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.31</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -286,7 +286,7 @@
       </div>
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.30</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.31</span></div>
       </div>
     </div>
 
@@ -368,7 +368,7 @@
 
   <!-- SCRIPT UTAMA -->
   <script>
-    const APP_VERSION = "v3.9.30";
+    const APP_VERSION = "v3.9.31";
     const API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
     
     let APP_DATA = { SETTINGS: { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju", pin: "kamu nanyak", email_admin: "" }, NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], ANGGARAN: [], REGU: [] };
@@ -528,48 +528,101 @@
         sel.innerHTML = '<option value="">-- Silakan Pilih Agenda --</option>' + combined.map(i => `<option value="${i.id}">${i.title} (${formatTanggal(i.date)})</option>`).join('');
     }
 
-    // DASHBOARD DIKEMBALIKAN KE MODEL KARTU PANJANG PUTIH SEPERTI MINTAAN
+    // FUNGSI SHARE LAPORAN ABSEN KE WHATSAPP
+    function shareLaporanAbsen(id, tipe) {
+        let item, title, date;
+        if(tipe === 'rapat') {
+            item = APP_DATA.NOTULEN.find(x => x.id === id);
+            title = item ? item.agenda : '';
+            date = item ? item.tgl_rapat : '';
+        } else {
+            item = APP_DATA.KEGIATAN.find(x => x.id === id);
+            title = item ? item.nama_kegiatan : '';
+            date = item ? item.tgl : '';
+        }
+        if(!item) return;
+
+        let totalWarga = (APP_DATA.WARGA || []).length || 1;
+        let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(x => x.id_kegiatan === id);
+        let hadirCount = kehadiranList.length;
+        let percentage = Math.round((hadirCount / totalWarga) * 100) || 0;
+
+        let txt = `📋 *LAPORAN PRESENSI RT*\n`;
+        txt += `Agenda: *${title}*\n`;
+        txt += `Tanggal: ${formatTanggal(date)}\n\n`;
+        txt += `📊 Tingkat Kehadiran: *${percentage}%*\n`;
+        txt += `👥 Total Hadir: *${hadirCount}* dari *${totalWarga}* KK\n\n`;
+        txt += `*Daftar Hadir:*\n`;
+        
+        if(hadirCount > 0) {
+            kehadiranList.forEach((k, i) => { txt += `${i+1}. ${k.nama}\n`; });
+        } else {
+            txt += `- Belum ada yang hadir -`;
+        }
+
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`, '_blank');
+    }
+
+    // DASHBOARD DIKEMBALIKAN KE MODEL KARTU DETAIL (SEPERTI V3.9.17)
     function renderDashboardKehadiran() {
         let cRapat = document.getElementById('dashboard-recent-presensi-rapat');
         let cKegiatan = document.getElementById('dashboard-recent-presensi-kegiatan');
         
-        if (cRapat) {
-            let htmlR = (APP_DATA.NOTULEN || []).slice(-3).reverse().map(n => {
-                let count = (APP_DATA.KEHADIRAN || []).filter(x => x.id_kegiatan === n.id).length;
-                return `
-                <div class="card card-custom p-3 mb-3 bg-white shadow-sm border-0" style="border-radius: 14px;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="fw-bold text-dark d-block" style="font-size: 0.9rem;">${n.agenda || '-'}</span>
-                            <small class="text-muted" style="font-size:0.75rem;">${formatTanggal(n.tgl_rapat)}</small>
-                        </div>
-                        <button class="btn btn-sm btn-primary-custom text-white rounded-pill px-3 py-1 fw-bold shadow-sm d-flex flex-column align-items-center" onclick="bukaDetailPresensi('${n.id}')">
-                            <div class="d-flex align-items-center"><i class="bi bi-eye-fill me-1"></i> ${count}</div>
-                            <span style="font-size:0.65rem;">Hadir</span>
-                        </button>
+        // Cek total warga untuk hitung persen
+        let totalWarga = (APP_DATA.WARGA || []).length;
+        if (totalWarga === 0) totalWarga = 1; // hindari pembagian nol
+
+        function buildDetailCard(item, tipe) {
+            let title = tipe === 'rapat' ? item.agenda : item.nama_kegiatan;
+            let date = tipe === 'rapat' ? item.tgl_rapat : item.tgl;
+            let kehadiranList = (APP_DATA.KEHADIRAN || []).filter(x => x.id_kegiatan === item.id);
+            let hadirCount = kehadiranList.length;
+            let percentage = Math.round((hadirCount / totalWarga) * 100) || 0;
+
+            // Generate label/badge warga yang hadir
+            let badgesHtml = kehadiranList.length > 0
+                ? kehadiranList.map(k => `<span class="badge bg-success rounded-pill me-1 mb-1 px-2 py-1">${k.nama}</span>`).join('')
+                : '<small class="text-muted fst-italic">Belum ada yang absen</small>';
+
+            let themeColor = tipe === 'rapat' ? 'primary' : 'success';
+            let bgSoft = tipe === 'rapat' ? 'bg-primary-subtle bg-opacity-10' : 'bg-success-subtle bg-opacity-10';
+            let borderColor = tipe === 'rapat' ? 'border-primary' : 'border-success';
+
+            return `
+            <div class="card card-custom p-3 mb-3 ${bgSoft} border ${borderColor}" style="border-radius: 14px;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="fw-bold text-dark mb-0 text-uppercase" style="font-size: 0.9rem;">${title || '-'}</h6>
+                    <span class="badge bg-${themeColor} rounded-pill">${percentage}% Hadir</span>
+                </div>
+                
+                <div class="progress mb-2" style="height: 8px; border-radius: 4px;">
+                    <div class="progress-bar bg-${themeColor}" role="progressbar" style="width: ${percentage}%" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                
+                <div class="small text-dark fw-bold mb-3 border-bottom pb-2">
+                    ${hadirCount} dari ${totalWarga} KK hadir.
+                </div>
+                
+                <div class="mb-3">
+                    <div class="small fw-bold text-dark mb-2">Sudah Absen:</div>
+                    <div class="d-flex flex-wrap">
+                        ${badgesHtml}
                     </div>
-                </div>`;
-            }).join('');
+                </div>
+                
+                <button class="btn btn-outline-${themeColor} btn-sm w-100 rounded-pill fw-bold" onclick="shareLaporanAbsen('${item.id}', '${tipe}')">
+                    <i class="bi bi-whatsapp me-1"></i> Share Laporan Absen
+                </button>
+            </div>`;
+        }
+
+        if (cRapat) {
+            let htmlR = (APP_DATA.NOTULEN || []).slice(-3).reverse().map(n => buildDetailCard(n, 'rapat')).join('');
             cRapat.innerHTML = htmlR || `<small class="text-muted d-block mb-3">Belum ada data rapat tersimpan.</small>`;
         }
         
         if (cKegiatan) {
-            let htmlK = (APP_DATA.KEGIATAN || []).slice(-3).reverse().map(k => {
-                let count = (APP_DATA.KEHADIRAN || []).filter(x => x.id_kegiatan === k.id).length;
-                return `
-                <div class="card card-custom p-3 mb-3 bg-white shadow-sm border-0" style="border-radius: 14px;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="fw-bold text-dark d-block" style="font-size: 0.9rem;">${k.nama_kegiatan || '-'}</span>
-                            <small class="text-muted" style="font-size:0.75rem;">${formatTanggal(k.tgl)}</small>
-                        </div>
-                        <button class="btn btn-sm btn-success text-white rounded-pill px-3 py-1 fw-bold shadow-sm d-flex flex-column align-items-center" onclick="bukaDetailPresensi('${k.id}')">
-                            <div class="d-flex align-items-center"><i class="bi bi-eye-fill me-1"></i> ${count}</div>
-                            <span style="font-size:0.65rem;">Hadir</span>
-                        </button>
-                    </div>
-                </div>`;
-            }).join('');
+            let htmlK = (APP_DATA.KEGIATAN || []).slice(-3).reverse().map(k => buildDetailCard(k, 'kegiatan')).join('');
             cKegiatan.innerHTML = htmlK || `<small class="text-muted d-block mb-3">Belum ada data kegiatan tersimpan.</small>`;
         }
     }
@@ -739,10 +792,6 @@
             <p class="small border rounded p-3">${hadirString}</p>
         `;
         new bootstrap.Modal(document.getElementById('modalCetak')).show();
-    }
-
-    function openModalPresensi() { 
-        new bootstrap.Modal(document.getElementById('modalPresensi')).show(); 
     }
 
     async function saveLocalAndSync(table, data) {
