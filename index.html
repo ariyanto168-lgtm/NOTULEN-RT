@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Notulen & Presensi Mandiri RT v3.9.38</title>
+  <title>Notulen & Presensi Mandiri RT v3.9.40</title>
   
-  <link rel="manifest" href="manifest.json?v=3.9.38">
+  <link rel="manifest" href="manifest.json?v=3.9.40">
   <meta name="theme-color" content="#0ea5e9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -66,7 +66,6 @@
 <body>
 
   <!-- ================= WADAH MODE SCANNER WARGA ================= -->
-  <!-- PERBAIKAN Z-INDEX: Menghapus absolute & z-index:9000 agar tidak menutupi modal login admin -->
   <div id="warga-scanner-app" style="background: #0f172a; min-height: 100vh; color: #fff; width:100%; padding-bottom: 120px;">
     <div class="container py-5 text-center">
 
@@ -82,7 +81,6 @@
           <small class="text-light opacity-75 d-block" id="locked-agenda-time">Batas Waktu: -</small>
         </div>
 
-        <!-- PERBAIKAN DROPDOWN: Dibuat custom manual, datalist dibuang -->
         <div class="mb-3 position-relative">
           <label class="form-label small fw-bold text-info mb-1"><i class="bi bi-person-badge-fill me-1"></i> 1. Pilih Nama / No. Rumah</label>
           <input type="text" id="scanner-warga-input" class="form-control rounded-pill bg-light text-dark fw-bold px-3 py-2" placeholder="Ketik nama & pilih daftar..." autocomplete="off">
@@ -116,7 +114,7 @@
       <div class="mt-5 mb-5 pt-4 pb-5">
         <div class="fw-semibold small text-light opacity-50 mb-3" style="font-size: 0.75rem;">Aplikasi Presensi RT</div>
         <button class="btn btn-dark border-secondary rounded-pill px-4 py-3 shadow-sm text-info fw-bold" onclick="masukModeAdmin()" style="font-size: 0.85rem; letter-spacing: 0.5px; margin-bottom: 30px;">
-           <i class="bi bi-shield-lock-fill me-2"></i> Powered By Ari GPM • <span class="text-light fw-normal opacity-75">v3.9.38</span>
+           <i class="bi bi-shield-lock-fill me-2"></i> Powered By Ari GPM • <span class="text-light fw-normal opacity-75">v3.9.40</span>
         </button>
       </div>
     </div>
@@ -134,7 +132,7 @@
           <div>
             <div class="d-flex align-items-center gap-1">
               <span>NOTULEN RT</span>
-              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.38</span>
+              <span class="badge bg-white text-primary-custom fs-6 fw-bold opacity-90 ms-1" style="font-size: 0.62rem !important;">v3.9.40</span>
             </div>
             <div id="nav-header-subtext" class="text-white opacity-90 fw-normal" style="font-size: 0.68rem; line-height: 1.1;">RT 01 / RW 01 • Desa Sukamaju</div>
           </div>
@@ -276,7 +274,7 @@
       </div>
       <div class="footer-branding no-print">
         <div class="fw-semibold">Aplikasi Notulen & Perencanaan Kegiatan RT</div>
-        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.38</span></div>
+        <div class="text-primary-custom fw-bold mt-1">Powered By Ari GPM • <span class="text-muted fw-normal">v3.9.40</span></div>
       </div>
     </div>
 
@@ -371,7 +369,7 @@
 
   <!-- SCRIPT UTAMA -->
   <script>
-    var APP_VERSION = "v3.9.38";
+    var APP_VERSION = "v3.9.40";
     var API_URL = "https://script.google.com/macros/s/AKfycbyjpowaeROtz1hpUonUmJkdrPtW2ZmZvtOLlZ_vyOFjxu_ybcds6R6yzMLb9-j5poD0/exec";
     
     var APP_DATA = { SETTINGS: { nama_rt: "RT 01 / RW 01", desa_alamat: "Desa Sukamaju", pin: "kamu nanyak", email_admin: "" }, NOTULEN: [], KEGIATAN: [], WARGA: [], KEHADIRAN: [], ANGGARAN: [], REGU: [] };
@@ -871,7 +869,9 @@
     }
 
     function openFormNotulen() { document.getElementById('form-notulen').reset(); document.getElementById('notulen-id').value = ''; document.getElementById('notulen-tgl').value = new Date().toISOString().split('T')[0]; document.getElementById('notulen-tampil-scanner').checked = true; new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
-    function editNotulen(id) { var item = APP_DATA.NOTULEN.find(function(x) { return String(x.id) === String(id); }); if (!item) return; document.getElementById('notulen-id').value = item.id; document.getElementById('notulen-agenda').value = item.agenda || ''; document.getElementById('notulen-tgl').value = item.tgl_rapat ? item.tgl_rapat.split('T')[0] : ''; document.getElementById('notulen-waktu').value = item.waktu || ''; document.getElementById('notulen-tempat').value = item.tempat || ''; document.getElementById('notulen-pimpinan').value = item.pimpinan || ''; document.getElementById('notulen-notulis').value = item.notulis || ''; document.getElementById('notulen-pembahasan').value = item.pembahasan || ''; document.getElementById('notulen-keputusan').value = item.keputusan || ''; document.getElementById('notulen-scan-start').value = item.scanner_start || ''; document.getElementById('notulen-scan-end').value = item.scanner_end || ''; document.getElementById('notulen-tampil-scanner').checked = (String(item.tampil_scanner) === 'true'); new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
+    function editNotulen(id) { var item = APP_DATA.NOTULEN.find(function(x) { return String(x.id) === String(id); }); if (!item) return; document.getElementById('notulen-id').value = item.id; document.getElementById('notulen-agenda').value = item.agenda || ''; document.getElementById('notulen-tgl').value = item.tgl_rapat ? item.tgl_rapat.split('T')[0] : ''; document.getElementById('notulen-waktu').value = item.waktu || ''; document.getElementById('notulen-tempat').value = item.tempat || ''; document.getElementById('notulen-pimpinan').value = item.pimpinan || ''; document.getElementById('notulen-notulis').value = item.notulis || ''; document.getElementById('notulen-pembahasan').value = item.pembahasan || ''; document.getElementById('notulen-keputusan').value = item.keputusan || ''; document.getElementById('notulen-scan-start').value = item.scanner_start || ''; document.getElementById('notulen-scan-end').value = item.scanner_end || ''; 
+    // CEK UNDEFINED AGAR DEFAULT TRUE
+    document.getElementById('notulen-tampil-scanner').checked = (item.tampil_scanner === undefined || String(item.tampil_scanner) === 'true'); new bootstrap.Modal(document.getElementById('modalNotulen')).show(); }
     document.getElementById('form-notulen').addEventListener('submit', function(e) { e.preventDefault(); saveLocalAndSync('NOTULEN', { id: document.getElementById('notulen-id').value, agenda: document.getElementById('notulen-agenda').value, tgl_rapat: document.getElementById('notulen-tgl').value, waktu: document.getElementById('notulen-waktu').value, tempat: document.getElementById('notulen-tempat').value, pimpinan: document.getElementById('notulen-pimpinan').value, notulis: document.getElementById('notulen-notulis').value, pembahasan: document.getElementById('notulen-pembahasan').value, keputusan: document.getElementById('notulen-keputusan').value, scanner_start: document.getElementById('notulen-scan-start').value, scanner_end: document.getElementById('notulen-scan-end').value, tampil_scanner: String(document.getElementById('notulen-tampil-scanner').checked) }); hideModalSafe('modalNotulen'); showToast('Notulen Disimpan'); });
 
     function toggleDailyScanner() {
@@ -901,7 +901,9 @@
         document.getElementById('kegiatan-pj').value = item.penanggung_jawab || ''; 
         document.getElementById('kegiatan-scan-start').value = item.scanner_start || ''; 
         document.getElementById('kegiatan-scan-end').value = item.scanner_end || ''; 
-        document.getElementById('kegiatan-tampil-scanner').checked = (String(item.tampil_scanner) === 'true'); 
+        
+        // CEK UNDEFINED AGAR DEFAULT TRUE
+        document.getElementById('kegiatan-tampil-scanner').checked = (item.tampil_scanner === undefined || String(item.tampil_scanner) === 'true'); 
         
         document.getElementById('kegiatan-is-daily').checked = (String(item.is_daily) === 'true');
         document.getElementById('kegiatan-scan-time-start').value = item.time_start || '';
@@ -1133,14 +1135,25 @@
       var st = scannerAppData.SETTINGS;
       document.getElementById('scanner-rt-header').innerText = `${(st && st.nama_rt) ? st.nama_rt : "RT 01"} - ${(st && st.desa_alamat) ? st.desa_alamat : "Desa"}`;
       
-      var nArr = (scannerAppData.NOTULEN || []).filter(function(n) { return String(n.tampil_scanner) === 'true'; }).map(function(n) { return { id: n.id, title: n.agenda, date: n.tgl_rapat, start: n.scanner_start, end: n.scanner_end, is_daily: 'false', tipe: 'Rapat' }; });
-      var kArr = (scannerAppData.KEGIATAN || []).filter(function(k) { return String(k.tampil_scanner) === 'true'; }).map(function(k) { return { id: k.id, title: k.nama_kegiatan, date: k.tgl, start: k.scanner_start, end: k.scanner_end, is_daily: k.is_daily, time_start: k.time_start, time_end: k.time_end, tipe: 'Kegiatan' }; });
+      // PERBAIKAN BUG UNDEFINED: Jika agenda dari versi lawas (tampil_scanner tidak ada), akan dianggap true secara otomatis.
+      var nArr = (scannerAppData.NOTULEN || []).filter(function(n) { 
+          return n.tampil_scanner === undefined || String(n.tampil_scanner) === 'true'; 
+      }).map(function(n) { 
+          return { id: n.id, title: n.agenda, date: n.tgl_rapat, start: n.scanner_start, end: n.scanner_end, is_daily: 'false', tipe: 'Rapat' }; 
+      });
+      
+      var kArr = (scannerAppData.KEGIATAN || []).filter(function(k) { 
+          return k.tampil_scanner === undefined || String(k.tampil_scanner) === 'true'; 
+      }).map(function(k) { 
+          return { id: k.id, title: k.nama_kegiatan, date: k.tgl, start: k.scanner_start, end: k.scanner_end, is_daily: k.is_daily, time_start: k.time_start, time_end: k.time_end, tipe: 'Kegiatan' }; 
+      });
       
       var combined = nArr.concat(kArr).reverse();
       
       if (btnContainer) {
           if(combined.length === 0) {
-              btnContainer.innerHTML = `<div class="alert bg-black border-secondary text-muted small text-center rounded-3">Tidak ada agenda aktif saat ini.</div>`;
+              // PERBAIKAN UI: Pesan kosong diubah dari Hitam Pekat menjadi Biru Transparan agar terbaca
+              btnContainer.innerHTML = `<div class="alert border border-info bg-info bg-opacity-10 text-info small text-center rounded-3 fw-bold"><i class="bi bi-info-circle me-1"></i>Belum ada agenda / rapat yang diaktifkan untuk scan hari ini.</div>`;
           } else {
               btnContainer.innerHTML = combined.map(function(m) {
                   var timeText = "Bebas Waktu";
