@@ -1,4 +1,4 @@
-const CACHE_NAME = "notulen-rt-v3.9.19-force";
+const CACHE_NAME = "notulen-rt-v3.9.42-force";
 
 const ASSETS_TO_CACHE = [
   "./",
